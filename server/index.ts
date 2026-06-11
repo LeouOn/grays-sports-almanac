@@ -9,6 +9,7 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import dotenv from 'dotenv';
 import { initAthenaDb, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
 import { registerEntries } from './entry-registry.js';
+import { requestLogger } from './middleware.js';
 import { createAthenaRoutes } from './athena-routes.js';
 import athenaStatic from '../src/data/athena-static.json' with { type: 'json' };
 
@@ -25,6 +26,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+app.use(requestLogger());
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });

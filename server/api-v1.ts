@@ -8,13 +8,24 @@ import { medicalInterventions } from '../src/data/medical.js';
 import { safetyProtocols } from '../src/data/safety.js';
 import { blueprintsData } from '../src/data/blueprints.js';
 import { loadIngested, saveIngested, exportIngested, restoreIngested } from './persistence.js';
+import { IngestSchema, FetchSchema, ExploreSchema, BatchSchema, RestoreSchema } from './schemas.js';
 
 type ModuleName = 'sports' | 'finance' | 'era-guide' | 'disasters' | 'tech-transfer' | 'medical' | 'safety' | 'blueprints';
+
+interface KnowledgeEntry {
+  id: string;
+  year?: number;
+  optimalYear?: number;
+  date?: string;
+  tags?: string[];
+  title?: string;
+  [key: string]: unknown;
+}
 
 // Merge static data with ingested entries from previous sessions (portable across computers)
 const ingested = loadIngested();
 
-const MODULES: Record<ModuleName, { data: any[]; label: string }> = {
+const MODULES: Record<ModuleName, { data: KnowledgeEntry[]; label: string }> = {
   'sports':         { data: [...sportsAlmanac, ...(ingested['sports'] || [])],         label: 'Sports Almanac' },
   'finance':        { data: [...financialAlmanac, ...(ingested['finance'] || [])],       label: 'Financial Almanac' },
   'era-guide':      { data: [...eraGuideData, ...(ingested['era-guide'] || [])],           label: 'Era Integration Guide' },
@@ -180,26 +191,27 @@ export function createApiV1Router(): Router {
 
   // POST /api/v1/fetch — external data connector (Wikipedia)
   router.post('/fetch', async (req, res) => {
-    const { source, query } = req.body;
-    if (!source || !query) {
-      res.status(400).json({ error: 'Missing source or query in request body' });
+    const parsed = FetchSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Validation failed', details: parsed.error.issues });
       return;
     }
+    const { source, query } = parsed.data;
 
     try {
       if (source === 'wikipedia') {
         const title = encodeURIComponent(query.replace(/ /g, '_'));
         const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${title}`;
         const resp = await fetch(url, { headers: { 'User-Agent': 'TimeTravelGuide/1.0' } });
-        const data = await resp.json() as any;
+        const data = await resp.json() as Record<string, unknown>;
         if (data.title) {
           res.json({
             source: 'wikipedia',
             title: data.title,
             extract: data.extract,
             description: data.description,
-            thumbnail: data.thumbnail?.source,
-            pageUrl: data.content_urls?.desktop?.page,
+            thumbnail: (data.thumbnail as Record<string, unknown> | undefined)?.source,
+            pageUrl: (data.content_urls as Record<string, Record<string, unknown>> | undefined)?.desktop?.page,
             coordinates: data.coordinates,
           });
         } else {
@@ -208,23 +220,22 @@ export function createApiV1Router(): Router {
       } else if (source === 'wikidata') {
         const url = `https://query.wikidata.org/sparql?format=json&query=${encodeURIComponent(query)}`;
         const resp = await fetch(url, { headers: { 'User-Agent': 'TimeTravelGuide/1.0' } });
-        const data = await resp.json() as any;
-        res.json({ source: 'wikidata', results: data.results?.bindings || [] });
-      } else {
-        res.status(400).json({ error: `Unknown source: ${source}. Valid: wikipedia, wikidata` });
+        const data = await resp.json() as Record<string, unknown>;
+        res.json({ source: 'wikidata', results: (data.results as Record<string, unknown> | undefined)?.bindings || [] });
       }
-    } catch (err: any) {
-      res.status(502).json({ error: `Fetch failed: ${err.message}` });
+    } catch (err: unknown) {
+      res.status(502).json({ error: `Fetch failed: ${err instanceof Error ? err.message : String(err)}` });
     }
   });
 
   // POST /api/v1/explore — crawl Wikipedia: summary + related + categories
   router.post('/explore', async (req, res) => {
-    const { query } = req.body;
-    if (!query) {
-      res.status(400).json({ error: 'Missing query (Wikipedia page title)' });
+    const parsed = ExploreSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Validation failed', details: parsed.error.issues });
       return;
     }
+    const { query } = parsed.data;
 
     try {
       const title = encodeURIComponent(query.replace(/ /g, '_'));
@@ -251,7 +262,7 @@ export function createApiV1Router(): Router {
       // Extract categories
       const pages = catData?.query?.pages || {};
       const cats: string[] = [];
-      for (const p of Object.values(pages) as any[]) {
+      for (const p of Object.values(pages) as Record<string, unknown>[]) {
         for (const c of (p.categories || [])) {
           const catName = (c.title || '').replace('Category:', '');
           if (catName && !catName.startsWith('Articles_') && !catName.startsWith('All_') && !catName.startsWith('CS1_') && !catName.startsWith('Webarchive_')) {
@@ -270,11 +281,11 @@ export function createApiV1Router(): Router {
           pageUrl: summaryData.content_urls?.desktop?.page,
           coordinates: summaryData.coordinates,
         } : { error: 'Page not found' },
-        related: (relatedData?.pages || []).map((p: any) => ({
+        related: (relatedData?.pages || []).map((p: Record<string, unknown>) => ({
           title: p.title,
           description: p.description,
-          thumbnail: p.thumbnail?.source,
-          pageUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g, '_'))}`,
+          thumbnail: (p.thumbnail as Record<string, unknown> | undefined)?.source,
+          pageUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(String(p.title).replace(/ /g, '_'))}`,
         })),
         relatedError: related.status === 'rejected' ? related.reason?.message : null,
         categories: cats.slice(0, 15),
@@ -287,22 +298,19 @@ export function createApiV1Router(): Router {
           categoriesRaw.status === 'rejected' ? `categories: ${categoriesRaw.reason?.message}` : null,
         ].filter(Boolean),
       });
-    } catch (err: any) {
-      res.status(502).json({ error: `Explore failed: ${err.message}` });
+    } catch (err: unknown) {
+      res.status(502).json({ error: `Explore failed: ${err instanceof Error ? err.message : String(err)}` });
     }
   });
 
   // POST /api/v1/batch — fetch multiple Wikipedia pages in parallel
   router.post('/batch', async (req, res) => {
-    const { queries } = req.body;
-    if (!queries || !Array.isArray(queries) || queries.length === 0) {
-      res.status(400).json({ error: 'Missing queries (array of Wikipedia page titles)' });
+    const parsed = BatchSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Validation failed', details: parsed.error.issues });
       return;
     }
-    if (queries.length > 10) {
-      res.status(400).json({ error: 'Max 10 queries per batch request' });
-      return;
-    }
+    const { queries } = parsed.data;
 
     try {
       const headers = { 'User-Agent': 'TimeTravelGuide/1.0' };
@@ -310,23 +318,23 @@ export function createApiV1Router(): Router {
         queries.map(async (q: string) => {
           const title = encodeURIComponent(q.replace(/ /g, '_'));
           const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`, { headers });
-          return resp.json() as any;
+          return resp.json() as Promise<Record<string, unknown>>;
         })
       );
 
       res.json({
         count: queries.length,
-        results: results.map((r: any, i: number) => ({
+        results: results.map((r: Record<string, unknown>, i: number) => ({
           query: queries[i],
           title: r.title || null,
           description: r.description || null,
-          extract: r.extract?.slice(0, 300) || null,
-          pageUrl: r.content_urls?.desktop?.page || null,
+          extract: typeof r.extract === 'string' ? r.extract.slice(0, 300) : null,
+          pageUrl: (r.content_urls as Record<string, Record<string, unknown>> | undefined)?.desktop?.page || null,
           error: r.title ? null : (r.detail || 'Not found'),
         })),
       });
-    } catch (err: any) {
-      res.status(502).json({ error: `Batch fetch failed: ${err.message}` });
+    } catch (err: unknown) {
+      res.status(502).json({ error: `Batch fetch failed: ${err instanceof Error ? err.message : String(err)}` });
     }
   });
 
@@ -346,11 +354,11 @@ export function createApiV1Router(): Router {
     }
     if (tags) {
       const tagList = (tags as string).split(',').map(t => t.trim().toLowerCase());
-      results = results.filter((e: any) => e.tags && tagList.some(t => e.tags.includes(t)));
+      results = results.filter((e: KnowledgeEntry) => e.tags && tagList.some(t => e.tags!.includes(t)));
     }
     if (era) {
       const eraFilter = (era as string).toLowerCase();
-      results = results.filter((e: any) => {
+      results = results.filter((e: KnowledgeEntry) => {
         const year = e.year || e.optimalYear || (e.date ? parseInt(e.date.match(/\d{4}/)?.[0] || '0') : 0);
         if (eraFilter === '1970s') return year >= 1970 && year < 1980;
         if (eraFilter === '1980s') return year >= 1980 && year < 1990;
@@ -375,7 +383,7 @@ export function createApiV1Router(): Router {
       res.status(404).json({ error: `Unknown module: ${module}` });
       return;
     }
-    const entry = MODULES[module].data.find((e: any) => e.id === req.params.id);
+    const entry = MODULES[module].data.find((e: KnowledgeEntry) => e.id === req.params.id);
     if (!entry) {
       res.status(404).json({ error: `Entry ${req.params.id} not found in ${module}` });
       return;
@@ -386,13 +394,13 @@ export function createApiV1Router(): Router {
   // GET /api/v1/search — federated search
   router.get('/search', (req, res) => {
     const { q, tags, era, module: modFilter } = req.query;
-    const results: any[] = [];
+    const results: (KnowledgeEntry & { module: string })[] = [];
 
     for (const [name, mod] of Object.entries(MODULES)) {
       if (modFilter && name !== modFilter) continue;
       if (era) {
         const eraFilter = (era as string).toLowerCase();
-        const filtered = mod.data.filter((e: any) => {
+        const filtered = mod.data.filter((e: KnowledgeEntry) => {
           const year = e.year || e.optimalYear || (e.date ? parseInt(e.date.match(/\d{4}/)?.[0] || '0') : 0);
           if (eraFilter === '1970s') return year >= 1970 && year < 1980;
           if (eraFilter === '1980s') return year >= 1980 && year < 1990;
@@ -400,9 +408,9 @@ export function createApiV1Router(): Router {
           if (eraFilter === '2000s') return year >= 2000;
           return true;
         });
-        results.push(...filtered.map((e: any) => ({ module: name, ...e })));
+        results.push(...filtered.map((e: KnowledgeEntry) => ({ module: name, ...e })));
       } else {
-        results.push(...mod.data.map((e: any) => ({ module: name, ...e })));
+        results.push(...mod.data.map((e: KnowledgeEntry) => ({ module: name, ...e })));
       }
     }
 
@@ -413,7 +421,7 @@ export function createApiV1Router(): Router {
     }
     if (tags) {
       const tagList = (tags as string).split(',').map(t => t.trim().toLowerCase());
-      filtered = filtered.filter((e: any) => e.tags && tagList.some((t: string) => e.tags.includes(t)));
+      filtered = filtered.filter((e: KnowledgeEntry & { module: string }) => e.tags && tagList.some((t: string) => e.tags!.includes(t)));
     }
 
     res.json({ query: q, total: filtered.length, data: filtered.slice(0, 50) });
@@ -421,22 +429,15 @@ export function createApiV1Router(): Router {
 
   // POST /api/v1/ingest — submit a new entry
   router.post('/ingest', (req, res) => {
-    const { module, entry } = req.body;
-    if (!module || !MODULES[module as ModuleName]) {
-      res.status(400).json({ error: `Invalid module. Must be one of: ${Object.keys(MODULES).join(', ')}` });
+    const parsed = IngestSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Validation failed', details: parsed.error.issues });
       return;
     }
-    if (!entry || typeof entry !== 'object') {
-      res.status(400).json({ error: 'Missing entry object in request body' });
-      return;
-    }
-    if (!entry.id) {
-      res.status(400).json({ error: 'Entry must have an id field' });
-      return;
-    }
+    const { module, entry } = parsed.data;
 
     const mod = MODULES[module as ModuleName];
-    const existing = mod.data.findIndex((e: any) => e.id === entry.id);
+    const existing = mod.data.findIndex((e: KnowledgeEntry) => e.id === entry.id);
     if (existing >= 0) {
       mod.data[existing] = { ...mod.data[existing], ...entry };
       saveIngested(module, mod.data[existing]); // persist to disk
@@ -450,7 +451,7 @@ export function createApiV1Router(): Router {
 
   // GET /api/v1/export — full data dump (includes ingested)
   router.get('/export', (_req, res) => {
-    const dump: Record<string, any> = {};
+    const dump: Record<string, { label: string; count: number; staticEntries: number; ingestedEntries: number; data: KnowledgeEntry[] }> = {};
     for (const [name, mod] of Object.entries(MODULES)) {
       const staticCount = (name === 'sports' ? sportsAlmanac : name === 'finance' ? financialAlmanac : name === 'era-guide' ? eraGuideData : name === 'disasters' ? disasterAlmanac : name === 'tech-transfer' ? techTransferTargets : name === 'medical' ? medicalInterventions : name === 'safety' ? safetyProtocols : blueprintsData).length;
       dump[name] = {
@@ -472,55 +473,32 @@ export function createApiV1Router(): Router {
 
   // POST /api/v1/restore — restore ingested data from export
   router.post('/restore', (req, res) => {
-    const { ingested: store } = req.body;
-    if (!store || typeof store !== 'object') {
-      res.status(400).json({ error: 'Missing "ingested" object in request body. Use the output from GET /api/v1/export.' });
+    const parsed = RestoreSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Validation failed', details: parsed.error.issues });
       return;
     }
+    const { ingested: store } = parsed.data;
     try {
       const result = restoreIngested(store);
       res.json({ status: 'restored', ...result, message: 'Restart the server to fully load restored entries into MODULES.' });
-    } catch (err: any) {
-      res.status(500).json({ error: `Restore failed: ${err.message}` });
+    } catch (err: unknown) {
+      res.status(500).json({ error: `Restore failed: ${err instanceof Error ? err.message : String(err)}` });
     }
-  });
-
-  // GET /api/v1/export — full data dump (replaced by above, keep old for compat)
-  router.get('/export-legacy', (_req, res) => {
-    const dump: Record<string, any> = {};
-    for (const [name, mod] of Object.entries(MODULES)) {
-      dump[name] = {
-        label: mod.label,
-        count: mod.data.length,
-        data: mod.data,
-      };
-    }
-    res.json({ exported_at: new Date().toISOString(), modules: dump });
-  });
-  router.get('/export', (_req, res) => {
-    const dump: Record<string, any> = {};
-    for (const [name, mod] of Object.entries(MODULES)) {
-      dump[name] = {
-        label: mod.label,
-        count: mod.data.length,
-        data: mod.data,
-      };
-    }
-    res.json({ exported_at: new Date().toISOString(), modules: dump });
   });
 
   // GET /api/v1/stats — module counts and coverage
   router.get('/stats', (_req, res) => {
-    const modules: any[] = [];
+    const modules: { module: string; label: string; entries: number; tagged: number; taggedPercent: number; yearRange: string }[] = [];
     let totalEntries = 0;
     let totalTagged = 0;
     const allTags = new Map<string, number>();
 
     for (const [name, mod] of Object.entries(MODULES)) {
       const count = mod.data.length;
-      const tagged = mod.data.filter((e: any) => e.tags && e.tags.length > 0).length;
+      const tagged = mod.data.filter((e: KnowledgeEntry) => e.tags && e.tags.length > 0).length;
       const eras = new Set<number>();
-      mod.data.forEach((e: any) => {
+      mod.data.forEach((e: KnowledgeEntry) => {
         const year = e.year || e.optimalYear || (e.date ? parseInt(e.date.match(/\d{4}/)?.[0] || '0') : 0);
         if (year > 0) eras.add(year);
         if (e.tags) e.tags.forEach((t: string) => allTags.set(t, (allTags.get(t) || 0) + 1));
