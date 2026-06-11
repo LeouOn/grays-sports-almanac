@@ -23,9 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Generated Knowledge Base
-server/knowledge/
-
 # Environment variables (API keys)
 .env
 

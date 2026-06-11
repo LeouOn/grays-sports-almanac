@@ -1,0 +1,4 @@
+export const era_1950__engineering__telecommunications = `
+## 1950S ENGINEERING - TELECOMMUNICATIONS
+- NTSC Color TV Standard (1953) (1950s): On Dec 17, 1953, the FCC adopted the NTSC (National Television System Committee) standard for color television broadcasting, designed to be backward-compatible with existing B&W sets. NTSC became the foundation for analog color TV broadcasting in the U.S., Japan, and much of the Americas until digital switchover in the 2000s. | Specs: FCC Adoption Date: Dec 17, 1953, Frame Rate: 29.97 fps (60 Hz field rate), Resolution: 525 lines (480i visible), Backward Compatibility: Color signal included a B&W-compatible luminance (Y) component, Field Nickname: "Never The Same Color" (early broadcast variance) | [Source: Wikipedia (https://en.wikipedia.org/wiki/NTSC), Confidence: high]
+`;

@@ -1,0 +1,10 @@
+export const era_1970__events__disasters = `
+## 1970S EVENTS - DISASTERS
+- Tenerife Airport Disaster (1977-03-27): 583 fatalities (deadliest aviation accident in history). Cause: KL 747 initiated takeoff without ATC clearance while Pan Am 747 was still on the runway. Heavy fog. Communication breakdown.
+- American Airlines Flight 191 (1979-05-25): 273 fatalities (all 271 on board + 2 on ground). Cause: Engine separated from wing on takeoff due to improper maintenance procedure (forklift used to remove engine+pylon as a unit, causing structural cracks).
+- Three Mile Island Accident (1979-03-28): 0 immediate fatalities (partial meltdown, long-term health effects disputed). Cause: Stuck-open pilot-operated relief valve (PORV). Operators misread control panel indicators and manually shut off emergency cooling water, thinking the reactor had too much water.
+- HIV/AIDS Early Warning (1978-1980 (intervention window)): 40M+ cumulative deaths by 2024. Cause: HIV-1 retrovirus, likely crossed from chimpanzees to humans in early 20th century. First recognized in 1981 when clusters of Pneumocystis pneumonia and Kaposi's sarcoma appeared in gay men in LA, NYC, and SF.
+- Reye's Syndrome / Aspirin Warning (1976-1980 (intervention window)): Hundreds of children died or suffered brain damage annually during peak years. Cause: Aspirin given to children with viral infections (flu, chickenpox) triggers Reye's Syndrome — rapid liver failure and brain swelling.
+- Leaded Gasoline Phase-Out Acceleration (1972-1976 (intervention window)): Estimated millions suffered IQ reduction and behavioral issues from childhood lead exposure. Cause: Tetraethyl lead in gasoline. The science was known by the 1960s but industry fought regulation. EPA began phase-out in 1976; completed in 1996.
+- Buffalo Creek Flood (1972-02-26): 125 fatalities (1,121 injured, 4,000 homeless). Cause: A coal waste slurry dam (built on top of an older dam that had already failed once) collapsed after heavy rain. 132 million gallons of black sludge raced through 16 mining communities along Buffalo Creek Hollow.
+`;
