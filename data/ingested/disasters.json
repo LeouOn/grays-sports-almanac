@@ -1,0 +1,21 @@
+[
+  {
+    "id": "air-florida-90",
+    "date": "1982-01-13",
+    "year": 1982,
+    "category": "Aviation",
+    "event": "Air Florida Flight 90",
+    "location": "Washington, D.C., USA",
+    "casualties": "78 fatalities",
+    "cause": "Icing on wings and engine sensors. Aircraft stalled after takeoff and struck the 14th Street Bridge before crashing into the Potomac River.",
+    "butterflyRisk": "Low",
+    "estimatedLivesSaved": "78",
+    "tags": [
+      "aviation",
+      "ice",
+      "de-icing",
+      "washington-dc",
+      "potomac"
+    ]
+  }
+]
