@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { disasterAlmanac } from '@/data/disasters';
+import { useState, useEffect } from 'react';
+import { loadDisasters } from '@/data/loader';
 import type { DisasterEvent } from '@/data/disasters';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -9,6 +9,7 @@ import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
 import { ButterflyImpact } from '@/components/ButterflyImpact';
+import { useURLState } from '../hooks/useURLState';
 
 const riskColors: Record<DisasterEvent['butterflyRisk'], string> = {
   'Low': 'bg-green-950/60 text-green-400 border-green-800',
@@ -26,9 +27,25 @@ const categoryIcons: Record<DisasterEvent['category'], string> = {
 };
 
 export function DisasterPrevention() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [disasters, setDisasters] = useState<DisasterEvent[] | null>(null);
 
-  const filtered = disasterAlmanac.filter(e =>
+  useEffect(() => {
+    void loadDisasters().then(setDisasters);
+  }, []);
+
+  if (!disasters) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-80 bg-neutral-900 rounded" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-80 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <span className="sr-only">Loading disaster prevention…</span>
+      </div>
+    );
+  }
+
+  const filtered = disasters.filter(e =>
     e.event.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -38,7 +55,7 @@ export function DisasterPrevention() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Disaster Prevention &amp; Mitigation</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Disaster Prevention &amp; Mitigation</h1>
         <p className="text-neutral-400 mt-2">Preventable tragedies with low-profile intervention strategies. Prioritize events with the best lives-saved-to-butterfly-risk ratio.</p>
       </div>
 
@@ -48,6 +65,7 @@ export function DisasterPrevention() {
           placeholder="Search by event, location, or category..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
+          aria-label="Search disasters"
           className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
         />
       </div>

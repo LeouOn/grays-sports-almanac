@@ -1,0 +1,113 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - link "Time Traveler's Guide" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e8]:
+        - button "Open navigation menu" [ref=e10] [cursor=pointer]:
+          - img [ref=e11]
+        - 'button "Active Companion: Athena. Click to change." [ref=e13] [cursor=pointer]':
+          - generic [ref=e14]: 🦉
+          - generic [ref=e15]: Athena
+          - img [ref=e16]
+        - button "Search the archive" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e22]: Search archive...
+          - generic: Ctrl+K
+        - button "Switch to light theme" [pressed] [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - generic [ref=e30]: Light
+        - button "Print guide" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e36]: Print Guide
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - heading "LLM Testing Module" [level=1] [ref=e40]
+        - paragraph [ref=e41]: Prove your factual recall, judgment, and roleplay skills across the modern era.
+      - radiogroup "Quiz tier" [ref=e42]:
+        - 'radio "Tier 1: Recall" [checked] [ref=e43] [cursor=pointer]'
+        - 'radio "Tier 2: Judgment" [ref=e44] [cursor=pointer]'
+        - 'radio "Tier 3: Roleplay" [ref=e45] [cursor=pointer]'
+      - generic [ref=e46]:
+        - img [ref=e47]
+        - radiogroup "LLM provider" [ref=e50]:
+          - radio "🔵" [ref=e51] [cursor=pointer]
+          - radio "🐋" [ref=e52] [cursor=pointer]
+          - radio "🧠" [checked] [ref=e53] [cursor=pointer]
+          - radio "⚡" [ref=e54] [cursor=pointer]
+          - radio "🔀" [ref=e55] [cursor=pointer]
+        - generic [ref=e56]: Zhipu
+      - button "model glm-4.5" [ref=e58] [cursor=pointer]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: model
+          - generic [ref=e61]: glm-4.5
+        - img [ref=e62]
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]: Eras
+          - group "Eras to include in quiz" [ref=e67]:
+            - button "1950s" [pressed] [ref=e68] [cursor=pointer]
+            - button "1960s" [pressed] [ref=e69] [cursor=pointer]
+            - button "1970s" [pressed] [ref=e70] [cursor=pointer]
+            - button "1980s" [pressed] [ref=e71] [cursor=pointer]
+            - button "1990s" [pressed] [ref=e72] [cursor=pointer]
+            - button "2000s" [pressed] [ref=e73] [cursor=pointer]
+            - button "global" [pressed] [ref=e74] [cursor=pointer]
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Domains
+              - group "Domains to include in quiz" [ref=e79]:
+                - button "culture" [pressed] [ref=e80] [cursor=pointer]
+                - button "science" [pressed] [ref=e81] [cursor=pointer]
+                - button "economics" [pressed] [ref=e82] [cursor=pointer]
+                - button "events" [pressed] [ref=e83] [cursor=pointer]
+                - button "engineering" [pressed] [ref=e84] [cursor=pointer]
+            - generic [ref=e85]:
+              - generic [ref=e86]: Sub-domains
+              - group "Sub-domains to include in quiz" [ref=e87]:
+                - button "sports" [pressed] [ref=e88] [cursor=pointer]
+                - button "slang" [pressed] [ref=e89] [cursor=pointer]
+                - button "tech" [pressed] [ref=e90] [cursor=pointer]
+                - button "blueprints" [pressed] [ref=e91] [cursor=pointer]
+                - button "medical" [pressed] [ref=e92] [cursor=pointer]
+                - button "prices" [pressed] [ref=e93] [cursor=pointer]
+                - button "finance" [pressed] [ref=e94] [cursor=pointer]
+                - button "disasters" [pressed] [ref=e95] [cursor=pointer]
+                - button "safety" [pressed] [ref=e96] [cursor=pointer]
+                - button "cnc_machining" [pressed] [ref=e97] [cursor=pointer]
+                - button "semiconductors" [pressed] [ref=e98] [cursor=pointer]
+                - button "metallurgy" [pressed] [ref=e99] [cursor=pointer]
+                - button "aerospace" [pressed] [ref=e100] [cursor=pointer]
+                - button "telecommunications" [pressed] [ref=e101] [cursor=pointer]
+          - button "Competency Profile" [ref=e102] [cursor=pointer]:
+            - img [ref=e103]
+            - text: Competency Profile
+      - generic [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e110]: "🧠 Tier 1: Factual Recall"
+            - generic [ref=e111]: Prove your factual knowledge of prices, sports scores, slang timelines, and technologies.
+          - generic [ref=e112]:
+            - generic [ref=e113]: Partner
+            - generic [ref=e114]:
+              - button "👨‍🔬" [ref=e115] [cursor=pointer]
+              - button "🎸" [ref=e116] [cursor=pointer]
+              - button "👊" [ref=e117] [cursor=pointer]
+              - button "🦉" [ref=e118] [cursor=pointer]
+              - button "🤖" [ref=e119] [cursor=pointer]
+        - generic [ref=e121]:
+          - generic [ref=e123]:
+            - img [ref=e125]
+            - generic [ref=e128]:
+              - paragraph [ref=e129]: Start your training session
+              - paragraph [ref=e130]: Send a message or type "start" to test your knowledge.
+            - button "Initialize AI Examiner" [ref=e131] [cursor=pointer]
+          - generic [ref=e132]:
+            - textbox "Quiz answer or message" [ref=e133]:
+              - /placeholder: Type your message or choice (e.g. A, B)...
+            - button "Send" [disabled]
+  - region "Notifications alt+T"

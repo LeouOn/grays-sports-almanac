@@ -22,24 +22,24 @@ describe('Bootstrap Blueprints Data & Search', () => {
     expect(cz?.stepByStepGuide).toContain('Necking');
   });
 
-  it('integrates successfully with the search utility for titles', () => {
-    const results = searchAll('Czochralski');
+  it('integrates successfully with the search utility for titles', async () => {
+    const results = await searchAll('Czochralski');
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].module).toBe('Blueprints');
     expect(results[0].title).toBe('Silicon Crystal Pulling (Czochralski Method)');
     expect(results[0].link).toBe('/blueprints');
   });
 
-  it('finds blueprints via related keywords or principles', () => {
+  it('finds blueprints via related keywords or principles', async () => {
     // Search for "backlash" which is in precision ball screws
-    const results = searchAll('backlash');
+    const results = await searchAll('backlash');
     expect(results.length).toBeGreaterThan(0);
     const blueprintMatches = results.filter(r => r.module === 'Blueprints');
     expect(blueprintMatches.length).toBeGreaterThan(0);
     expect(blueprintMatches[0].title).toContain('Precision Ball Screws');
 
     // Search for "TMAH" which is in photolithography developer materials
-    const tmahResults = searchAll('tmah');
+    const tmahResults = await searchAll('tmah');
     expect(tmahResults.length).toBeGreaterThan(0);
     expect(tmahResults[0].title).toContain('Photolithography');
   });

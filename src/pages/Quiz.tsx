@@ -133,6 +133,7 @@ export function Quiz() {
       hasSentInitial.current = true;
       sendMessage({ text: initialQuestion }, { body: getRequestBody() });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion, initialEntryId, messages.length, sendMessage]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -218,21 +219,31 @@ export function Quiz() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex gap-2 p-1 bg-neutral-900 border border-neutral-800 rounded-lg max-w-md mx-auto">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">LLM Testing Module</h1>
+        <p className="text-neutral-400 mt-2">Prove your factual recall, judgment, and roleplay skills across the modern era.</p>
+      </div>
+      <div className="flex gap-2 p-1 bg-neutral-900 border border-neutral-800 rounded-lg max-w-md mx-auto" role="radiogroup" aria-label="Quiz tier">
         <button
           onClick={() => handleTierChange('tier1')}
+          role="radio"
+          aria-checked={selectedTier === 'tier1'}
           className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier1' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 1: Recall
         </button>
         <button
           onClick={() => handleTierChange('tier2')}
+          role="radio"
+          aria-checked={selectedTier === 'tier2'}
           className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier2' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 2: Judgment
         </button>
         <button
           onClick={() => handleTierChange('tier3')}
+          role="radio"
+          aria-checked={selectedTier === 'tier3'}
           className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier3' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 3: Roleplay
@@ -242,11 +253,13 @@ export function Quiz() {
       {/* Provider Selector */}
       <div className="flex items-center justify-center gap-2">
         <Cpu className="size-3.5 text-neutral-600" />
-        <div className="flex gap-1 p-0.5 bg-neutral-900 border border-neutral-800/60 rounded-md">
+        <div className="flex gap-1 p-0.5 bg-neutral-900 border border-neutral-800/60 rounded-md" role="radiogroup" aria-label="LLM provider">
           {PROVIDERS.map(p => (
             <button
               key={p.id}
               onClick={() => setProviderId(p.id)}
+              role="radio"
+              aria-checked={providerId === p.id}
               className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all cursor-pointer ${
                 providerId === p.id
                   ? 'bg-neutral-800 text-neutral-100 shadow-sm'
@@ -292,6 +305,7 @@ export function Quiz() {
                 value={modelSearch}
                 onChange={e => setModelSearch(e.target.value)}
                 placeholder="Search or type custom model..."
+                aria-label="Filter models"
                 className="flex-1 bg-transparent text-xs text-neutral-200 outline-none placeholder:text-neutral-600"
                 autoFocus
               />
@@ -336,13 +350,14 @@ export function Quiz() {
       <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 space-y-3">
         <div>
           <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5">Eras</div>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Eras to include in quiz">
             {ALL_ERAS.map(era => {
               const isSelected = selectedEras.includes(era);
               return (
                 <button
                   key={era}
                   onClick={() => toggleSelection(setSelectedEras, era)}
+                  aria-pressed={isSelected}
                   className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer ${
                     isSelected 
                       ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-300' 
@@ -359,13 +374,14 @@ export function Quiz() {
           <div className="flex flex-col gap-3">
             <div>
               <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5">Domains</div>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Domains to include in quiz">
                 {ALL_CATEGORIES.map(cat => {
                   const isSelected = selectedCategories.includes(cat);
                   return (
                     <button
                       key={cat}
                       onClick={() => toggleSelection(setSelectedCategories, cat)}
+                      aria-pressed={isSelected}
                       className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
                         isSelected 
                           ? 'bg-amber-600/20 border-amber-500/50 text-amber-300' 
@@ -381,13 +397,14 @@ export function Quiz() {
             {selectedCategories.length > 0 && (
               <div>
                 <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5">Sub-domains</div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5" role="group" aria-label="Sub-domains to include in quiz">
                   {selectedCategories.flatMap(cat => CATEGORY_TREE[cat as keyof typeof CATEGORY_TREE]).map(sub => {
                     const isSelected = selectedSubcategories.includes(sub);
                     return (
                       <button
                         key={sub}
                         onClick={() => toggleSelection(setSelectedSubcategories, sub)}
+                        aria-pressed={isSelected}
                         className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
                           isSelected 
                             ? 'bg-teal-600/20 border-teal-500/50 text-teal-300' 
@@ -420,7 +437,7 @@ export function Quiz() {
       {showProfile && (
         <div className="bg-neutral-900 border border-amber-900/40 rounded-lg p-4 space-y-4 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-amber-500 uppercase tracking-wider">Learner Mastery Profile</h3>
+            <h2 className="text-sm font-bold text-amber-500 uppercase tracking-wider">Learner Mastery Profile</h2>
             <button 
               onClick={resetCompetency}
               className="text-xs text-neutral-500 hover:text-red-400 cursor-pointer underline"
@@ -636,6 +653,7 @@ export function Quiz() {
                 value={input}
                 onChange={handleInputChange}
                 placeholder={isLoading ? "AI is typing..." : "Type your message or choice (e.g. A, B)..."}
+                aria-label="Quiz answer or message"
                 className="bg-neutral-900 border-neutral-800 text-white focus-visible:ring-indigo-500"
                 disabled={isLoading}
               />

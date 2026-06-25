@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { medicalInterventions } from '@/data/medical';
+import { useState, useEffect } from 'react';
+import { loadMedical } from '@/data/loader';
 import type { MedicalIntervention } from '@/data/medical';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -8,6 +8,7 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { useURLState } from '../hooks/useURLState';
 
 const riskColors: Record<MedicalIntervention['butterflyRisk'], string> = {
   'Low': 'bg-green-950/60 text-green-400 border-green-800',
@@ -17,9 +18,25 @@ const riskColors: Record<MedicalIntervention['butterflyRisk'], string> = {
 };
 
 export function MedicalInterventions() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [interventions, setInterventions] = useState<MedicalIntervention[] | null>(null);
 
-  const filtered = medicalInterventions.filter(e =>
+  useEffect(() => {
+    void loadMedical().then(setInterventions);
+  }, []);
+
+  if (!interventions) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-72 bg-neutral-900 rounded" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-80 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <span className="sr-only">Loading medical interventions…</span>
+      </div>
+    );
+  }
+
+  const filtered = interventions.filter(e =>
     e.condition.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.targetRecipient.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.details.toLowerCase().includes(searchTerm.toLowerCase())
@@ -28,7 +45,7 @@ export function MedicalInterventions() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Medical Interventions</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Medical Interventions</h1>
         <p className="text-neutral-400 mt-2">High-impact, low-butterfly medical knowledge that saves lives without rewriting history.</p>
       </div>
 
@@ -38,6 +55,7 @@ export function MedicalInterventions() {
           placeholder="Search by condition, target, or details..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
+          aria-label="Search medical interventions"
           className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
         />
       </div>

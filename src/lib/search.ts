@@ -1,14 +1,42 @@
-import { sportsAlmanac } from '../data/sports';
-import { financialAlmanac } from '../data/finance';
-import { eraGuideData } from '../data/era-guide';
-import { disasterAlmanac } from '../data/disasters';
-import { techTransferTargets } from '../data/tech-transfer';
-import { medicalInterventions } from '../data/medical';
-import { safetyProtocols } from '../data/safety';
-import { blueprintsData } from '../data/blueprints';
+// Global archive search.
+//
+// Search pulls from every knowledge dataset, so it depends on all of them.
+// To keep that data out of the initial bundle, datasets are loaded lazily
+// through `../data/loader` (which caches each module after first load). The
+// first search therefore awaits a one-time data load; every search after
+// that resolves from cache with no extra network cost.
+//
+// Call `preloadSearchData()` when the search UI opens to warm the cache so
+// the user's first keystroke feels instant.
+import {
+  loadSports,
+  loadFinance,
+  loadEraGuide,
+  loadDisasters,
+  loadTechTransfer,
+  loadMedical,
+  loadSafety,
+  loadBlueprints,
+  loadWorldEvents,
+  loadPlacesToLive,
+  loadPlacesToVisit,
+  loadEngineering,
+} from '../data/loader';
 
 export interface SearchResult {
-  module: 'Sports' | 'Finance' | 'Era Guide' | 'Disasters' | 'Tech' | 'Medical' | 'Safety' | 'Blueprints';
+  module:
+    | 'Sports'
+    | 'Finance'
+    | 'Era Guide'
+    | 'Disasters'
+    | 'Tech'
+    | 'Medical'
+    | 'Safety'
+    | 'Blueprints'
+    | 'World Events'
+    | 'Places to Live'
+    | 'Places to Visit'
+    | 'Engineering';
   title: string;
   subtitle: string;
   description: string;
@@ -16,9 +44,60 @@ export interface SearchResult {
   year?: number;
 }
 
-export function searchAll(query: string): SearchResult[] {
+/**
+ * Warm every dataset the archive searches across. Safe to call repeatedly;
+ * the loader caches each module after its first load, so repeat calls are
+ * effectively free. Intended to be fired when the search modal opens.
+ */
+export function preloadSearchData(): Promise<unknown[]> {
+  return Promise.all([
+    loadSports(),
+    loadFinance(),
+    loadEraGuide(),
+    loadDisasters(),
+    loadTechTransfer(),
+    loadMedical(),
+    loadSafety(),
+    loadBlueprints(),
+    loadWorldEvents(),
+    loadPlacesToLive(),
+    loadPlacesToVisit(),
+    loadEngineering(),
+  ]);
+}
+
+export async function searchAll(query: string): Promise<SearchResult[]> {
   if (!query || !query.trim()) return [];
   const q = query.toLowerCase().trim();
+
+  // Load (or read from cache) every dataset in parallel.
+  const [
+    sportsAlmanac,
+    financialAlmanac,
+    eraGuideData,
+    disasterAlmanac,
+    techTransferTargets,
+    medicalInterventions,
+    safetyProtocols,
+    blueprintsData,
+    worldEvents,
+    placesToLive,
+    placesToVisit,
+    engineering,
+  ] = await Promise.all([
+    loadSports(),
+    loadFinance(),
+    loadEraGuide(),
+    loadDisasters(),
+    loadTechTransfer(),
+    loadMedical(),
+    loadSafety(),
+    loadBlueprints(),
+    loadWorldEvents(),
+    loadPlacesToLive(),
+    loadPlacesToVisit(),
+    loadEngineering(),
+  ]);
 
   const results: SearchResult[] = [];
 
@@ -175,6 +254,93 @@ export function searchAll(query: string): SearchResult[] {
         subtitle: `${e.category} · Difficulty: ${e.difficulty} · Tolerances: ${e.tolerances}`,
         description: e.description,
         link: '/blueprints'
+      });
+    }
+  });
+
+  // 9. World Events
+  worldEvents.forEach(e => {
+    if (
+      e.event.toLowerCase().includes(q) ||
+      e.country.toLowerCase().includes(q) ||
+      e.significance.toLowerCase().includes(q) ||
+      e.category.toLowerCase().includes(q) ||
+      e.region.toLowerCase().includes(q) ||
+      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)))
+    ) {
+      results.push({
+        module: 'World Events',
+        title: `${e.event} (${e.year})`,
+        subtitle: `${e.region} · ${e.country} · ${e.category}`,
+        description: e.significance,
+        link: '/world-events',
+        year: e.year
+      });
+    }
+  });
+
+  // 10. Places to Live
+  placesToLive.forEach(e => {
+    if (
+      e.city.toLowerCase().includes(q) ||
+      e.country.toLowerCase().includes(q) ||
+      e.decade.toLowerCase().includes(q) ||
+      e.politicalStability.toLowerCase().includes(q) ||
+      e.highlights.some(h => h.toLowerCase().includes(q)) ||
+      e.cautions.some(c => c.toLowerCase().includes(q)) ||
+      e.bestFor.some(b => b.toLowerCase().includes(q)) ||
+      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)))
+    ) {
+      results.push({
+        module: 'Places to Live',
+        title: `${e.city}, ${e.country} (${e.decade})`,
+        subtitle: `Stability: ${e.politicalStability} · Cost: ${e.costOfLivingIndex} · QoL: ${e.qualityOfLifeScore}`,
+        description: `Best for ${e.bestFor.join(', ')}. ${e.highlights.join(' ')}`,
+        link: '/places-to-live'
+      });
+    }
+  });
+
+  // 11. Places to Visit
+  placesToVisit.forEach(e => {
+    if (
+      e.name.toLowerCase().includes(q) ||
+      e.location.toLowerCase().includes(q) ||
+      e.description.toLowerCase().includes(q) ||
+      e.category.toLowerCase().includes(q) ||
+      e.decade.toLowerCase().includes(q) ||
+      e.bestTimeToVisit.toLowerCase().includes(q) ||
+      e.costTier.toLowerCase().includes(q) ||
+      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)))
+    ) {
+      results.push({
+        module: 'Places to Visit',
+        title: `${e.name} (${e.decade})`,
+        subtitle: `${e.location} · ${e.category} · Best: ${e.bestTimeToVisit}`,
+        description: e.description,
+        link: '/places-to-visit'
+      });
+    }
+  });
+
+  // 12. Engineering
+  engineering.forEach(e => {
+    const keySpecsText = Object.values(e.keySpecs).join(' ').toLowerCase();
+    const tagText = (e.tags ?? []).join(' ').toLowerCase();
+    if (
+      e.conceptName.toLowerCase().includes(q) ||
+      e.description.toLowerCase().includes(q) ||
+      keySpecsText.includes(q) ||
+      e.subDomain.toLowerCase().includes(q) ||
+      e.era.toLowerCase().includes(q) ||
+      tagText.includes(q)
+    ) {
+      results.push({
+        module: 'Engineering',
+        title: e.conceptName,
+        subtitle: `${e.era} · ${e.subDomain} · Confidence: ${e.provenance.confidence}`,
+        description: e.description,
+        link: '/engineering'
       });
     }
   });

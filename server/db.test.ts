@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { initAthenaDb, getCommentary, upsertCommentary, getEntry, upsertEntry, type AthenaDb } from './db.js';
-import type { Database } from 'better-sqlite3';
 
 describe('AthenaDb', () => {
   let db: AthenaDb;

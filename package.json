@@ -12,7 +12,11 @@
     "build": "npm run generate:knowledge && npm run precompute:athena && tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
-    "preview": "vite preview"
+    "test:e2e": "playwright test",
+    "preview": "vite preview",
+    "analyze": "vite build --mode analyze",
+    "check:bundle": "node scripts/check-bundle-size.mjs",
+    "build:check": "vite build && node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.81",
@@ -30,11 +34,15 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "idb": "^8.0.3",
     "lucide-react": "^1.17.0",
+    "next-themes": "^0.4.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router": "^7.16.0",
+    "recharts": "^3.8.1",
     "shadcn": "^4.10.0",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
     "tw-animate-css": "^1.4.0",
@@ -42,6 +50,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/better-sqlite3": "^7.6.13",
@@ -52,17 +61,28 @@
     "@types/react-dom": "^19.2.3",
     "@types/supertest": "^7.2.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "axe-core": "^4.12.1",
     "concurrently": "^10.0.3",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "fake-indexeddb": "^6.2.5",
     "globals": "^17.6.0",
     "happy-dom": "^20.9.0",
+    "rollup-plugin-visualizer": "^7.0.1",
     "supertest": "^7.2.2",
     "tsx": "^4.22.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12",
-    "vitest": "^4.1.8"
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^4.1.8",
+    "vitest-axe": "^0.1.0",
+    "web-vitals": "^5.3.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   }
 }

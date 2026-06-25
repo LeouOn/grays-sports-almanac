@@ -1,40 +1,102 @@
-import { useState } from 'react';
-import { sportsAlmanac, type SportsEvent } from '@/data/sports';
+import { useState, useEffect } from 'react';
+import { loadSports } from '@/data/loader';
+import type { SportsEvent } from '@/data/sports';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { exportToCSV } from '@/lib/export';
 import { AthenaCommentary } from '@/components/AthenaCommentary';
 import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
+import { useURLState } from '../hooks/useURLState';
 
 export function SportsAlmanac() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [regionFilter, setRegionFilter] = useURLState('region', 'all');
   const [selectedEvent, setSelectedEvent] = useState<SportsEvent | null>(null);
+  const [events, setEvents] = useState<SportsEvent[] | null>(null);
 
-  const filteredSports = sportsAlmanac.filter(event => 
-    event.sport.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.event.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.winner.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.year.toString().includes(searchTerm)
-  );
+  useEffect(() => {
+    void loadSports().then(setEvents);
+  }, []);
+
+  if (!events) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-72 bg-neutral-900 rounded" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-96 bg-neutral-900/50 rounded-md border border-neutral-800" />
+        <span className="sr-only">Loading sports almanac…</span>
+      </div>
+    );
+  }
+
+  const filteredSports = events.filter(event => {
+    // Region filter
+    if (regionFilter === 'US' && event.region !== 'US') return false;
+    if (regionFilter === 'international' && event.region === 'US') return false;
+
+    // Search filter (works in combination with region)
+    const term = searchTerm.toLowerCase();
+    return (
+      event.sport.toLowerCase().includes(term) ||
+      event.event.toLowerCase().includes(term) ||
+      event.winner.toLowerCase().includes(term) ||
+      event.year.toString().includes(searchTerm)
+    );
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">The Sports Almanac</h2>
+        <h1 className="text-3xl font-bold tracking-tight">The Sports Almanac</h1>
         <p className="text-neutral-400 mt-2">Historical sporting outcomes curated for optimal capital generation.</p>
       </div>
 
-      <div className="max-w-sm">
-        <Input 
-          type="text" 
-          placeholder="Search by year, sport, or event..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
-        />
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2" role="group" aria-label="Filter by region">
+          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Region:</span>
+          {(['all', 'US', 'international'] as const).map(r => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRegionFilter(r)}
+              aria-pressed={regionFilter === r}
+              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
+                regionFilter === r
+                  ? 'bg-indigo-600 text-white border-indigo-500'
+                  : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white hover:border-neutral-700'
+              }`}
+            >
+              {r === 'all' ? 'All' : r === 'US' ? 'US' : 'International'}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="max-w-sm">
+            <Input 
+              type="text" 
+              placeholder="Search by year, sport, or event..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search sports"
+              className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
+            />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => exportToCSV(filteredSports as unknown as Record<string, unknown>[], 'sports-almanac.csv')}
+            disabled={filteredSports.length === 0}
+            className="gap-2"
+          >
+            <Download className="size-4" />
+            Export CSV
+          </Button>
+        </div>
       </div>
 
       <div className="rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
@@ -64,7 +126,14 @@ export function SportsAlmanac() {
                 >
                   <TableCell className="font-medium text-neutral-300">{event.year}</TableCell>
                   <TableCell>{event.sport}</TableCell>
-                  <TableCell className="text-neutral-300">{event.event}</TableCell>
+                  <TableCell className="text-neutral-300">
+                    <div className="flex items-center gap-2">
+                      <span>{event.event}</span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] bg-neutral-800 text-neutral-400 uppercase tracking-wide whitespace-nowrap">
+                        {event.region}
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-green-400 font-semibold">{event.winner}</TableCell>
                   <TableCell>
                     {event.score && <div className="font-bold text-neutral-200">{event.score}</div>}
@@ -82,12 +151,13 @@ export function SportsAlmanac() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 animate-in fade-in duration-200">
           <div className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center p-4 border-b border-neutral-800">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
                 <span>🏆</span> {selectedEvent.year} {selectedEvent.event}
-              </h3>
+              </h2>
               <button
                 onClick={() => setSelectedEvent(null)}
                 className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
+                aria-label="Close event details"
               >
                 <X className="size-5" />
               </button>

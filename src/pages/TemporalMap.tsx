@@ -1,13 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CompanionThought } from '@/components/CompanionThought';
 import { useCompanion } from '../context/CompanionContext';
-import { disasterAlmanac } from '../data/disasters';
-import { techTransferTargets } from '../data/tech-transfer';
-import { medicalInterventions } from '../data/medical';
-import { Search, Printer, ShieldAlert, Check, Info, Filter, Activity, Zap } from 'lucide-react';
+import { loadDisasters, loadTechTransfer, loadMedical } from '../data/loader';
+import type { DisasterEvent } from '../data/disasters';
+import type { TechTransferTarget } from '../data/tech-transfer';
+import type { MedicalIntervention } from '../data/medical';
+import { useURLState } from '../hooks/useURLState';
+import { Search, Printer, ShieldAlert, Check, Info, Filter, Activity, Zap, Download } from 'lucide-react';
+import { exportToJSON } from '@/lib/export';
 
 interface TimelineItem {
   id: string;
@@ -79,7 +82,31 @@ export function TemporalMap() {
     }
     return [];
   });
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortOrder, setSortOrder] = useURLState('sort', 'asc');
+  const [datasets, setDatasets] = useState<{
+    disasters: DisasterEvent[];
+    tech: TechTransferTarget[];
+    medical: MedicalIntervention[];
+  } | null>(null);
+
+  useEffect(() => {
+    // Load the three datasets in parallel and commit once all have arrived.
+    // (Uses per-loader `.then` + a counter rather than `Promise.all` so that
+    // the in-test synchronous loader mock resolves during the passive
+    // effect — `Promise.all` would assimilate the thenables onto the
+    // microtask queue and defer the commit by a tick.)
+    let disasters!: DisasterEvent[];
+    let tech!: TechTransferTarget[];
+    let medical!: MedicalIntervention[];
+    let pending = 3;
+    const commit = () => {
+      if (--pending !== 0) return;
+      setDatasets({ disasters, tech, medical });
+    };
+    void loadDisasters().then(d => { disasters = d; commit(); });
+    void loadTechTransfer().then(t => { tech = t; commit(); });
+    void loadMedical().then(m => { medical = m; commit(); });
+  }, []);
 
   const savePlan = (newPlan: string[]) => {
     setActivePlan(newPlan);
@@ -88,6 +115,8 @@ export function TemporalMap() {
 
   // Compile and merge all data sources
   const allEvents = useMemo<TimelineItem[]>(() => {
+    if (!datasets) return [];
+    const { disasters: disasterAlmanac, tech: techTransferTargets, medical: medicalInterventions } = datasets;
     const list: TimelineItem[] = [];
 
     // Disasters
@@ -151,7 +180,7 @@ export function TemporalMap() {
     });
 
     return list;
-  }, []);
+  }, [datasets]);
 
   // Filter events
   const filteredEvents = useMemo(() => {
@@ -239,6 +268,20 @@ export function TemporalMap() {
     return warnings;
   }, [activePlanItems, stats.totalRisk]);
 
+  if (!datasets) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-80 bg-neutral-900 rounded" />
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          <div className="h-64 bg-neutral-900/50 rounded-xl border border-neutral-850" />
+          <div className="xl:col-span-2 h-96 bg-neutral-900/50 rounded-xl border border-neutral-850" />
+          <div className="h-64 bg-neutral-900/50 rounded-xl border border-neutral-850" />
+        </div>
+        <span className="sr-only">Loading temporal strategy map…</span>
+      </div>
+    );
+  }
+
   const handleToggleEventInPlan = (id: string) => {
     const newPlan = activePlan.includes(id) 
       ? activePlan.filter(i => i !== id)
@@ -279,9 +322,9 @@ export function TemporalMap() {
       {/* Page Title */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
             Temporal Strategy Map &amp; Timeline
-          </h2>
+          </h1>
           <p className="text-neutral-400 mt-2">
             Formulate a timeline-safe plan by selecting key historical interventions. Avoid exceeding critical butterfly risk threshold limits.
           </p>
@@ -294,6 +337,15 @@ export function TemporalMap() {
           >
             <Printer className="size-3.5" />
             Print Briefing
+          </Button>
+          <Button
+            onClick={() => exportToJSON(filteredEvents, 'timeline-data.json')}
+            disabled={filteredEvents.length === 0}
+            variant="outline"
+            className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 text-xs flex items-center gap-1.5 cursor-pointer"
+          >
+            <Download className="size-3.5" />
+            Export JSON
           </Button>
         </div>
       </div>
@@ -317,6 +369,7 @@ export function TemporalMap() {
                   placeholder="Search events or tools..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
+                  aria-label="Search events and tools"
                   className="pl-9 bg-neutral-950 border-neutral-800 text-xs text-white focus-visible:ring-indigo-500"
                 />
               </div>
@@ -395,6 +448,7 @@ export function TemporalMap() {
 
         {/* Main Timeline Column: Years & Cards (xl:col-span-2) */}
         <div className="space-y-8 xl:col-span-2">
+          <h2 className="sr-only">Historical Events Timeline</h2>
           {groupedEvents.length === 0 ? (
             <Card className="bg-neutral-950 border-neutral-850 p-12 text-center">
               <p className="text-neutral-500 text-sm">No historical events found matching the active filters.</p>
@@ -466,9 +520,9 @@ export function TemporalMap() {
                                 </span>
                               </div>
 
-                              <h4 className="text-base font-bold text-neutral-200 mt-2 group-hover/card:text-indigo-400 transition-colors">
+                              <h3 className="text-base font-bold text-neutral-200 mt-2 group-hover/card:text-indigo-400 transition-colors">
                                 {event.title}
-                              </h4>
+                              </h3>
                               <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed line-clamp-2">
                                 {event.description}
                               </p>
@@ -614,7 +668,7 @@ export function TemporalMap() {
       {/* Printable Briefing Layout (Only visible during printing) */}
       <div className="hidden print:block space-y-6 pt-12">
         <div className="border-b-2 border-black pb-4 text-center">
-          <h1 className="text-2xl font-black uppercase tracking-wider">Temporal Briefing Dossier</h1>
+          <h2 className="text-2xl font-black uppercase tracking-wider">Temporal Briefing Dossier</h2>
           <p className="text-xs uppercase font-mono mt-1 text-neutral-600">Strictly Confidential · For Traveler Use Only</p>
         </div>
 
@@ -632,7 +686,7 @@ export function TemporalMap() {
         </div>
 
         <div className="space-y-4 pt-4">
-          <h3 className="text-sm font-bold uppercase border-b border-black pb-1">Scheduled Timeline Interventions</h3>
+          <h2 className="text-sm font-bold uppercase border-b border-black pb-1">Scheduled Timeline Interventions</h2>
           {activePlanItems.length === 0 ? (
             <p className="text-xs italic">No actions scheduled in this briefing queue.</p>
           ) : (
@@ -682,9 +736,9 @@ export function TemporalMap() {
                 <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${typeColors[selectedEvent.type]}`}>
                   {typeIcons[selectedEvent.type]} {selectedEvent.category}
                 </span>
-                <h3 className="text-lg font-bold text-white pr-4 leading-tight truncate">
+                <h2 className="text-lg font-bold text-white pr-4 leading-tight truncate">
                   {selectedEvent.title}
-                </h3>
+                </h2>
               </div>
               <button
                 onClick={() => setSelectedEvent(null)}
@@ -738,7 +792,7 @@ export function TemporalMap() {
 
               {/* Case context / Description */}
               <div className="space-y-1">
-                <h5 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Historical Context &amp; Details</h5>
+                <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Historical Context &amp; Details</h3>
                 <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-3 rounded-lg border border-neutral-850/40">
                   {selectedEvent.causeOrContext}
                 </p>
@@ -746,7 +800,7 @@ export function TemporalMap() {
 
               {/* Intervention Plan */}
               <div className="space-y-1">
-                <h5 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Recommended Intervention</h5>
+                <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Recommended Intervention</h3>
                 <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-3 rounded-lg border border-neutral-850/40">
                   {selectedEvent.interventionOrDetails}
                 </p>
@@ -754,7 +808,7 @@ export function TemporalMap() {
 
               {/* Delivery Mechanism */}
               <div className="space-y-1">
-                <h5 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Delivery Mechanism</h5>
+                <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Delivery Mechanism</h3>
                 <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-3 rounded-lg border border-neutral-850/40">
                   {selectedEvent.deliveryMethod}
                 </p>

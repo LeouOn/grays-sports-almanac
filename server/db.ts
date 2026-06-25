@@ -67,6 +67,47 @@ CREATE TABLE IF NOT EXISTS session_notes (
 CREATE INDEX IF NOT EXISTS idx_session_notes_session ON session_notes(session_id);
 `;
 
+const FEATURE_MIGRATIONS = `
+CREATE TABLE IF NOT EXISTS bookmarks (
+  id          TEXT PRIMARY KEY,
+  module      TEXT NOT NULL,
+  entry_id    TEXT NOT NULL,
+  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  note        TEXT NOT NULL DEFAULT ''
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookmarks_module ON bookmarks(module);
+CREATE INDEX IF NOT EXISTS idx_bookmarks_entry ON bookmarks(entry_id);
+
+CREATE TABLE IF NOT EXISTS spaced_repetition (
+  id            TEXT PRIMARY KEY,
+  topic         TEXT NOT NULL UNIQUE,
+  competence    INTEGER NOT NULL DEFAULT 0,
+  next_review   TEXT NOT NULL,
+  interval_days INTEGER NOT NULL DEFAULT 1,
+  review_count  INTEGER NOT NULL DEFAULT 0,
+  last_reviewed TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_srs_next_review ON spaced_repetition(next_review);
+
+CREATE TABLE IF NOT EXISTS progress_tracking (
+  id              TEXT PRIMARY KEY,
+  module          TEXT NOT NULL UNIQUE,
+  entries_viewed  INTEGER NOT NULL DEFAULT 0,
+  total_entries   INTEGER NOT NULL DEFAULT 0,
+  quiz_score      INTEGER NOT NULL DEFAULT 0,
+  quiz_total      INTEGER NOT NULL DEFAULT 0,
+  last_activity   TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_progress_module ON progress_tracking(module);
+`;
+
+export function runFeatureMigrations(db: Database.Database): void {
+  db.exec(FEATURE_MIGRATIONS);
+}
+
 export function initAthenaDb(path: string = 'data/athena.db'): AthenaDb {
   const db = new Database(path);
   db.pragma('journal_mode = WAL');

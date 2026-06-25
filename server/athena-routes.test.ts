@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import express from 'express';
 import request from 'supertest';
-import { initAthenaDb, upsertCommentary, upsertEntry, type AthenaDb } from './db.js';
+import { initAthenaDb, upsertCommentary, type AthenaDb } from './db.js';
 import { createAthenaRoutes } from './athena-routes.js';
 import { registerEntries } from './entry-registry.js';
 

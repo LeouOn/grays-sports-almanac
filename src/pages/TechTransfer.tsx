@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { techTransferTargets } from '@/data/tech-transfer';
+import { useState, useEffect } from 'react';
+import { loadTechTransfer } from '@/data/loader';
 import type { TechTransferTarget } from '@/data/tech-transfer';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -8,6 +8,7 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { useURLState } from '../hooks/useURLState';
 
 const riskColors: Record<TechTransferTarget['butterflyRisk'], string> = {
   'Low': 'bg-green-950/60 text-green-400 border-green-800',
@@ -16,9 +17,25 @@ const riskColors: Record<TechTransferTarget['butterflyRisk'], string> = {
 };
 
 export function TechTransfer() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [targets, setTargets] = useState<TechTransferTarget[] | null>(null);
 
-  const filtered = techTransferTargets.filter(e =>
+  useEffect(() => {
+    void loadTechTransfer().then(setTargets);
+  }, []);
+
+  if (!targets) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-80 bg-neutral-900 rounded" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-80 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <span className="sr-only">Loading technology transfer…</span>
+      </div>
+    );
+  }
+
+  const filtered = targets.filter(e =>
     e.concept.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.targetRecipient.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.estimatedImpact.toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,7 +44,7 @@ export function TechTransfer() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Technology Transfer Strategy</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Technology Transfer Strategy</h1>
         <p className="text-neutral-400 mt-2">What to send, to whom, and when — accelerating beneficial technology without breaking the timeline.</p>
       </div>
 
@@ -37,6 +54,7 @@ export function TechTransfer() {
           placeholder="Search by concept, recipient, or impact..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
+          aria-label="Search tech transfer"
           className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
         />
       </div>

@@ -20,6 +20,7 @@ const QUESTION_TEMPLATES: Record<string, (f: Record<string, string | number>) =>
   'era-guide': (f) => `What should I know about ${f.item} in the ${f.era}? Give me the survival essentials.`,
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function generateChatQuestion(module: string, fields: Record<string, string | number>): string {
   const template = QUESTION_TEMPLATES[module] ?? (() => `Tell me about ${fields.title ?? fields.item ?? fields.event ?? 'this entry'}.`);
   return template(fields);

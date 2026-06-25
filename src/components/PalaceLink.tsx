@@ -7,10 +7,10 @@ interface PalaceLinkProps {
   excludeId?: string;
 }
 
-export function PalaceLink({ tags, contextItem, excludeId }: PalaceLinkProps) {
+export function PalaceLink({ excludeId }: PalaceLinkProps) {
   const [expanded, setExpanded] = useState(false);
   const [connection, setConnection] = useState('');
-  const [targetEntryId, setTargetEntryId] = useState('');
+  const [, setTargetEntryId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleExpand = async () => {

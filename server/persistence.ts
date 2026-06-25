@@ -4,7 +4,7 @@ import path from 'node:path';
 const INGESTED_DIR = path.join(process.cwd(), 'data', 'ingested');
 
 /** Module name → array of entries */
-type IngestedStore = Record<string, any[]>;
+type IngestedStore = Record<string, unknown[]>;
 
 /**
  * Load all ingested entries from the data/ingested/ directory.
@@ -46,14 +46,14 @@ export function loadIngested(): IngestedStore {
  * Save an entry to the ingested JSON file for its module.
  * Creates the file if it doesn't exist, appends or updates the entry.
  */
-export function saveIngested(module: string, entry: any): void {
+export function saveIngested(module: string, entry: Record<string, unknown>): void {
   try {
     if (!fs.existsSync(INGESTED_DIR)) {
       fs.mkdirSync(INGESTED_DIR, { recursive: true });
     }
 
     const filePath = path.join(INGESTED_DIR, `${module}.json`);
-    let entries: any[] = [];
+    let entries: Record<string, unknown>[] = [];
 
     if (fs.existsSync(filePath)) {
       try {
@@ -65,7 +65,7 @@ export function saveIngested(module: string, entry: any): void {
     }
 
     // Update or append
-    const idx = entries.findIndex((e: any) => e.id === entry.id);
+    const idx = entries.findIndex((e) => e.id === entry.id);
     if (idx >= 0) {
       entries[idx] = { ...entries[idx], ...entry };
     } else {
@@ -82,7 +82,7 @@ export function saveIngested(module: string, entry: any): void {
 /**
  * Get all ingested entries for a module.
  */
-export function getIngested(module: string): any[] {
+export function getIngested(module: string): unknown[] {
   const filePath = path.join(INGESTED_DIR, `${module}.json`);
   if (!fs.existsSync(filePath)) return [];
   try {

@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useURLState } from '../hooks/useURLState';
+import { RiskVisualization } from '@/components/RiskVisualization';
 
 interface FactorOption {
   label: string;
@@ -42,7 +43,7 @@ function FactorPicker({ title, options, selected, onSelect }: {
 }) {
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold text-neutral-200">{title}</h3>
+      <h2 className="text-sm font-semibold text-neutral-200">{title}</h2>
       <div className="grid gap-2">
         {options.map(opt => (
           <button
@@ -64,10 +65,15 @@ function FactorPicker({ title, options, selected, onSelect }: {
 }
 
 export function ButterflyCalculator() {
-  const [visibility, setVisibility] = useState<number | null>(null);
-  const [temporal, setTemporal] = useState<number | null>(null);
-  const [reversibility, setReversibility] = useState<number | null>(null);
-  const [connectedness, setConnectedness] = useState<number | null>(null);
+  const [visibilityStr, setVisibilityStr] = useURLState('visibility', '');
+  const [temporalStr, setTemporalStr] = useURLState('temporal', '');
+  const [reversibilityStr, setReversibilityStr] = useURLState('reversibility', '');
+  const [connectednessStr, setConnectednessStr] = useURLState('connectedness', '');
+
+  const visibility = visibilityStr ? Number(visibilityStr) : null;
+  const temporal = temporalStr ? Number(temporalStr) : null;
+  const reversibility = reversibilityStr ? Number(reversibilityStr) : null;
+  const connectedness = connectednessStr ? Number(connectednessStr) : null;
 
   const allSelected = visibility !== null && temporal !== null && reversibility !== null && connectedness !== null;
   const rawScore = allSelected ? visibility! * temporal! * reversibility! * connectedness! : null;
@@ -82,26 +88,26 @@ export function ButterflyCalculator() {
   const risk = rawScore !== null ? getRiskLevel(rawScore) : null;
 
   const reset = () => {
-    setVisibility(null);
-    setTemporal(null);
-    setReversibility(null);
-    setConnectedness(null);
+    setVisibilityStr('');
+    setTemporalStr('');
+    setReversibilityStr('');
+    setConnectednessStr('');
   };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">Butterfly Risk Calculator</h2>
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">Butterfly Risk Calculator</h1>
         <p className="text-neutral-400 mt-2">Score your intervention across four dimensions. Multiply the factors. Scores above 50 are red-flagged.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Pickers Column */}
         <div className="lg:col-span-2 space-y-6">
-          <FactorPicker title="1. Visibility — How exposed are you?" options={visibilityOptions} selected={visibility} onSelect={setVisibility} />
-          <FactorPicker title="2. Temporal Distance — How close to the known event?" options={temporalOptions} selected={temporal} onSelect={setTemporal} />
-          <FactorPicker title="3. Reversibility — Can you undo this?" options={reversibilityOptions} selected={reversibility} onSelect={setReversibility} />
-          <FactorPicker title="4. Connectedness — How far do the effects ripple?" options={connectednessOptions} selected={connectedness} onSelect={setConnectedness} />
+          <FactorPicker title="1. Visibility — How exposed are you?" options={visibilityOptions} selected={visibility} onSelect={(s) => setVisibilityStr(String(s))} />
+          <FactorPicker title="2. Temporal Distance — How close to the known event?" options={temporalOptions} selected={temporal} onSelect={(s) => setTemporalStr(String(s))} />
+          <FactorPicker title="3. Reversibility — Can you undo this?" options={reversibilityOptions} selected={reversibility} onSelect={(s) => setReversibilityStr(String(s))} />
+          <FactorPicker title="4. Connectedness — How far do the effects ripple?" options={connectednessOptions} selected={connectedness} onSelect={(s) => setConnectednessStr(String(s))} />
         </div>
 
         {/* Risk Gauge Card Column */}
@@ -188,6 +194,15 @@ export function ButterflyCalculator() {
           </Card>
         </div>
       </div>
+
+      {/* Risk Factor Visualization */}
+      <RiskVisualization
+        visibility={visibility}
+        temporal={temporal}
+        reversibility={reversibility}
+        connectedness={connectedness}
+        rawScore={rawScore}
+      />
     </div>
   );
 }

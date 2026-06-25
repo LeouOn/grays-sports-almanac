@@ -9,6 +9,7 @@ import { medicalInterventions } from '@/data/medical';
 import { safetyProtocols } from '@/data/safety';
 import { blueprintsData } from '@/data/blueprints';
 import { ArrowUpRight } from 'lucide-react';
+import { BookmarkButton } from '@/components/BookmarkButton';
 
 interface LinkCard {
   module: string;
@@ -97,14 +98,16 @@ export function RelatedEntries({ tags, excludeId, onMatch }: RelatedEntriesProps
             </Link>
             <div className="flex flex-wrap gap-1.5">
               {items.slice(0, 4).map((item, i) => (
-                <Link
-                  key={i}
-                  to={item.link}
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-neutral-900 border border-neutral-800 hover:border-indigo-700/50 hover:bg-neutral-850 transition-all text-[11px] text-neutral-300 hover:text-white group"
-                >
-                  <span className="truncate max-w-[180px]">{item.title}</span>
-                  <ArrowUpRight className="size-2.5 text-neutral-600 group-hover:text-indigo-400 shrink-0" />
-                </Link>
+                <div key={i} className="inline-flex items-center gap-1">
+                  <Link
+                    to={item.link}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-neutral-900 border border-neutral-800 hover:border-indigo-700/50 hover:bg-neutral-850 transition-all text-[11px] text-neutral-300 hover:text-white group"
+                  >
+                    <span className="truncate max-w-[180px]">{item.title}</span>
+                    <ArrowUpRight className="size-2.5 text-neutral-600 group-hover:text-indigo-400 shrink-0" />
+                  </Link>
+                  <BookmarkButton module={item.module} entryId={item.title} title={item.title} />
+                </div>
               ))}
             </div>
           </div>

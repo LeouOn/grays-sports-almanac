@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { blueprintsData, type BootstrapBlueprint } from '@/data/blueprints';
+import { useState, useEffect } from 'react';
+import { loadBlueprints } from '@/data/loader';
+import type { BootstrapBlueprint } from '@/data/blueprints';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { useURLState } from '../hooks/useURLState';
 import { Search, Filter, Cpu, Wrench, Layers, Lightbulb, Clock, Info, ShieldAlert } from 'lucide-react';
 
 const categoryIcons = {
@@ -24,14 +26,33 @@ const difficultyColors = {
 };
 
 export function BootstrapBlueprints() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [selectedCategory, setSelectedCategory] = useURLState('category', 'All');
   const [activeBlueprint, setActiveBlueprint] = useState<BootstrapBlueprint | null>(null);
   const [modalTab, setModalTab] = useState<'specs' | 'guide' | 'impact'>('specs');
+  const [blueprints, setBlueprints] = useState<BootstrapBlueprint[] | null>(null);
+
+  useEffect(() => {
+    void loadBlueprints().then(setBlueprints);
+  }, []);
 
   const categories = ['All', 'Semiconductors', 'Machine Tooling', 'Electronics', 'Materials & Chemistry'];
 
-  const filtered = blueprintsData.filter(b => {
+  if (!blueprints) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-80 bg-neutral-900 rounded" />
+        <div className="h-20 bg-neutral-900/50 rounded-lg border border-neutral-900" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="h-56 bg-neutral-900/50 rounded-xl border border-neutral-850" />
+          <div className="h-56 bg-neutral-900/50 rounded-xl border border-neutral-850" />
+        </div>
+        <span className="sr-only">Loading bootstrap blueprints…</span>
+      </div>
+    );
+  }
+
+  const filtered = blueprints.filter(b => {
     const matchesSearch =
       b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,9 +73,9 @@ export function BootstrapBlueprints() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Title */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-50 via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
           Bootstrap Blueprints &amp; Specs
-        </h2>
+        </h1>
         <p className="text-neutral-400 mt-2">
           Preserved technical specifications and building instructions for jumpstarting core engineering primitives from scratch.
         </p>
@@ -70,6 +91,7 @@ export function BootstrapBlueprints() {
             placeholder="Search blueprints, materials, or rules..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
+            aria-label="Search blueprints"
             className="pl-9 bg-neutral-900 border-neutral-800 text-xs text-white focus-visible:ring-indigo-500"
           />
         </div>
@@ -170,9 +192,9 @@ export function BootstrapBlueprints() {
                     {activeBlueprint.difficulty}
                   </span>
                 </div>
-                <h3 className="text-lg font-black text-white leading-tight pr-6 mt-1">
+                <h2 className="text-lg font-black text-white leading-tight pr-6 mt-1">
                   {activeBlueprint.title}
-                </h3>
+                </h2>
               </div>
               <button
                 onClick={() => setActiveBlueprint(null)}
@@ -216,7 +238,7 @@ export function BootstrapBlueprints() {
                 <div className="space-y-4 animate-in fade-in duration-150">
                   {/* Summary */}
                   <div>
-                    <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Process Overview</h4>
+                    <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Process Overview</h3>
                     <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-3 rounded-lg border border-neutral-850/40">
                       {activeBlueprint.description}
                     </p>
@@ -233,7 +255,7 @@ export function BootstrapBlueprints() {
 
                   {/* Materials list */}
                   <div className="space-y-1.5">
-                    <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider block">Required Elements &amp; Substrates</h4>
+                    <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider block">Required Elements &amp; Substrates</h3>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                       {activeBlueprint.materialsRequired.map((mat, i) => (
                         <li key={i} className="text-xs text-neutral-300 bg-neutral-950/60 border border-neutral-850 p-2 rounded flex items-center gap-2">
@@ -258,7 +280,7 @@ export function BootstrapBlueprints() {
                 <div className="space-y-4 animate-in fade-in duration-150">
                   {/* Timeline change */}
                   <div>
-                    <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Timeline Acceleration Vector</h4>
+                    <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Timeline Acceleration Vector</h3>
                     <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-3.5 rounded-lg border border-neutral-850/40 border-l-4 border-l-blue-500">
                       {activeBlueprint.chronoImpact}
                     </p>

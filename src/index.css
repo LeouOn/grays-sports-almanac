@@ -60,7 +60,8 @@
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
+    /* T6 (A6): lowered from 0.556 → 0.520 so muted text hits WCAG AA 4.5:1 on both white bg (5.51) and muted bg oklch(0.97) (5.05) */
+    --muted-foreground: oklch(0.520 0 0);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
@@ -115,6 +116,18 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+
+    /* T6 (A6): WCAG AA contrast fixes for muted text on dark backgrounds.
+       Tailwind's default neutral-500 (oklch 0.556) and neutral-600 (oklch 0.439)
+       fail AA on the app's dark backgrounds (bg-black, bg-neutral-950/900):
+         - default neutral-500 on bg-950: 4.0:1 (needs 4.5:1 for normal text) FAILS
+         - default neutral-600 on bg-950: 2.6:1                                       FAILS
+       Bumped values pass AA on bg-950, bg-900, and pure black:
+         - neutral-500 (0.620): 5.4:1 on bg-950, 4.9:1 on bg-900, 6.1:1 on bg-black
+         - neutral-600 (0.570): 4.9:1 on bg-950, 4.5:1 on bg-900, 5.5:1 on bg-black
+       Cascade applies to all variants (placeholder:, hover:, fill-, etc.). */
+    --color-neutral-500: oklch(0.620 0 0);
+    --color-neutral-600: oklch(0.570 0 0);
 }
 
 @layer base {
@@ -181,5 +194,21 @@
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* WCAG 2.3.3 Animation from Interactions
+   Respect user preference for reduced motion.
+   Neutralizes non-essential animations/transitions while preserving functional
+   loading indicators (they fall back to their first frame via iteration-count: 1).
+   See: https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

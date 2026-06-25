@@ -1,13 +1,17 @@
-import { useState } from 'react';
-import { financialAlmanac, type FinancialEvent } from '@/data/finance';
+import { useState, useEffect } from 'react';
+import { loadFinance } from '@/data/loader';
+import type { FinancialEvent } from '@/data/finance';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { exportToCSV } from '@/lib/export';
 import { AthenaCommentary } from '@/components/AthenaCommentary';
 import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
+import { FinancialChart } from '@/components/FinancialChart';
+import { useURLState } from '../hooks/useURLState';
 
 const categoryColors: Record<FinancialEvent['category'], string> = {
   'Market Crash': 'text-red-400',
@@ -19,7 +23,24 @@ const categoryColors: Record<FinancialEvent['category'], string> = {
 
 export function FinancialAlmanac() {
   const [selectedEvent, setSelectedEvent] = useState<FinancialEvent | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [events, setEvents] = useState<FinancialEvent[] | null>(null);
+
+  useEffect(() => {
+    void loadFinance().then(setEvents);
+  }, []);
+
+  if (!events) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-64 bg-neutral-900 rounded" />
+        <div className="h-40 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-96 bg-neutral-900/50 rounded-md border border-neutral-800" />
+        <span className="sr-only">Loading financial almanac…</span>
+      </div>
+    );
+  }
 
   const renderChart = (id: string) => {
     let path: string;
@@ -204,7 +225,7 @@ export function FinancialAlmanac() {
     );
   };
 
-  const filtered = financialAlmanac.filter(e =>
+  const filtered = events.filter(e =>
     e.event.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.notableDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -214,18 +235,33 @@ export function FinancialAlmanac() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Financial Almanac</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Financial Almanac</h1>
         <p className="text-neutral-400 mt-2">Market crashes, commodity spikes, IPOs, and currency events — curated for maximum capital generation with minimal attention.</p>
       </div>
 
-      <div className="max-w-sm">
-        <Input
-          type="text"
-          placeholder="Search by year, event, or category..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
-        />
+      <FinancialChart />
+
+      <div className="flex items-center gap-3">
+        <div className="max-w-sm">
+          <Input
+            type="text"
+            placeholder="Search by year, event, or category..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            aria-label="Search financial events"
+            className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
+          />
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => exportToCSV(filtered as unknown as Record<string, unknown>[], 'financial-almanac.csv')}
+          disabled={filtered.length === 0}
+          className="gap-2"
+        >
+          <Download className="size-4" />
+          Export CSV
+        </Button>
       </div>
 
       <div className="rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
@@ -279,12 +315,13 @@ export function FinancialAlmanac() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 animate-in fade-in duration-200">
           <div className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center p-4 border-b border-neutral-800">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
                 <span>📈</span> {selectedEvent.date}: {selectedEvent.event}
-              </h3>
+              </h2>
               <button
                 onClick={() => setSelectedEvent(null)}
                 className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
+                aria-label="Close event details"
               >
                 <X className="size-5" />
               </button>

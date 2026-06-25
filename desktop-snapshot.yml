@@ -1,0 +1,125 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - link "Time Traveler's Guide" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e8]:
+        - navigation [ref=e9]:
+          - link "Sports" [ref=e10] [cursor=pointer]:
+            - /url: /sports
+          - link "Finance" [ref=e11] [cursor=pointer]:
+            - /url: /finance
+          - link "Era" [ref=e12] [cursor=pointer]:
+            - /url: /era-guide
+          - link "Timeline" [ref=e13] [cursor=pointer]:
+            - /url: /timeline
+          - link "Blueprints" [ref=e14] [cursor=pointer]:
+            - /url: /blueprints
+          - link "Disasters" [ref=e15] [cursor=pointer]:
+            - /url: /disasters
+          - link "Tech" [ref=e16] [cursor=pointer]:
+            - /url: /tech-transfer
+          - link "Medical" [ref=e17] [cursor=pointer]:
+            - /url: /medical
+          - link "Risk" [ref=e18] [cursor=pointer]:
+            - /url: /butterfly
+          - link "Safety" [ref=e19] [cursor=pointer]:
+            - /url: /safety
+          - link "Quiz" [ref=e20] [cursor=pointer]:
+            - /url: /quiz
+          - link "Bookmarks" [ref=e21] [cursor=pointer]:
+            - /url: /bookmarks
+          - link "Progress" [ref=e22] [cursor=pointer]:
+            - /url: /progress
+          - link "Companions" [ref=e23] [cursor=pointer]:
+            - /url: /companions
+        - 'button "Active Companion: Athena. Click to change." [ref=e25] [cursor=pointer]':
+          - generic [ref=e26]: 🦉
+          - generic [ref=e27]: Athena
+          - img [ref=e28]
+        - button "Search the archive" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+          - generic [ref=e34]: Search archive...
+          - generic: Ctrl+K
+        - button "Switch to light theme" [pressed] [ref=e35] [cursor=pointer]:
+          - img [ref=e36]
+          - generic [ref=e42]: Light
+        - button "Print guide" [ref=e43] [cursor=pointer]:
+          - img [ref=e44]
+          - generic [ref=e48]: Print Guide
+  - main [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - heading "Welcome, Traveler." [level=1] [ref=e52]
+        - paragraph [ref=e53]: You are about to depart for the modern era (1970s–2001). Select a module to prepare.
+      - status
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: 🏈 Sports Almanac
+            - generic [ref=e58]: Super Bowls, World Series, boxing, Triple Crown, and bracket-busting upsets.
+          - link "View Almanac" [ref=e60] [cursor=pointer]:
+            - /url: /sports
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: 📈 Financial Almanac
+            - generic [ref=e64]: Market crashes, commodity spikes, IPOs, and currency events — your bootstrap fund.
+          - link "View Almanac" [ref=e66] [cursor=pointer]:
+            - /url: /finance
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: 🕰️ Era Integration Guide
+            - generic [ref=e70]: Prices, slang, tech constraints, fashion, and identity — blend in.
+          - link "View Guide" [ref=e72] [cursor=pointer]:
+            - /url: /era-guide
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]: 🛟 Disaster Prevention
+            - generic [ref=e76]: Preventable tragedies with low-profile intervention strategies.
+          - link "View Protocols" [ref=e78] [cursor=pointer]:
+            - /url: /disasters
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: 🧠 LLM Testing Module
+            - generic [ref=e82]: Tier 1 Factual Recall — prove you know the era before you go.
+          - link "Take the Quiz" [ref=e84] [cursor=pointer]:
+            - /url: /quiz
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: 🔬 Technology Transfer
+            - generic [ref=e88]: What to send, to whom, and when — accelerating good tech.
+          - link "View Targets" [ref=e90] [cursor=pointer]:
+            - /url: /tech-transfer
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]: 💊 Medical Interventions
+            - generic [ref=e94]: Life-saving medical knowledge with minimal butterfly risk.
+          - link "View Interventions" [ref=e96] [cursor=pointer]:
+            - /url: /medical
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: 🦋 Butterfly Risk Calculator
+            - generic [ref=e100]: Score your intervention before you act. Avoid timeline collapse.
+          - link "Calculate Risk" [ref=e102] [cursor=pointer]:
+            - /url: /butterfly
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: 🛡️ Safety & Dead Drops
+            - generic [ref=e106]: Identity, banking, housing, and methods to communicate across time.
+          - link "View Protocols" [ref=e108] [cursor=pointer]:
+            - /url: /safety
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]: 🗺️ Temporal Strategy Map
+            - generic [ref=e112]: Checklist-simulate key operations and analyze timeline distortion effects.
+          - link "View Strategy Map" [ref=e114] [cursor=pointer]:
+            - /url: /timeline
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - generic [ref=e117]: 🛠️ Bootstrap Blueprints
+            - generic [ref=e118]: Preserved specs to build semiconductors, CNC tooling, and flat transistors from scratch.
+          - link "View Blueprints" [ref=e120] [cursor=pointer]:
+            - /url: /blueprints
+  - region "Notifications alt+T"

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatPreferences, type AthenaPreference } from './athena-preferences';
+import { formatPreferences, athenaPreferences, type AthenaPreference } from './athena-preferences';
 
 describe('formatPreferences', () => {
   it('returns placeholder text for empty array', () => {
@@ -91,5 +91,30 @@ describe('formatPreferences', () => {
     expect(aIdx).toBeGreaterThan(-1);
     expect(aIdx).toBeLessThan(bIdx);
     expect(bIdx).toBeLessThan(cIdx);
+  });
+});
+
+describe('athenaPreferences content coverage', () => {
+  it('references the new world-events content area', () => {
+    const categories = athenaPreferences.map((p) => p.category);
+    expect(categories).toContain('world-events');
+  });
+
+  it('references the new places-to-live content area', () => {
+    const categories = athenaPreferences.map((p) => p.category);
+    expect(categories).toContain('places-to-live');
+  });
+
+  it('references the new places-to-visit content area', () => {
+    const categories = athenaPreferences.map((p) => p.category);
+    expect(categories).toContain('places-to-visit');
+  });
+
+  it('formats the full athenaPreferences array without throwing', () => {
+    expect(() => formatPreferences(athenaPreferences)).not.toThrow();
+    const formatted = formatPreferences(athenaPreferences);
+    expect(formatted).toContain('### WORLD-EVENTS');
+    expect(formatted).toContain('### PLACES-TO-LIVE');
+    expect(formatted).toContain('### PLACES-TO-VISIT');
   });
 });

@@ -7,10 +7,11 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { deepseek } from '@ai-sdk/deepseek';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import dotenv from 'dotenv';
-import { initAthenaDb, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
+import { initAthenaDb, runFeatureMigrations, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
 import { registerEntries } from './entry-registry.js';
 import { requestLogger } from './middleware.js';
 import { createAthenaRoutes } from './athena-routes.js';
+import { createFeatureRoutes } from './feature-routes.js';
 import athenaStatic from '../src/data/athena-static.json' with { type: 'json' };
 
 dotenv.config();
@@ -19,6 +20,7 @@ dotenv.config();
 const athenaDb = initAthenaDb('data/athena.db');
 registerEntries(athenaDb);
 seedStaticContent(athenaDb, athenaStatic as { mnemonics: Record<string, string>; quizReactions: Record<string, string> });
+runFeatureMigrations(athenaDb._db);
 console.log('[athena] SQLite cache initialized');
 
 const app = express();
@@ -310,6 +312,13 @@ Make sure they stay in character and react to what just happened. If the travele
           feedback: z.string().describe('Short snippet of feedback (e.g., "Nailed it!", "Close, but it was 1982.").')
         }),
         execute: async (args: { topic: string; isCorrect: boolean; competenceDelta: number; feedback: string }) => {
+          // Fire-and-forget: create/update spaced repetition entry
+          fetch(`http://localhost:${PORT}/api/features/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic: args.topic, isCorrect: args.isCorrect }),
+          }).catch(() => { /* ignore SRS errors */ });
+
           return `Answer evaluated: ${args.isCorrect ? 'Correct' : 'Incorrect'}, delta: ${args.competenceDelta}.`;
         }
       })
@@ -438,6 +447,7 @@ app.post('/api/companion/palace-link', createPalaceLinkHandler());
 // ── REST API v1 ─────────────────────────────────────────────
 app.use('/api/v1', createApiV1Router());
 app.use('/api/athena', createAthenaRoutes(athenaDb));
+app.use('/api/features', createFeatureRoutes(athenaDb));
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

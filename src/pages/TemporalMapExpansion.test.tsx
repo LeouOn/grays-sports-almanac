@@ -1,11 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { TemporalMap } from './TemporalMap';
 import { CompanionProvider } from '../context/CompanionContext';
 import React from 'react';
 
 const renderWithProvider = (ui: React.ReactElement) => {
-  return render(<CompanionProvider>{ui}</CompanionProvider>);
+  return render(
+    <MemoryRouter>
+      <CompanionProvider>{ui}</CompanionProvider>
+    </MemoryRouter>
+  );
 };
 
 describe('TemporalMap Expansion Component (1990–2001)', () => {

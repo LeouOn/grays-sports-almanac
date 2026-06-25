@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { eraGuideData } from '@/data/era-guide';
+import { useState, useEffect } from 'react';
+import { loadEraGuide } from '@/data/loader';
+import type { EraGuideEntry } from '@/data/era-guide';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AthenaCommentary } from '@/components/AthenaCommentary';
@@ -7,6 +8,7 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { useURLState } from '../hooks/useURLState';
 
 const SLANG_DICTIONARY: Record<string, { replacement: string; explanation: string; risk: 'low' | 'high' }> = {
   'sus': { replacement: 'sketchy', explanation: 'Use "sketchy" or "shady". "Sus" raises immediate eyebrows.', risk: 'low' },
@@ -69,8 +71,9 @@ function SlangTranslator() {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] font-bold text-neutral-500 uppercase">Input Dialogue</label>
+          <label htmlFor="slang-input" className="text-[10px] font-bold text-neutral-500 uppercase">Input Dialogue</label>
           <input
+            id="slang-input"
             type="text"
             value={inputText}
             onChange={e => handleTranslate(e.target.value)}
@@ -114,16 +117,39 @@ function SlangTranslator() {
 }
 
 export function EraGuide() {
-  const categories = Array.from(new Set(eraGuideData.map(e => e.category)));
+  const [entries, setEntries] = useState<EraGuideEntry[] | null>(null);
+  // useURLState must run unconditionally (Rules of Hooks), so it is called
+  // before the data-load early return. The default is resolved after data
+  // loads via `activeCategory` reconciliation below.
+  const [urlCategory, setUrlCategory] = useURLState('category', '');
+
+  useEffect(() => {
+    void loadEraGuide().then(setEntries);
+  }, []);
+
+  if (!entries) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-72 bg-neutral-900 rounded" />
+        <div className="h-12 bg-neutral-900 rounded" />
+        <div className="h-80 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <span className="sr-only">Loading era guide…</span>
+      </div>
+    );
+  }
+
+  const categories = Array.from(new Set(entries.map(e => e.category)));
+  // Fall back to the first category when the URL has no (or a stale) value.
+  const activeCategory = categories.includes(urlCategory) ? urlCategory : categories[0];
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Era Integration Guide</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Era Integration Guide</h1>
         <p className="text-neutral-400 mt-2">Essential knowledge to blend in without altering the timeline.</p>
       </div>
 
-      <Tabs defaultValue={categories[0]} className="w-full">
+      <Tabs value={activeCategory} onValueChange={setUrlCategory} className="w-full">
         <TabsList className="bg-neutral-900 border border-neutral-800">
           {categories.map(cat => (
             <TabsTrigger key={cat} value={cat} className="data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-neutral-400">
@@ -136,7 +162,7 @@ export function EraGuide() {
           <TabsContent key={cat} value={cat} className="mt-6">
             {cat === 'Slang' && <SlangTranslator />}
             <Accordion className="w-full space-y-4">
-              {eraGuideData.filter(e => e.category === cat).map((entry, idx) => (
+              {entries.filter(e => e.category === cat).map((entry, idx) => (
                 <AccordionItem key={idx} value={`item-${idx}`} className="border border-neutral-800 rounded-lg px-4 bg-neutral-900/50">
                   <AccordionTrigger className="hover:no-underline hover:text-indigo-400 transition-colors py-4">
                     <div className="flex items-center gap-4 text-left">

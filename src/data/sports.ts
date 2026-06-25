@@ -1,13 +1,18 @@
 export interface SportsEvent {
   id: string;
   year: number;
-  sport: 'Football' | 'Baseball' | 'Boxing' | 'Horse Racing' | 'Basketball' | 'Hockey';
+  sport: 'Football' | 'Baseball' | 'Boxing' | 'Horse Racing' | 'Basketball' | 'Hockey'
+    | 'Soccer' | 'Olympics' | 'F1' | 'Tennis' | 'Cricket';
   event: string;
   winner: string;
   loser: string;
   score?: string;
   odds?: string;
   notableDetails: string;
+  region: 'US' | 'Europe' | 'Asia' | 'South America' | 'Africa' | 'Oceania';
+  country?: string;
+  venue?: string;
+  playerOfTheTournament?: string;
   tags?: string[];
 }
 
@@ -15,54 +20,62 @@ export const sportsAlmanac: SportsEvent[] = [
   // ── 1950s FOOTBALL (PRE-SUPER BOWL NFL CHAMPIONSHIPS) ────
   {
     id: 'nfl-1958', year: 1958, sport: 'Football',
-    event: 'NFL Championship — "The Greatest Game Ever Played"',
+    event: 'NFL Championship  E"The Greatest Game Ever Played"',
     winner: 'Baltimore Colts', loser: 'New York Giants',
     score: '23-17 OT', odds: 'Colts -3.5',
-    notableDetails: 'First NFL game to go to overtime. Johnny Unitas engineers a legendary drive. Alan Ameche scores the winning TD. This game single-handedly popularized professional football on national TV and set the stage for the AFL-NFL merger and the Super Bowl era.'
+    notableDetails: 'First NFL game to go to overtime. Johnny Unitas engineers a legendary drive. Alan Ameche scores the winning TD. This game single-handedly popularized professional football on national TV and set the stage for the AFL-NFL merger and the Super Bowl era.',
+    region: 'US',
   },
   {
     id: 'nfl-1956', year: 1956, sport: 'Football',
     event: 'NFL Championship', winner: 'New York Giants', loser: 'Chicago Bears',
     score: '47-7', odds: 'Bears slight favorites',
-    notableDetails: 'Giants destroy the Bears. Frank Gifford runs for a TD, catches a TD, and throws a TD pass. The Giants\' most dominant championship performance.'
+    notableDetails: 'Giants destroy the Bears. Frank Gifford runs for a TD, catches a TD, and throws a TD pass. The Giants\' most dominant championship performance.',
+    region: 'US',
   },
   {
     id: 'nfl-1950', year: 1950, sport: 'Football',
     event: 'NFL Championship', winner: 'Cleveland Browns', loser: 'Los Angeles Rams',
     score: '30-28', odds: 'Rams -2',
-    notableDetails: 'Browns\' first NFL championship after moving from the AAFC. Otto Engineers a comeback. Lou Groza kicks the winning FG with 28 seconds left. Proved AAFC teams could compete in the NFL.'
+    notableDetails: 'Browns\' first NFL championship after moving from the AAFC. Otto Engineers a comeback. Lou Groza kicks the winning FG with 28 seconds left. Proved AAFC teams could compete in the NFL.',
+    region: 'US',
   },
 
   // ── 1950s BASEBALL ───────────────────────────────────────
   {
     id: 'ws-1956', year: 1956, sport: 'Baseball',
-    event: 'World Series — Don Larsen\'s Perfect Game', winner: 'New York Yankees', loser: 'Brooklyn Dodgers',
+    event: 'World Series  EDon Larsen\'s Perfect Game', winner: 'New York Yankees', loser: 'Brooklyn Dodgers',
     score: '4-3', odds: 'Yankees -160',
-    notableDetails: 'Don Larsen throws the only perfect game in World Series history (Game 5). Yogi Berra leaps into his arms. The Yankees win the series in 7 games. The only no-hitter in postseason history until 2010.'
+    notableDetails: 'Don Larsen throws the only perfect game in World Series history (Game 5). Yogi Berra leaps into his arms. The Yankees win the series in 7 games. The only no-hitter in postseason history until 2010.',
+    region: 'US',
   },
   {
     id: 'ws-1954', year: 1954, sport: 'Baseball',
-    event: 'World Series — Willie Mays\' Catch', winner: 'New York Giants', loser: 'Cleveland Indians',
+    event: 'World Series  EWillie Mays\' Catch', winner: 'New York Giants', loser: 'Cleveland Indians',
     score: '4-0', odds: 'Indians -160 (won 111 games)',
-    notableDetails: 'Willie Mays makes "The Catch" — an over-the-shoulder basket catch in deep center field at the Polo Grounds in Game 1. Indians won 111 regular season games (AL record at the time) but get swept.'
+    notableDetails: 'Willie Mays makes "The Catch"  Ean over-the-shoulder basket catch in deep center field at the Polo Grounds in Game 1. Indians won 111 regular season games (AL record at the time) but get swept.',
+    region: 'US',
   },
   {
     id: 'ws-1951', year: 1951, sport: 'Baseball',
     event: 'World Series', winner: 'New York Yankees', loser: 'New York Giants',
     score: '4-2', odds: 'Yankees -200',
-    notableDetails: 'The "Shot Heard Round the World" — Bobby Thomson\'s walk-off HR wins the NL pennant for the Giants over the Dodgers. Yankees then beat the Giants in the Series. Joe DiMaggio\'s final season.'
+    notableDetails: 'The "Shot Heard Round the World"  EBobby Thomson\'s walk-off HR wins the NL pennant for the Giants over the Dodgers. Yankees then beat the Giants in the Series. Joe DiMaggio\'s final season.',
+    region: 'US',
   },
   {
     id: 'ws-1955', year: 1955, sport: 'Baseball',
-    event: 'World Series — Brooklyn Dodgers Finally Win', winner: 'Brooklyn Dodgers', loser: 'New York Yankees',
+    event: 'World Series  EBrooklyn Dodgers Finally Win', winner: 'Brooklyn Dodgers', loser: 'New York Yankees',
     score: '4-3', odds: 'Yankees -180',
-    notableDetails: 'Brooklyn Dodgers win their FIRST World Series after 5 previous losses to the Yankees. Johnny Podres pitches a 2-0 shutout in Game 7. Sandy Amoros makes a game-saving catch in left field. The borough of Brooklyn erupts.'
+    notableDetails: 'Brooklyn Dodgers win their FIRST World Series after 5 previous losses to the Yankees. Johnny Podres pitches a 2-0 shutout in Game 7. Sandy Amoros makes a game-saving catch in left field. The borough of Brooklyn erupts.',
+    region: 'US',
   },
   {
     id: 'ws-1957', year: 1957, sport: 'Baseball',
-    event: 'World Series — Milwaukee Braves', winner: 'Milwaukee Braves', loser: 'New York Yankees',
+    event: 'World Series  EMilwaukee Braves', winner: 'Milwaukee Braves', loser: 'New York Yankees',
     score: '4-3', odds: 'Yankees -150',
-    notableDetails: 'Hank Aaron hits .393 with 3 HRs. Lew Burdette wins 3 games including a Game 7 shutout on 2 days rest. The Braves\' only championship in Milwaukee.'
+    notableDetails: 'Hank Aaron hits .393 with 3 HRs. Lew Burdette wins 3 games including a Game 7 shutout on 2 days rest. The Braves\' only championship in Milwaukee.',
+    region: 'US',
   },
 
   // ── 1950s BOXING ─────────────────────────────────────────
@@ -70,19 +83,22 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'marciano-walcott', year: 1952, sport: 'Boxing',
     event: 'Heavyweight Championship', winner: 'Rocky Marciano', loser: 'Jersey Joe Walcott',
     score: 'KO 13th round', odds: 'Walcott -8.5',
-    notableDetails: 'Marciano wins the heavyweight title with a devastating right hand that knocks Walcott unconscious against the ropes. Marciano would retire undefeated at 49-0 — the only heavyweight champ to do so.'
+    notableDetails: 'Marciano wins the heavyweight title with a devastating right hand that knocks Walcott unconscious against the ropes. Marciano would retire undefeated at 49-0  Ethe only heavyweight champ to do so.',
+    region: 'US',
   },
   {
     id: 'marciano-charles', year: 1954, sport: 'Boxing',
     event: 'Heavyweight Championship', winner: 'Rocky Marciano', loser: 'Ezzard Charles',
     score: 'KO 8th round', odds: 'Marciano -300',
-    notableDetails: 'Marciano retains title in rematch. Charles had pushed Marciano to the brink in their first fight (split decision). Marciano knocks him out in the rematch.'
+    notableDetails: 'Marciano retains title in rematch. Charles had pushed Marciano to the brink in their first fight (split decision). Marciano knocks him out in the rematch.',
+    region: 'US',
   },
   {
     id: 'robinson-fullmer', year: 1957, sport: 'Boxing',
     event: 'World Middleweight Championship', winner: 'Sugar Ray Robinson', loser: 'Gene Fullmer',
     score: 'KO 5th round', odds: 'Fullmer slight favorite',
-    notableDetails: 'Robinson reclaims the middleweight title with a perfectly timed left hook. At 36 years old, Robinson becomes a 5-time world champion — a record that still stands. Many consider Robinson the greatest pound-for-pound fighter ever.'
+    notableDetails: 'Robinson reclaims the middleweight title with a perfectly timed left hook. At 36 years old, Robinson becomes a 5-time world champion  Ea record that still stands. Many consider Robinson the greatest pound-for-pound fighter ever.',
+    region: 'US',
   },
 
   // ── 1950s HORSE RACING ───────────────────────────────────
@@ -90,7 +106,8 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'citation-48', year: 1948, sport: 'Horse Racing',
     event: 'Belmont Stakes (Triple Crown)', winner: 'Citation', loser: 'Field',
     score: '11 lengths', odds: '1-20 favorite',
-    notableDetails: 'Citation wins the Triple Crown. One of the greatest racehorses ever. First horse to win over $1 million in career earnings. Would be the last Triple Crown winner for 25 years until Secretariat (1973).'
+    notableDetails: 'Citation wins the Triple Crown. One of the greatest racehorses ever. First horse to win over $1 million in career earnings. Would be the last Triple Crown winner for 25 years until Secretariat (1973).',
+    region: 'US',
   },
 
   // ── 1960s FOOTBALL ───────────────────────────────────────
@@ -98,77 +115,89 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'nfl-1962', year: 1962, sport: 'Football',
     event: 'NFL Championship', winner: 'Green Bay Packers', loser: 'New York Giants',
     score: '16-7', odds: 'Packers -9',
-    notableDetails: 'Vince Lombardi\'s Packers win their 2nd straight championship at Yankee Stadium in brutal cold. Jerry Kramer and Fuzzy Thurston lead the famous "Packers Sweep." The beginning of the Packers dynasty.'
+    notableDetails: 'Vince Lombardi\'s Packers win their 2nd straight championship at Yankee Stadium in brutal cold. Jerry Kramer and Fuzzy Thurston lead the famous "Packers Sweep." The beginning of the Packers dynasty.',
+    region: 'US',
   },
   {
     id: 'nfl-1967', year: 1967, sport: 'Football',
-    event: 'NFL Championship — "The Ice Bowl"', winner: 'Green Bay Packers', loser: 'Dallas Cowboys',
+    event: 'NFL Championship  E"The Ice Bowl"', winner: 'Green Bay Packers', loser: 'Dallas Cowboys',
     score: '21-17', odds: 'Packers -7',
-    notableDetails: 'Played in -13°F wind chill at Lambeau Field. Bart Starr scores the winning TD on a QB sneak behind Kramer with 16 seconds left. Arguably the greatest NFL game ever played. The Packers go on to win Super Bowl II.'
+    notableDetails: 'Played in -13°F wind chill at Lambeau Field. Bart Starr scores the winning TD on a QB sneak behind Kramer with 16 seconds left. Arguably the greatest NFL game ever played. The Packers go on to win Super Bowl II.',
+    region: 'US',
   },
   {
     id: 'sb-i', year: 1967, sport: 'Football',
     event: 'Super Bowl I (AFL-NFL World Championship)', winner: 'Green Bay Packers', loser: 'Kansas City Chiefs',
     score: '35-10', odds: 'Packers -14',
-    notableDetails: 'The first Super Bowl. Lombardi\'s Packers dominate. Max McGee catches 7 passes for 138 yards and 2 TDs despite being hungover — he had partied all night because he didn\'t expect to play. The game was not a sellout.'
+    notableDetails: 'The first Super Bowl. Lombardi\'s Packers dominate. Max McGee catches 7 passes for 138 yards and 2 TDs despite being hungover  Ehe had partied all night because he didn\'t expect to play. The game was not a sellout.',
+    region: 'US',
   },
   {
     id: 'sb-iii', year: 1969, sport: 'Football',
-    event: 'Super Bowl III — "The Guarantee"', winner: 'New York Jets', loser: 'Baltimore Colts',
+    event: 'Super Bowl III  E"The Guarantee"', winner: 'New York Jets', loser: 'Baltimore Colts',
     score: '16-7', odds: 'Colts -18',
-    notableDetails: 'Joe Namath guarantees victory and delivers. The AFL\'s first Super Bowl win legitimized the merger. One of the greatest upsets in sports history. The Colts were 18-point favorites.'
+    notableDetails: 'Joe Namath guarantees victory and delivers. The AFL\'s first Super Bowl win legitimized the merger. One of the greatest upsets in sports history. The Colts were 18-point favorites.',
+    region: 'US',
   },
 
   // ── 1960s BASEBALL ───────────────────────────────────────
   {
     id: 'ws-1960', year: 1960, sport: 'Baseball',
-    event: 'World Series — Mazeroski\'s Walk-Off', winner: 'Pittsburgh Pirates', loser: 'New York Yankees',
+    event: 'World Series  EMazeroski\'s Walk-Off', winner: 'Pittsburgh Pirates', loser: 'New York Yankees',
     score: '4-3', odds: 'Yankees -200',
-    notableDetails: 'Bill Mazeroski hits a walk-off home run in Game 7 — the only Game 7 walk-off HR in World Series history. Yankees outscored the Pirates 55-27 in the series but LOST. A bizarre, thrilling upset.'
+    notableDetails: 'Bill Mazeroski hits a walk-off home run in Game 7  Ethe only Game 7 walk-off HR in World Series history. Yankees outscored the Pirates 55-27 in the series but LOST. A bizarre, thrilling upset.',
+    region: 'US',
   },
   {
     id: 'ws-1961', year: 1961, sport: 'Baseball',
     event: 'World Series', winner: 'New York Yankees', loser: 'Cincinnati Reds',
     score: '4-1', odds: 'Yankees -250',
-    notableDetails: 'Roger Maris hits 61 home runs during the regular season, breaking Babe Ruth\'s single-season record (with an asterisk due to the expanded 162-game schedule). Whitey Ford pitches 2 shutouts.'
+    notableDetails: 'Roger Maris hits 61 home runs during the regular season, breaking Babe Ruth\'s single-season record (with an asterisk due to the expanded 162-game schedule). Whitey Ford pitches 2 shutouts.',
+    region: 'US',
   },
   {
     id: 'ws-1966', year: 1966, sport: 'Baseball',
     event: 'World Series', winner: 'Baltimore Orioles', loser: 'Los Angeles Dodgers',
     score: '4-0', odds: 'Dodgers -160',
-    notableDetails: 'Orioles sweep the defending champion Dodgers. Frank Robinson wins the Triple Crown during the regular season (.316, 49 HR, 122 RBI). Jim Palmer, at 20 years old, outpitches Sandy Koufax in Game 2. Koufax\'s final season.'
+    notableDetails: 'Orioles sweep the defending champion Dodgers. Frank Robinson wins the Triple Crown during the regular season (.316, 49 HR, 122 RBI). Jim Palmer, at 20 years old, outpitches Sandy Koufax in Game 2. Koufax\'s final season.',
+    region: 'US',
   },
   {
     id: 'ws-1967', year: 1967, sport: 'Baseball',
-    event: 'World Series — "Impossible Dream"', winner: 'St. Louis Cardinals', loser: 'Boston Red Sox',
+    event: 'World Series  E"Impossible Dream"', winner: 'St. Louis Cardinals', loser: 'Boston Red Sox',
     score: '4-3', odds: 'Cardinals -150',
-    notableDetails: 'The Red Sox go from 9th place in 1966 to the pennant — the "Impossible Dream." But Bob Gibson dominates with 3 complete game victories (1.00 ERA, 26 Ks). Carl Yastrzemski wins the Triple Crown but loses the Series.'
+    notableDetails: 'The Red Sox go from 9th place in 1966 to the pennant  Ethe "Impossible Dream." But Bob Gibson dominates with 3 complete game victories (1.00 ERA, 26 Ks). Carl Yastrzemski wins the Triple Crown but loses the Series.',
+    region: 'US',
   },
   {
     id: 'ws-1968', year: 1968, sport: 'Baseball',
-    event: 'World Series — "The Year of the Pitcher"', winner: 'Detroit Tigers', loser: 'St. Louis Cardinals',
+    event: 'World Series  E"The Year of the Pitcher"', winner: 'Detroit Tigers', loser: 'St. Louis Cardinals',
     score: '4-3', odds: 'Cardinals -130',
-    notableDetails: 'Bob Gibson posts a 1.12 ERA during the regular season (lowest live-ball era ERA). Denny McLain wins 31 games (last 30-game winner). Mickey Lolich wins 3 games including Game 7 on 2 days rest. The "Year of the Pitcher" led directly to the lowering of the mound in 1969.'
+    notableDetails: 'Bob Gibson posts a 1.12 ERA during the regular season (lowest live-ball era ERA). Denny McLain wins 31 games (last 30-game winner). Mickey Lolich wins 3 games including Game 7 on 2 days rest. The "Year of the Pitcher" led directly to the lowering of the mound in 1969.',
+    region: 'US',
   },
 
   // ── 1960s BOXING ─────────────────────────────────────────
   {
     id: 'ali-liston-1', year: 1964, sport: 'Boxing',
-    event: 'Heavyweight Championship — "The Upset"', winner: 'Muhammad Ali (Cassius Clay)', loser: 'Sonny Liston',
+    event: 'Heavyweight Championship  E"The Upset"', winner: 'Muhammad Ali (Cassius Clay)', loser: 'Sonny Liston',
     score: 'TKO 7th round', odds: 'Liston 7-1 favorite',
-    notableDetails: '22-year-old Cassius Clay shocks the world by beating the fearsome Sonny Liston. Clay dances, jabs, and refuses to be cornered. After the fight, he announces his conversion to Islam and changes his name to Muhammad Ali. The most transformative sporting event of the 1960s.'
+    notableDetails: '22-year-old Cassius Clay shocks the world by beating the fearsome Sonny Liston. Clay dances, jabs, and refuses to be cornered. After the fight, he announces his conversion to Islam and changes his name to Muhammad Ali. The most transformative sporting event of the 1960s.',
+    region: 'US',
   },
   {
     id: 'ali-liston-2', year: 1965, sport: 'Boxing',
-    event: 'Heavyweight Championship — "The Phantom Punch"', winner: 'Muhammad Ali', loser: 'Sonny Liston',
+    event: 'Heavyweight Championship  E"The Phantom Punch"', winner: 'Muhammad Ali', loser: 'Sonny Liston',
     score: 'KO 1st round (1:44)', odds: 'Ali -4',
-    notableDetails: 'Ali knocks out Liston with a punch so fast that many ringside didn\'t see it. The "phantom punch" controversy persists to this day. The iconic photo of Ali standing over Liston is one of the most famous sports photos ever taken.'
+    notableDetails: 'Ali knocks out Liston with a punch so fast that many ringside didn\'t see it. The "phantom punch" controversy persists to this day. The iconic photo of Ali standing over Liston is one of the most famous sports photos ever taken.',
+    region: 'US',
   },
   {
     id: 'ali-folley', year: 1967, sport: 'Boxing',
     event: 'Heavyweight Championship', winner: 'Muhammad Ali', loser: 'Zora Folley',
     score: 'KO 7th round', odds: 'Ali -8',
-    notableDetails: 'Ali\'s last fight before his 3-year exile for refusing the Vietnam draft. He was 29-0 and in his prime. He would not fight again until 1970. The Supreme Court overturned his conviction in 1971.'
+    notableDetails: 'Ali\'s last fight before his 3-year exile for refusing the Vietnam draft. He was 29-0 and in his prime. He would not fight again until 1970. The Supreme Court overturned his conviction in 1971.',
+    region: 'US',
   },
 
   // ── 1960s BASKETBALL ─────────────────────────────────────
@@ -176,19 +205,22 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'celtics-1962', year: 1962, sport: 'Basketball',
     event: 'NBA Finals', winner: 'Boston Celtics', loser: 'Los Angeles Lakers',
     score: '4-3', odds: 'Celtics -200',
-    notableDetails: 'Bill Russell grabs 40 rebounds in Game 7. Sam Jones hits the game-winning shot with 2 seconds left. Celtics win their 4th straight title. The beginning of the greatest dynasty in NBA history (8 straight championships, 11 in 13 years).'
+    notableDetails: 'Bill Russell grabs 40 rebounds in Game 7. Sam Jones hits the game-winning shot with 2 seconds left. Celtics win their 4th straight title. The beginning of the greatest dynasty in NBA history (8 straight championships, 11 in 13 years).',
+    region: 'US',
   },
   {
     id: 'celtics-1969', year: 1969, sport: 'Basketball',
     event: 'NBA Finals', winner: 'Boston Celtics', loser: 'Los Angeles Lakers',
     score: '4-3', odds: 'Lakers -180',
-    notableDetails: 'Bill Russell\'s final game. John Havlicek steals the ball in the Eastern Conference Finals ("Havlicek stole the ball!"). Celtics win Game 7 in LA despite being underdogs. Russell retires with 11 championships in 13 years. Don Nelson\'s shot bounces over the rim and in.'
+    notableDetails: 'Bill Russell\'s final game. John Havlicek steals the ball in the Eastern Conference Finals ("Havlicek stole the ball!"). Celtics win Game 7 in LA despite being underdogs. Russell retires with 11 championships in 13 years. Don Nelson\'s shot bounces over the rim and in.',
+    region: 'US',
   },
   {
     id: 'wilt-100', year: 1962, sport: 'Basketball',
-    event: 'NBA Regular Season — Wilt Chamberlain Scores 100', winner: 'Philadelphia Warriors', loser: 'New York Knicks',
+    event: 'NBA Regular Season  EWilt Chamberlain Scores 100', winner: 'Philadelphia Warriors', loser: 'New York Knicks',
     score: '169-147', odds: 'N/A (regular season)',
-    notableDetails: 'Wilt Chamberlain scores 100 points in a single game — the most unbreakable record in NBA history. He shot 36-of-63 from the field and 28-of-32 from the free throw line (career 51% FT shooter). The game was played in Hershey, PA — no TV cameras, only a few hundred fans.'
+    notableDetails: 'Wilt Chamberlain scores 100 points in a single game  Ethe most unbreakable record in NBA history. He shot 36-of-63 from the field and 28-of-32 from the free throw line (career 51% FT shooter). The game was played in Hershey, PA  Eno TV cameras, only a few hundred fans.',
+    region: 'US',
   },
 
   // ── 1960s HOCKEY ─────────────────────────────────────────
@@ -196,11 +228,12 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'canadiens-1960', year: 1960, sport: 'Hockey',
     event: 'Stanley Cup Finals', winner: 'Montreal Canadiens', loser: 'Toronto Maple Leafs',
     score: '4-0', odds: 'Canadiens -200',
-    notableDetails: 'Canadiens win their 5th straight Stanley Cup — still the longest consecutive championship streak in NHL history. Maurice "Rocket" Richard scores the Cup-winning goal in his final season.'
+    notableDetails: 'Canadiens win their 5th straight Stanley Cup  Estill the longest consecutive championship streak in NHL history. Maurice "Rocket" Richard scores the Cup-winning goal in his final season.',
+    region: 'US',
   },
 
-  // ── 1950s/1960s SOCCER ───────────────────────────────────
-  // Note: no Soccer sport type yet in schema — using Football for now
+// ── 1950s/1960s SOCCER ───────────────────────────────────
+  // Note: no Soccer sport type yet in schema - using Football for now
   // Skipping to avoid confusion with American Football
 
   // ── SUPER BOWLS ──────────────────────────────────────────
@@ -208,85 +241,99 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'sb-iv', year: 1970, sport: 'Football',
     event: 'Super Bowl IV', winner: 'Kansas City Chiefs', loser: 'Minnesota Vikings',
     score: '23-7', odds: 'Vikings -12',
-    notableDetails: 'AFL wins final pre-merger Super Bowl. Chiefs dominate as heavy underdogs.'
+    notableDetails: 'AFL wins final pre-merger Super Bowl. Chiefs dominate as heavy underdogs.',
+    region: 'US',
   },
   {
     id: 'sb-v', year: 1971, sport: 'Football',
     event: 'Super Bowl V', winner: 'Baltimore Colts', loser: 'Dallas Cowboys',
     score: '16-13', odds: 'Colts -2.5',
-    notableDetails: 'Sloppy game (the "Blunder Bowl"). Jim O\'Brien walk-off 32-yd FG.'
+    notableDetails: 'Sloppy game (the "Blunder Bowl"). Jim O\'Brien walk-off 32-yd FG.',
+    region: 'US',
   },
   {
     id: 'sb-vii', year: 1973, sport: 'Football',
     event: 'Super Bowl VII', winner: 'Miami Dolphins', loser: 'Washington Redskins',
     score: '14-7', odds: 'Redskins -1',
-    notableDetails: 'Dolphins complete 17-0 perfect season. Only perfect season in NFL history.'
+    notableDetails: 'Dolphins complete 17-0 perfect season. Only perfect season in NFL history.',
+    region: 'US',
   },
   {
     id: 'sb-ix', year: 1975, sport: 'Football',
     event: 'Super Bowl IX', winner: 'Pittsburgh Steelers', loser: 'Minnesota Vikings',
     score: '16-6', odds: 'Steelers -3',
-    notableDetails: 'Steelers first championship. Steel Curtain defense allows only 17 rushing yards.'
+    notableDetails: 'Steelers first championship. Steel Curtain defense allows only 17 rushing yards.',
+    region: 'US',
   },
   {
     id: 'sb-x', year: 1976, sport: 'Football',
     event: 'Super Bowl X', winner: 'Pittsburgh Steelers', loser: 'Dallas Cowboys',
     score: '21-17', odds: 'Steelers -7',
-    notableDetails: 'Lynn Swann 161 yds receiving. Staubach Hail Mary too late.'
+    notableDetails: 'Lynn Swann 161 yds receiving. Staubach Hail Mary too late.',
+    region: 'US',
   },
   {
     id: 'sb-xiii', year: 1979, sport: 'Football',
     event: 'Super Bowl XIII', winner: 'Pittsburgh Steelers', loser: 'Dallas Cowboys',
     score: '35-31', odds: 'Steelers -3.5',
-    notableDetails: 'Terry Bradshaw 4 TD passes. Steelers 3rd ring in 5 years.'
+    notableDetails: 'Terry Bradshaw 4 TD passes. Steelers 3rd ring in 5 years.',
+    region: 'US',
   },
   {
     id: 'sb-xiv', year: 1980, sport: 'Football',
     event: 'Super Bowl XIV', winner: 'Pittsburgh Steelers', loser: 'Los Angeles Rams',
     score: '31-19', odds: 'Steelers -10.5',
-    notableDetails: 'Bradshaw to Stallworth 73-yd TD. Steelers 4th ring in 6 years.'
+    notableDetails: 'Bradshaw to Stallworth 73-yd TD. Steelers 4th ring in 6 years.',
+    region: 'US',
   },
   {
     id: 'sb-xvi', year: 1982, sport: 'Football',
     event: 'Super Bowl XVI', winner: 'San Francisco 49ers', loser: 'Cincinnati Bengals',
     score: '26-21', odds: '49ers -1',
-    notableDetails: 'Montana\'s first ring. 49ers goal-line stand. Beginning of a dynasty.'
+    notableDetails: 'Montana\'s first ring. 49ers goal-line stand. Beginning of a dynasty.',
+    region: 'US',
   },
   {
     id: 'sb-xvii', year: 1983, sport: 'Football',
     event: 'Super Bowl XVII', winner: 'Washington Redskins', loser: 'Miami Dolphins',
     score: '27-17', odds: 'Dolphins -3',
-    notableDetails: 'John Riggins 43-yd TD run on 4th & 1. "I\'m only 35, I can play another 5 years."'
+    notableDetails: 'John Riggins 43-yd TD run on 4th & 1. "I\'m only 35, I can play another 5 years."',
+    region: 'US',
   },
   {
     id: 'sb-xx', year: 1986, sport: 'Football',
     event: 'Super Bowl XX', winner: 'Chicago Bears', loser: 'New England Patriots',
     score: '46-10', odds: 'Bears -10',
-    notableDetails: 'The \'85 Bears defense (arguably greatest ever). Refrigerator Perry TD run.'
+    notableDetails: 'The \'85 Bears defense (arguably greatest ever). Refrigerator Perry TD run.',
+    region: 'US',
   },
   {
     id: 'sb-xxi', year: 1987, sport: 'Football',
     event: 'Super Bowl XXI', winner: 'New York Giants', loser: 'Denver Broncos',
     score: '39-20', odds: 'Giants -9.5',
-    notableDetails: 'Phil Simms 22/25 passing (88% — Super Bowl record). Gatorade shower invented.'
+    notableDetails: 'Phil Simms 22/25 passing (88%  ESuper Bowl record). Gatorade shower invented.',
+    region: 'US',
   },
   {
     id: 'sb-xxii', year: 1988, sport: 'Football',
     event: 'Super Bowl XXII', winner: 'Washington Redskins', loser: 'Denver Broncos',
     score: '42-10', odds: 'Broncos -3',
-    notableDetails: 'Doug Williams 1st black QB to win Super Bowl. 35 pts in 2nd quarter.'
+    notableDetails: 'Doug Williams 1st black QB to win Super Bowl. 35 pts in 2nd quarter.',
+    region: 'US',
   },
   {
     id: 'sb-xxiii', year: 1989, sport: 'Football',
     event: 'Super Bowl XXIII', winner: 'San Francisco 49ers', loser: 'Cincinnati Bengals',
     score: '20-16', odds: '49ers -7',
-    notableDetails: 'Montana 92-yd game-winning drive. John Taylor TD catch with 34 seconds left.'
+    notableDetails: 'Montana 92-yd game-winning drive. John Taylor TD catch with 34 seconds left.',
+    region: 'US',
   },
   {
     id: 'sb-xxiv', year: 1990, sport: 'Football',
     event: 'Super Bowl XXIV', winner: 'San Francisco 49ers', loser: 'Denver Broncos',
     score: '55-10', odds: '49ers -12',
-    notableDetails: 'Most lopsided Super Bowl. Montana 5 TD passes. Rice 3 TDs.'
+    notableDetails: 'Most lopsided Super Bowl. Montana 5 TD passes. Rice 3 TDs.',
+    region: 'US',
   },
 
   // ── WORLD SERIES ─────────────────────────────────────────
@@ -294,43 +341,50 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'ws-1971', year: 1971, sport: 'Baseball',
     event: 'World Series', winner: 'Pittsburgh Pirates', loser: 'Baltimore Orioles',
     score: '4-3', odds: 'Orioles heavy favorites',
-    notableDetails: 'Roberto Clemente .414 avg. Blass throws 2 CGs. Great upset.'
+    notableDetails: 'Roberto Clemente .414 avg. Blass throws 2 CGs. Great upset.',
+    region: 'US',
   },
   {
     id: 'ws-1975', year: 1975, sport: 'Baseball',
     event: 'World Series', winner: 'Cincinnati Reds', loser: 'Boston Red Sox',
     score: '4-3', odds: 'Reds -185',
-    notableDetails: 'Game 6: Carlton Fisk waves ball fair. Arguably greatest WS game ever.'
+    notableDetails: 'Game 6: Carlton Fisk waves ball fair. Arguably greatest WS game ever.',
+    region: 'US',
   },
   {
     id: 'ws-1977', year: 1977, sport: 'Baseball',
     event: 'World Series', winner: 'New York Yankees', loser: 'Los Angeles Dodgers',
     score: '4-2', odds: 'Yankees -175',
-    notableDetails: 'Reggie Jackson 3 HRs on 3 pitches in Game 6. "Mr. October" cemented.'
+    notableDetails: 'Reggie Jackson 3 HRs on 3 pitches in Game 6. "Mr. October" cemented.',
+    region: 'US',
   },
   {
     id: 'ws-1985', year: 1985, sport: 'Baseball',
     event: 'World Series', winner: 'Kansas City Royals', loser: 'St. Louis Cardinals',
     score: '4-3', odds: 'Cardinals -130',
-    notableDetails: 'Don Denkinger blown call at 1B in Game 6. Royals rally from 1-0 deficit in 9th.'
+    notableDetails: 'Don Denkinger blown call at 1B in Game 6. Royals rally from 1-0 deficit in 9th.',
+    region: 'US',
   },
   {
     id: 'ws-1986', year: 1986, sport: 'Baseball',
     event: 'World Series', winner: 'New York Mets', loser: 'Boston Red Sox',
     score: '4-3', odds: 'Mets -140',
-    notableDetails: 'Game 6: Buckner error. Mets down to last strike in Game 6 & 7, win both.'
+    notableDetails: 'Game 6: Buckner error. Mets down to last strike in Game 6 & 7, win both.',
+    region: 'US',
   },
   {
     id: 'ws-1988', year: 1988, sport: 'Baseball',
     event: 'World Series', winner: 'Los Angeles Dodgers', loser: 'Oakland Athletics',
     score: '4-1', odds: 'A\'s -240',
-    notableDetails: 'Kirk Gibson pinch-hit walk-off HR in Game 1 on two bad legs. Huge upset.'
+    notableDetails: 'Kirk Gibson pinch-hit walk-off HR in Game 1 on two bad legs. Huge upset.',
+    region: 'US',
   },
   {
     id: 'ws-1990', year: 1990, sport: 'Baseball',
     event: 'World Series', winner: 'Cincinnati Reds', loser: 'Oakland Athletics',
     score: '4-0', odds: 'A\'s -200',
-    notableDetails: 'Wire-to-wire sweep. Reds outscore A\'s 22-8. Eric Davis dominates.'
+    notableDetails: 'Wire-to-wire sweep. Reds outscore A\'s 22-8. Eric Davis dominates.',
+    region: 'US',
   },
 
   // ── BOXING ───────────────────────────────────────────────
@@ -338,55 +392,64 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'ali-frazier-1', year: 1971, sport: 'Boxing',
     event: 'The Fight of the Century', winner: 'Joe Frazier', loser: 'Muhammad Ali',
     score: 'UD 15 rounds', odds: 'Ali slight favorite',
-    notableDetails: 'Both undefeated. Frazier knocks Ali down in 15th. Ali\'s first loss.'
+    notableDetails: 'Both undefeated. Frazier knocks Ali down in 15th. Ali\'s first loss.',
+    region: 'US',
   },
   {
     id: 'foreman-frazier', year: 1973, sport: 'Boxing',
     event: 'Foreman vs Frazier', winner: 'George Foreman', loser: 'Joe Frazier',
     score: 'TKO 2nd round', odds: 'Frazier slight favorite',
-    notableDetails: 'Foreman destroys Frazier. "Down goes Frazier! Down goes Frazier!" — Howard Cosell.'
+    notableDetails: 'Foreman destroys Frazier. "Down goes Frazier! Down goes Frazier!"  EHoward Cosell.',
+    region: 'US',
   },
   {
     id: 'rumble-in-jungle', year: 1974, sport: 'Boxing',
     event: 'The Rumble in the Jungle', winner: 'Muhammad Ali', loser: 'George Foreman',
     score: 'KO 8th round', odds: 'Foreman 4-1 favorite',
-    notableDetails: 'Zaire. Ali\'s rope-a-dope exhausts Foreman, then KOs him.'
+    notableDetails: 'Zaire. Ali\'s rope-a-dope exhausts Foreman, then KOs him.',
+    region: 'US',
   },
   {
     id: 'thrilla-manila', year: 1975, sport: 'Boxing',
     event: 'Thrilla in Manila', winner: 'Muhammad Ali', loser: 'Joe Frazier',
     score: 'TKO 14th round', odds: 'Ali -200',
-    notableDetails: 'Rubber match. "The closest thing to death." Frazier\'s corner stops it before 15th.'
+    notableDetails: 'Rubber match. "The closest thing to death." Frazier\'s corner stops it before 15th.',
+    region: 'US',
   },
   {
     id: 'leonard-duran-2', year: 1980, sport: 'Boxing',
-    event: 'Leonard vs Duran II — "No Más"', winner: 'Sugar Ray Leonard', loser: 'Roberto Durán',
+    event: 'Leonard vs Duran II  E"No Más"', winner: 'Sugar Ray Leonard', loser: 'Roberto Durán',
     score: 'TKO 8th round', odds: 'Even',
-    notableDetails: 'Durán quits mid-round. "No más" ("no more"). Stunning end to a grudge match.'
+    notableDetails: 'Durán quits mid-round. "No más" ("no more"). Stunning end to a grudge match.',
+    region: 'US',
   },
   {
     id: 'hagler-hearns', year: 1985, sport: 'Boxing',
-    event: 'Hagler vs Hearns — "The War"', winner: 'Marvin Hagler', loser: 'Thomas Hearns',
+    event: 'Hagler vs Hearns  E"The War"', winner: 'Marvin Hagler', loser: 'Thomas Hearns',
     score: 'TKO 3rd round', odds: 'Hagler -210',
-    notableDetails: '8 minutes of pure violence. Round 1 is greatest round in boxing history.'
+    notableDetails: '8 minutes of pure violence. Round 1 is greatest round in boxing history.',
+    region: 'US',
   },
   {
     id: 'tyson-berbick', year: 1986, sport: 'Boxing',
     event: 'Tyson vs Berbick', winner: 'Mike Tyson', loser: 'Trevor Berbick',
     score: 'TKO 2nd round', odds: 'Tyson -400',
-    notableDetails: 'Tyson youngest heavyweight champ ever (20 yrs, 4 months). Berbick knocked down 3 times trying to get up.'
+    notableDetails: 'Tyson youngest heavyweight champ ever (20 yrs, 4 months). Berbick knocked down 3 times trying to get up.',
+    region: 'US',
   },
   {
     id: 'tyson-spinks', year: 1988, sport: 'Boxing',
     event: 'Tyson vs Spinks', winner: 'Mike Tyson', loser: 'Michael Spinks',
     score: 'KO 1st round (91 seconds)', odds: 'Tyson -350',
-    notableDetails: 'Undisputed heavyweight title. Spinks never fights again. Tyson at his peak.'
+    notableDetails: 'Undisputed heavyweight title. Spinks never fights again. Tyson at his peak.',
+    region: 'US',
   },
   {
     id: 'douglas-tyson', year: 1990, sport: 'Boxing',
     event: 'Douglas vs Tyson', winner: 'Buster Douglas', loser: 'Mike Tyson',
     score: 'KO 10th round', odds: 'Tyson 42-1 favorite',
-    notableDetails: 'BIGGEST UPSET IN BOXING HISTORY. Tyson knocked down and out. 42:1 underdog wins.'
+    notableDetails: 'BIGGEST UPSET IN BOXING HISTORY. Tyson knocked down and out. 42:1 underdog wins.',
+    region: 'US',
   },
 
   // ── TRIPLE CROWN HORSE RACING ────────────────────────────
@@ -394,19 +457,22 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'secretariat-73', year: 1973, sport: 'Horse Racing',
     event: 'Belmont Stakes (Triple Crown)', winner: 'Secretariat', loser: 'Field',
     score: '31 lengths, 2:24 flat', odds: '1-10 favorite',
-    notableDetails: 'Greatest performance in racing history. Still holds all 3 Triple Crown race records.'
+    notableDetails: 'Greatest performance in racing history. Still holds all 3 Triple Crown race records.',
+    region: 'US',
   },
   {
     id: 'seattle-slew-77', year: 1977, sport: 'Horse Racing',
     event: 'Belmont Stakes (Triple Crown)', winner: 'Seattle Slew', loser: 'Field',
     score: '4 lengths', odds: '2-5 favorite',
-    notableDetails: 'Only undefeated Triple Crown winner. Bought for $17,500 as a yearling.'
+    notableDetails: 'Only undefeated Triple Crown winner. Bought for $17,500 as a yearling.',
+    region: 'US',
   },
   {
     id: 'affirmed-78', year: 1978, sport: 'Horse Racing',
     event: 'Belmont Stakes (Triple Crown)', winner: 'Affirmed', loser: 'Alydar',
     score: 'Head', odds: 'Affirmed slight favorite',
-    notableDetails: 'Affirmed beats Alydar in all 3 Triple Crown races by a combined margin of under 2 lengths.'
+    notableDetails: 'Affirmed beats Alydar in all 3 Triple Crown races by a combined margin of under 2 lengths.',
+    region: 'US',
   },
 
   // ── NCAA BASKETBALL ──────────────────────────────────────
@@ -414,204 +480,237 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'ncst-1983', year: 1983, sport: 'Basketball',
     event: 'NCAA Championship', winner: 'NC State Wolfpack', loser: 'Houston Cougars',
     score: '54-52', odds: 'Houston -7.5',
-    notableDetails: 'Jim Valvano\'s "Cardiac Pack." Lorenzo Charles dunks Dereck Whittenburg airball at buzzer. All-time Cinderella.'
+    notableDetails: 'Jim Valvano\'s "Cardiac Pack." Lorenzo Charles dunks Dereck Whittenburg airball at buzzer. All-time Cinderella.',
+    region: 'US',
   },
   {
     id: 'villanova-1985', year: 1985, sport: 'Basketball',
     event: 'NCAA Championship', winner: 'Villanova Wildcats', loser: 'Georgetown Hoyas',
     score: '66-64', odds: 'Georgetown -9.5',
-    notableDetails: '8-seed beats defending champs. Villanova shoots 78.6% — misses only 1 FG in 2nd half.'
+    notableDetails: '8-seed beats defending champs. Villanova shoots 78.6%  Emisses only 1 FG in 2nd half.',
+    region: 'US',
   },
   {
     id: 'kansas-1988', year: 1988, sport: 'Basketball',
     event: 'NCAA Championship', winner: 'Kansas Jayhawks', loser: 'Oklahoma Sooners',
     score: '83-79', odds: 'Oklahoma -6',
-    notableDetails: '"Danny and the Miracles." 6-seed Kansas stuns Billy Tubbs\' high-powered Sooners.'
+    notableDetails: '"Danny and the Miracles." 6-seed Kansas stuns Billy Tubbs\' high-powered Sooners.',
+    region: 'US',
   },
 
   // ── HOCKEY ───────────────────────────────────────────────
   {
     id: 'miracle-on-ice', year: 1980, sport: 'Hockey',
-    event: 'Winter Olympics Semi-Final — "Miracle on Ice"', winner: 'United States', loser: 'Soviet Union',
+    event: 'Winter Olympics Semi-Final  E"Miracle on Ice"', winner: 'United States', loser: 'Soviet Union',
     score: '4-3', odds: 'Soviets massive favorites (est. 1000-1 for USA gold)',
-    notableDetails: 'College kids beat the greatest hockey team in the world. Al Michaels: "Do you believe in miracles? YES!"'
+    notableDetails: 'College kids beat the greatest hockey team in the world. Al Michaels: "Do you believe in miracles? YES!"',
+    region: 'US',
   },
   {
     id: 'ws-2001', year: 2001, sport: 'Baseball',
     event: 'World Series 2001', winner: 'Arizona Diamondbacks', loser: 'New York Yankees',
     score: '4-3', odds: 'Yankees slight favorites',
-    notableDetails: 'First World Series after 9/11. D-backs score 2 runs in bottom of 9th in Game 7 off Mariano Rivera, Luis Gonzalez hits walk-off single.'
+    notableDetails: 'First World Series after 9/11. D-backs score 2 runs in bottom of 9th in Game 7 off Mariano Rivera, Luis Gonzalez hits walk-off single.',
+    region: 'US',
   },
   // ── MISSING WORLD SERIES (filling gaps) ─────────────────────
   {
     id: 'ws-1972', year: 1972, sport: 'Baseball',
     event: 'World Series', winner: 'Oakland Athletics', loser: 'Cincinnati Reds',
     score: '4-3', odds: 'A\'s -150',
-    notableDetails: 'First of 3 straight A\'s championships. Gene Tenace hits 4 HRs after hitting 5 all regular season. Catfish Hunter wins 2 games. Start of the Mustache Gang dynasty.'
+    notableDetails: 'First of 3 straight A\'s championships. Gene Tenace hits 4 HRs after hitting 5 all regular season. Catfish Hunter wins 2 games. Start of the Mustache Gang dynasty.',
+    region: 'US',
   },
   {
     id: 'ws-1973', year: 1973, sport: 'Baseball',
     event: 'World Series', winner: 'Oakland Athletics', loser: 'New York Mets',
     score: '4-3', odds: 'A\'s -180',
-    notableDetails: 'A\'s repeat. Reggie Jackson (injured) and manager Dick Williams clash. Bert Campaneris hits .350. The Mets went from last place on Aug 30 to the World Series — the "You Gotta Believe" Mets.'
+    notableDetails: 'A\'s repeat. Reggie Jackson (injured) and manager Dick Williams clash. Bert Campaneris hits .350. The Mets went from last place on Aug 30 to the World Series  Ethe "You Gotta Believe" Mets.',
+    region: 'US',
   },
   {
     id: 'ws-1974', year: 1974, sport: 'Baseball',
     event: 'World Series', winner: 'Oakland Athletics', loser: 'Los Angeles Dodgers',
     score: '4-1', odds: 'A\'s -160',
-    notableDetails: 'A\'s 3-peat. Catfish Hunter wins 2 games (will sign with Yankees as FA after season). Rollie Fingers saves 2 games. Reggie Jackson slugs .600. Last time a team won 3 straight World Series until the 1998-2000 Yankees.'
+    notableDetails: 'A\'s 3-peat. Catfish Hunter wins 2 games (will sign with Yankees as FA after season). Rollie Fingers saves 2 games. Reggie Jackson slugs .600. Last time a team won 3 straight World Series until the 1998-2000 Yankees.',
+    region: 'US',
   },
   {
     id: 'ws-1976', year: 1976, sport: 'Baseball',
-    event: 'World Series — "The Big Red Machine"', winner: 'Cincinnati Reds', loser: 'New York Yankees',
+    event: 'World Series  E"The Big Red Machine"', winner: 'Cincinnati Reds', loser: 'New York Yankees',
     score: '4-0', odds: 'Reds -200',
-    notableDetails: 'The Big Red Machine sweeps the Yankees. Pete Rose hits .350, Joe Morgan hits .333 with 2 HRs. Johnny Bench hits .533 in the sweep. One of the greatest teams ever assembled.'
+    notableDetails: 'The Big Red Machine sweeps the Yankees. Pete Rose hits .350, Joe Morgan hits .333 with 2 HRs. Johnny Bench hits .533 in the sweep. One of the greatest teams ever assembled.',
+    region: 'US',
   },
   {
     id: 'ws-1978', year: 1978, sport: 'Baseball',
-    event: 'World Series — "The Boston Massacre"', winner: 'New York Yankees', loser: 'Los Angeles Dodgers',
+    event: 'World Series  E"The Boston Massacre"', winner: 'New York Yankees', loser: 'Los Angeles Dodgers',
     score: '4-2', odds: 'Yankees -160',
-    notableDetails: 'Yankees repeat. Bucky Dent hits a HR over the Green Monster in the 1-game AL East playoff against Boston (the "Bucky Dent game"). Reggie Jackson hits 3 HRs in Game 6 again (but loses).'
+    notableDetails: 'Yankees repeat. Bucky Dent hits a HR over the Green Monster in the 1-game AL East playoff against Boston (the "Bucky Dent game"). Reggie Jackson hits 3 HRs in Game 6 again (but loses).',
+    region: 'US',
   },
   {
     id: 'ws-1979', year: 1979, sport: 'Baseball',
-    event: 'World Series — "We Are Family"', winner: 'Pittsburgh Pirates', loser: 'Baltimore Orioles',
+    event: 'World Series  E"We Are Family"', winner: 'Pittsburgh Pirates', loser: 'Baltimore Orioles',
     score: '4-3', odds: 'Orioles -180',
-    notableDetails: '"We Are Family" Pirates. Willie Stargell hits .400 with 3 HRs. Kent Tekulve appears in all 7 games. The Pirates\' last World Series win to date.'
+    notableDetails: '"We Are Family" Pirates. Willie Stargell hits .400 with 3 HRs. Kent Tekulve appears in all 7 games. The Pirates\' last World Series win to date.',
+    region: 'US',
   },
   {
     id: 'ws-1980', year: 1980, sport: 'Baseball',
-    event: 'World Series — Phillies Win First', winner: 'Philadelphia Phillies', loser: 'Kansas City Royals',
+    event: 'World Series  EPhillies Win First', winner: 'Philadelphia Phillies', loser: 'Kansas City Royals',
     score: '4-2', odds: 'Phillies -130',
-    notableDetails: 'The Phillies\' first World Series title in franchise history (founded 1883 — 97 years). Mike Schmidt hits .381 with 2 HRs. Tug McGraw strikes out the final batter. "You beauty!"'
+    notableDetails: 'The Phillies\' first World Series title in franchise history (founded 1883  E97 years). Mike Schmidt hits .381 with 2 HRs. Tug McGraw strikes out the final batter. "You beauty!"',
+    region: 'US',
   },
   {
     id: 'ws-1984', year: 1984, sport: 'Baseball',
     event: 'World Series', winner: 'Detroit Tigers', loser: 'San Diego Padres',
     score: '4-1', odds: 'Tigers -210',
-    notableDetails: 'Tigers started the season 35-5 — the greatest start in MLB history. Jack Morris throws a complete game in Game 5 to clinch. Kirk Gibson hits a clinching HR off Goose Gossage (who refused to walk him). Alan Trammell MVP (.450, 2 HRs).'
+    notableDetails: 'Tigers started the season 35-5  Ethe greatest start in MLB history. Jack Morris throws a complete game in Game 5 to clinch. Kirk Gibson hits a clinching HR off Goose Gossage (who refused to walk him). Alan Trammell MVP (.450, 2 HRs).',
+    region: 'US',
   },
   {
     id: 'ws-1989', year: 1989, sport: 'Baseball',
-    event: 'World Series — "The Earthquake Series"', winner: 'Oakland Athletics', loser: 'San Francisco Giants',
+    event: 'World Series  E"The Earthquake Series"', winner: 'Oakland Athletics', loser: 'San Francisco Giants',
     score: '4-0', odds: 'A\'s -200',
-    notableDetails: 'The Loma Prieta earthquake (M6.9) hits 30 minutes before Game 3, collapsing a freeway and killing 63. The Series is delayed 10 days. When play resumes, the A\'s sweep. Dave Stewart wins 2 games. The "Battle of the Bay" ends anticlimactically.'
+    notableDetails: 'The Loma Prieta earthquake (M6.9) hits 30 minutes before Game 3, collapsing a freeway and killing 63. The Series is delayed 10 days. When play resumes, the A\'s sweep. Dave Stewart wins 2 games. The "Battle of the Bay" ends anticlimactically.',
+    region: 'US',
   },
   {
     id: 'ws-1992', year: 1992, sport: 'Baseball',
-    event: 'World Series — First Outside the US', winner: 'Toronto Blue Jays', loser: 'Atlanta Braves',
+    event: 'World Series  EFirst Outside the US', winner: 'Toronto Blue Jays', loser: 'Atlanta Braves',
     score: '4-2', odds: 'Braves -130',
-    notableDetails: 'First World Series with a non-US team. Blue Jays win on Dave Winfield\'s 2-run double in the 11th inning of Game 6. Joe Carter catches the final out. First championship for a Canadian team in any major sport.'
+    notableDetails: 'First World Series with a non-US team. Blue Jays win on Dave Winfield\'s 2-run double in the 11th inning of Game 6. Joe Carter catches the final out. First championship for a Canadian team in any major sport.',
+    region: 'US',
   },
   {
     id: 'ws-1996', year: 1996, sport: 'Baseball',
-    event: 'World Series — Yankees Dynasty Begins', winner: 'New York Yankees', loser: 'Atlanta Braves',
+    event: 'World Series  EYankees Dynasty Begins', winner: 'New York Yankees', loser: 'Atlanta Braves',
     score: '4-2', odds: 'Braves -145',
-    notableDetails: 'Yankees come back from 0-2 deficit. Jim Leyritz hits a game-tying 3-run HR off Mark Wohlers in Game 4 (turning point). Joe Torre\'s first championship. Start of the Yankees dynasty (4 titles in 5 years).'
+    notableDetails: 'Yankees come back from 0-2 deficit. Jim Leyritz hits a game-tying 3-run HR off Mark Wohlers in Game 4 (turning point). Joe Torre\'s first championship. Start of the Yankees dynasty (4 titles in 5 years).',
+    region: 'US',
   },
   {
     id: 'ws-1998', year: 1998, sport: 'Baseball',
-    event: 'World Series — 114-Win Yankees', winner: 'New York Yankees', loser: 'San Diego Padres',
+    event: 'World Series  E114-Win Yankees', winner: 'New York Yankees', loser: 'San Diego Padres',
     score: '4-0', odds: 'Yankees -250',
-    notableDetails: 'Yankees won 114 regular season games (AL record). Scott Brosius hits .471 with 2 HRs and wins MVP. The greatest team of the modern era sweeps the Padres. Total dominance.'
+    notableDetails: 'Yankees won 114 regular season games (AL record). Scott Brosius hits .471 with 2 HRs and wins MVP. The greatest team of the modern era sweeps the Padres. Total dominance.',
+    region: 'US',
   },
   {
     id: 'ws-1999', year: 1999, sport: 'Baseball',
     event: 'World Series', winner: 'New York Yankees', loser: 'Atlanta Braves',
     score: '4-0', odds: 'Yankees -200',
-    notableDetails: 'Yankees sweep the Braves. Chad Curtis hits walk-off HR in Game 3. Mariano Rivera saves all 4 games. Yankees win 3rd title in 4 years. The 1998-2000 Yankees win 3 straight World Series.'
+    notableDetails: 'Yankees sweep the Braves. Chad Curtis hits walk-off HR in Game 3. Mariano Rivera saves all 4 games. Yankees win 3rd title in 4 years. The 1998-2000 Yankees win 3 straight World Series.',
+    region: 'US',
   },
   {
     id: 'ws-2000', year: 2000, sport: 'Baseball',
-    event: 'World Series — "Subway Series"', winner: 'New York Yankees', loser: 'New York Mets',
+    event: 'World Series  E"Subway Series"', winner: 'New York Yankees', loser: 'New York Mets',
     score: '4-1', odds: 'Yankees -160',
-    notableDetails: 'First Subway Series since 1956. Yankees win their 3rd straight World Series (4th in 5 years). Roger Clemens throws a broken bat shard at Mike Piazza. Derek Jeter hits .400 and wins MVP.'
+    notableDetails: 'First Subway Series since 1956. Yankees win their 3rd straight World Series (4th in 5 years). Roger Clemens throws a broken bat shard at Mike Piazza. Derek Jeter hits .400 and wins MVP.',
+    region: 'US',
   },
 
   // ── NBA FINALS (expanding from 2 to full coverage) ──────────
   {
     id: 'nba-1980', year: 1980, sport: 'Basketball',
-    event: 'NBA Finals — Magic\'s Rookie Masterpiece', winner: 'Los Angeles Lakers', loser: 'Philadelphia 76ers',
+    event: 'NBA Finals  EMagic\'s Rookie Masterpiece', winner: 'Los Angeles Lakers', loser: 'Philadelphia 76ers',
     score: '4-2', odds: '76ers slight favorites (Kareem injured)',
-    notableDetails: 'Magic Johnson (20 years old, rookie) starts at center in Game 6 with Kareem Abdul-Jabbar injured. Scores 42 points, grabs 15 rebounds, dishes 7 assists. Named Finals MVP. The birth of "Showtime."'
+    notableDetails: 'Magic Johnson (20 years old, rookie) starts at center in Game 6 with Kareem Abdul-Jabbar injured. Scores 42 points, grabs 15 rebounds, dishes 7 assists. Named Finals MVP. The birth of "Showtime."',
+    region: 'US',
   },
   {
     id: 'nba-1984', year: 1984, sport: 'Basketball',
-    event: 'NBA Finals — Bird vs Magic', winner: 'Boston Celtics', loser: 'Los Angeles Lakers',
+    event: 'NBA Finals  EBird vs Magic', winner: 'Boston Celtics', loser: 'Los Angeles Lakers',
     score: '4-3', odds: 'Celtics -160',
-    notableDetails: 'The first Bird vs Magic Finals. Cedric Maxwell scores 24 in Game 7. Gerald Henderson steals James Worthy\'s pass in Game 2 to force OT. Bird averages 27/14/4. The rivalry that saved the NBA.'
+    notableDetails: 'The first Bird vs Magic Finals. Cedric Maxwell scores 24 in Game 7. Gerald Henderson steals James Worthy\'s pass in Game 2 to force OT. Bird averages 27/14/4. The rivalry that saved the NBA.',
+    region: 'US',
   },
   {
     id: 'nba-1985', year: 1985, sport: 'Basketball',
-    event: 'NBA Finals — Lakers Get Revenge', winner: 'Los Angeles Lakers', loser: 'Boston Celtics',
+    event: 'NBA Finals  ELakers Get Revenge', winner: 'Los Angeles Lakers', loser: 'Boston Celtics',
     score: '4-2', odds: 'Celtics -130',
-    notableDetails: 'Lakers beat Celtics in the Finals for the first time (0-8 previously). Kareem (38 years old) scores 30 in Game 6 clincher. Memorial Day Massacre: Celtics blow out Lakers 148-114 in Game 1 — the Lakers respond by winning 4 of the next 5.'
+    notableDetails: 'Lakers beat Celtics in the Finals for the first time (0-8 previously). Kareem (38 years old) scores 30 in Game 6 clincher. Memorial Day Massacre: Celtics blow out Lakers 148-114 in Game 1  Ethe Lakers respond by winning 4 of the next 5.',
+    region: 'US',
   },
   {
     id: 'nba-1987', year: 1987, sport: 'Basketball',
-    event: 'NBA Finals — "Junior Skyhook"', winner: 'Los Angeles Lakers', loser: 'Boston Celtics',
+    event: 'NBA Finals  E"Junior Skyhook"', winner: 'Los Angeles Lakers', loser: 'Boston Celtics',
     score: '4-2', odds: 'Lakers -170',
-    notableDetails: 'Magic Johnson\'s "junior skyhook" over Kevin McHale and Robert Parish wins Game 4 at Boston Garden. Lakers take 3-1 lead. Magic named MVP. The iconic moment of the Lakers-Celtics rivalry.'
+    notableDetails: 'Magic Johnson\'s "junior skyhook" over Kevin McHale and Robert Parish wins Game 4 at Boston Garden. Lakers take 3-1 lead. Magic named MVP. The iconic moment of the Lakers-Celtics rivalry.',
+    region: 'US',
   },
   {
     id: 'nba-1988', year: 1988, sport: 'Basketball',
-    event: 'NBA Finals — Lakers Repeat', winner: 'Los Angeles Lakers', loser: 'Detroit Pistons',
+    event: 'NBA Finals  ELakers Repeat', winner: 'Los Angeles Lakers', loser: 'Detroit Pistons',
     score: '4-3', odds: 'Lakers -150',
-    notableDetails: 'Isiah Thomas scores 25 points in the 3rd quarter of Game 6 on a severely sprained ankle — one of the gutsiest performances ever. Lakers win Game 7 behind James Worthy\'s 36/16/10 triple-double. Worthy MVP.'
+    notableDetails: 'Isiah Thomas scores 25 points in the 3rd quarter of Game 6 on a severely sprained ankle  Eone of the gutsiest performances ever. Lakers win Game 7 behind James Worthy\'s 36/16/10 triple-double. Worthy MVP.',
+    region: 'US',
   },
   {
     id: 'nba-1989', year: 1989, sport: 'Basketball',
-    event: 'NBA Finals — Pistons Get Their Ring', winner: 'Detroit Pistons', loser: 'Los Angeles Lakers',
+    event: 'NBA Finals  EPistons Get Their Ring', winner: 'Detroit Pistons', loser: 'Los Angeles Lakers',
     score: '4-0', odds: 'Pistons -180',
-    notableDetails: '"The Bad Boys" sweep the defending champion Lakers. Joe Dumars averages 27.3 PPG and wins MVP. Isiah Thomas and the Pistons finally get their championship after losing to Lakers in 1988.'
+    notableDetails: '"The Bad Boys" sweep the defending champion Lakers. Joe Dumars averages 27.3 PPG and wins MVP. Isiah Thomas and the Pistons finally get their championship after losing to Lakers in 1988.',
+    region: 'US',
   },
   {
     id: 'nba-1990', year: 1990, sport: 'Basketball',
-    event: 'NBA Finals — Pistons Repeat', winner: 'Detroit Pistons', loser: 'Portland Trail Blazers',
+    event: 'NBA Finals  EPistons Repeat', winner: 'Detroit Pistons', loser: 'Portland Trail Blazers',
     score: '4-1', odds: 'Pistons -200',
-    notableDetails: 'Pistons repeat as champions. Isiah Thomas MVP (27.6 PPG, 7.0 APG). Vinnie Johnson hits the series-clinching shot with 0.7 seconds left in Game 5. The Bad Boys era peaks.'
+    notableDetails: 'Pistons repeat as champions. Isiah Thomas MVP (27.6 PPG, 7.0 APG). Vinnie Johnson hits the series-clinching shot with 0.7 seconds left in Game 5. The Bad Boys era peaks.',
+    region: 'US',
   },
   {
     id: 'nba-1991', year: 1991, sport: 'Basketball',
-    event: 'NBA Finals — Jordan\'s First Title', winner: 'Chicago Bulls', loser: 'Los Angeles Lakers',
+    event: 'NBA Finals  EJordan\'s First Title', winner: 'Chicago Bulls', loser: 'Los Angeles Lakers',
     score: '4-1', odds: 'Bulls -200',
-    notableDetails: 'Michael Jordan wins his first NBA championship. Averages 31/11/8. The famous "switch hands" layup in Game 2. Bulls win 4 straight after losing Game 1. The beginning of the Jordan dynasty. Magic Johnson retires (first time) after this series.'
+    notableDetails: 'Michael Jordan wins his first NBA championship. Averages 31/11/8. The famous "switch hands" layup in Game 2. Bulls win 4 straight after losing Game 1. The beginning of the Jordan dynasty. Magic Johnson retires (first time) after this series.',
+    region: 'US',
   },
   {
     id: 'nba-1992', year: 1992, sport: 'Basketball',
     event: 'NBA Finals', winner: 'Chicago Bulls', loser: 'Portland Trail Blazers',
     score: '4-2', odds: 'Bulls -220',
-    notableDetails: 'Jordan shrugs after hitting 6 3-pointers in Game 1 (35 points in the 1st half). Bulls repeat. Jordan averages 35.8 PPG. Clyde Drexler and Jordan have a legendary individual battle.'
+    notableDetails: 'Jordan shrugs after hitting 6 3-pointers in Game 1 (35 points in the 1st half). Bulls repeat. Jordan averages 35.8 PPG. Clyde Drexler and Jordan have a legendary individual battle.',
+    region: 'US',
   },
   {
     id: 'nba-1994', year: 1994, sport: 'Basketball',
-    event: 'NBA Finals — Jordan\'s Absence', winner: 'Houston Rockets', loser: 'New York Knicks',
+    event: 'NBA Finals  EJordan\'s Absence', winner: 'Houston Rockets', loser: 'New York Knicks',
     score: '4-3', odds: 'Knicks -130',
-    notableDetails: 'Hakeem Olajuwon dominates Patrick Ewing in a 7-game classic. Olajuwon blocks John Starks\' potential series-winning 3-pointer in Game 6. Hakeem averages 27/9/4 with 3.7 blocks. The "Clutch City" Rockets win without having to face Jordan (playing baseball).'
+    notableDetails: 'Hakeem Olajuwon dominates Patrick Ewing in a 7-game classic. Olajuwon blocks John Starks\' potential series-winning 3-pointer in Game 6. Hakeem averages 27/9/4 with 3.7 blocks. The "Clutch City" Rockets win without having to face Jordan (playing baseball).',
+    region: 'US',
   },
   {
     id: 'nba-1995', year: 1995, sport: 'Basketball',
-    event: 'NBA Finals — Rockets Repeat', winner: 'Houston Rockets', loser: 'Orlando Magic',
+    event: 'NBA Finals  ERockets Repeat', winner: 'Houston Rockets', loser: 'Orlando Magic',
     score: '4-0', odds: 'Magic -150 (had home court)',
-    notableDetails: 'Rockets sweep the Magic despite being underdogs. Hakeem outplays young Shaquille O\'Neal. Kenny Smith hits 7 3-pointers in Game 1. The 6th-seeded Rockets become the lowest seed ever to win the title. "Never underestimate the heart of a champion."'
+    notableDetails: 'Rockets sweep the Magic despite being underdogs. Hakeem outplays young Shaquille O\'Neal. Kenny Smith hits 7 3-pointers in Game 1. The 6th-seeded Rockets become the lowest seed ever to win the title. "Never underestimate the heart of a champion."',
+    region: 'US',
   },
   {
     id: 'nba-1996', year: 1996, sport: 'Basketball',
-    event: 'NBA Finals — 72-Win Bulls', winner: 'Chicago Bulls', loser: 'Seattle SuperSonics',
+    event: 'NBA Finals  E72-Win Bulls', winner: 'Chicago Bulls', loser: 'Seattle SuperSonics',
     score: '4-2', odds: 'Bulls -800',
-    notableDetails: 'Bulls won 72 games in the regular season (NBA record until 2016 Warriors won 73). Jordan comes back from baseball. Dennis Rodman grabs 11+ rebounds per game. Jordan wins Finals MVP (27.3 PPG). The greatest single-season team ever assembled.'
+    notableDetails: 'Bulls won 72 games in the regular season (NBA record until 2016 Warriors won 73). Jordan comes back from baseball. Dennis Rodman grabs 11+ rebounds per game. Jordan wins Finals MVP (27.3 PPG). The greatest single-season team ever assembled.',
+    region: 'US',
   },
   {
     id: 'nba-1997', year: 1997, sport: 'Basketball',
-    event: 'NBA Finals — "The Flu Game"', winner: 'Chicago Bulls', loser: 'Utah Jazz',
+    event: 'NBA Finals  E"The Flu Game"', winner: 'Chicago Bulls', loser: 'Utah Jazz',
     score: '4-2', odds: 'Bulls -230',
-    notableDetails: 'Jordan scores 38 points in Game 5 despite being visibly ill (reported flu or food poisoning) — "The Flu Game." Steve Kerr hits the series-clinching jumper in Game 6 off Jordan\'s pass. Jordan averages 32/7/6.'
+    notableDetails: 'Jordan scores 38 points in Game 5 despite being visibly ill (reported flu or food poisoning)  E"The Flu Game." Steve Kerr hits the series-clinching jumper in Game 6 off Jordan\'s pass. Jordan averages 32/7/6.',
+    region: 'US',
   },
   {
     id: 'nba-1999', year: 1999, sport: 'Basketball',
-    event: 'NBA Finals — Spurs\' First Title', winner: 'San Antonio Spurs', loser: 'New York Knicks',
+    event: 'NBA Finals  ESpurs\' First Title', winner: 'San Antonio Spurs', loser: 'New York Knicks',
     score: '4-1', odds: 'Spurs -300',
-    notableDetails: 'Lockout-shortened season (50 games). Tim Duncan (2nd year) and David Robinson ("The Twin Towers") dominate. Duncan averages 27/14 and wins Finals MVP at age 23. The Knicks were the 8th seed — lowest ever to reach the Finals.'
+    notableDetails: 'Lockout-shortened season (50 games). Tim Duncan (2nd year) and David Robinson ("The Twin Towers") dominate. Duncan averages 27/14 and wins Finals MVP at age 23. The Knicks were the 8th seed  Elowest ever to reach the Finals.',
+    region: 'US',
   },
 
   // ── 1990s & early 2000s EXPANSIONS ────────────────────────
@@ -619,139 +718,934 @@ export const sportsAlmanac: SportsEvent[] = [
     id: 'sb-xxv', year: 1991, sport: 'Football',
     event: 'Super Bowl XXV', winner: 'New York Giants', loser: 'Buffalo Bills',
     score: '20-19', odds: 'Bills -7',
-    notableDetails: 'Giants control ball for 40:33. Bills kicker Scott Norwood misses 47-yard FG wide right at the buzzer.'
+    notableDetails: 'Giants control ball for 40:33. Bills kicker Scott Norwood misses 47-yard FG wide right at the buzzer.',
+    region: 'US',
   },
   {
     id: 'sb-xxviii', year: 1994, sport: 'Football',
     event: 'Super Bowl XXVIII', winner: 'Dallas Cowboys', loser: 'Buffalo Bills',
     score: '30-13', odds: 'Cowboys -10.5',
-    notableDetails: 'Dallas dominates second half. Emmitt Smith rushes for 132 yards and 2 TDs, wins MVP. Bills lose 4th straight Super Bowl.'
+    notableDetails: 'Dallas dominates second half. Emmitt Smith rushes for 132 yards and 2 TDs, wins MVP. Bills lose 4th straight Super Bowl.',
+    region: 'US',
   },
   {
     id: 'sb-xxxii', year: 1998, sport: 'Football',
     event: 'Super Bowl XXXII', winner: 'Denver Broncos', loser: 'Green Bay Packers',
     score: '31-24', odds: 'Packers -11.5',
-    notableDetails: 'John Elway wins first championship. Terrell Davis runs for 157 yards & 3 TDs despite a migraine. Elway\'s famous "helicopter" run on 3rd down.'
+    notableDetails: 'John Elway wins first championship. Terrell Davis runs for 157 yards & 3 TDs despite a migraine. Elway\'s famous "helicopter" run on 3rd down.',
+    region: 'US',
   },
   {
     id: 'sb-xxxvi', year: 2002, sport: 'Football',
     event: 'Super Bowl XXXVI', winner: 'New England Patriots', loser: 'St. Louis Rams',
     score: '20-17', odds: 'Rams -14',
-    notableDetails: 'Played in Feb 2002 for 2001 season. First Super Bowl won on final play. Adam Vinatieri 48-yd GW FG. Tom Brady wins MVP.'
+    notableDetails: 'Played in Feb 2002 for 2001 season. First Super Bowl won on final play. Adam Vinatieri 48-yd GW FG. Tom Brady wins MVP.',
+    region: 'US',
   },
   // ── MISSING SUPER BOWLS (filling gaps) ─────────────────────
   {
     id: 'sb-ii', year: 1968, sport: 'Football',
     event: 'Super Bowl II', winner: 'Green Bay Packers', loser: 'Oakland Raiders',
     score: '33-14', odds: 'Packers -14',
-    notableDetails: 'Lombardi\'s final game as Packers coach. Bart Starr MVP. Packers dominate the AFL champions for the 2nd straight year.'
+    notableDetails: 'Lombardi\'s final game as Packers coach. Bart Starr MVP. Packers dominate the AFL champions for the 2nd straight year.',
+    region: 'US',
   },
   {
     id: 'sb-vi', year: 1972, sport: 'Football',
     event: 'Super Bowl VI', winner: 'Dallas Cowboys', loser: 'Miami Dolphins',
     score: '24-3', odds: 'Cowboys -6',
-    notableDetails: 'Cowboys win their first Super Bowl. Roger Staubach MVP. Dolphins held to 185 total yards. The only Super Bowl decided by exactly 21 points.'
+    notableDetails: 'Cowboys win their first Super Bowl. Roger Staubach MVP. Dolphins held to 185 total yards. The only Super Bowl decided by exactly 21 points.',
+    region: 'US',
   },
   {
     id: 'sb-viii', year: 1974, sport: 'Football',
     event: 'Super Bowl VIII', winner: 'Miami Dolphins', loser: 'Minnesota Vikings',
     score: '24-7', odds: 'Dolphins -6.5',
-    notableDetails: 'Dolphins win 2nd straight Super Bowl. Larry Csonka rushes for 145 yards on 33 carries. The "No-Name Defense" dominates.'
+    notableDetails: 'Dolphins win 2nd straight Super Bowl. Larry Csonka rushes for 145 yards on 33 carries. The "No-Name Defense" dominates.',
+    region: 'US',
   },
   {
     id: 'sb-xi', year: 1977, sport: 'Football',
     event: 'Super Bowl XI', winner: 'Oakland Raiders', loser: 'Minnesota Vikings',
     score: '32-14', odds: 'Raiders -4',
-    notableDetails: 'John Madden finally wins his Super Bowl. Fred Biletnikoff MVP (4 catches, 79 yards, 3 set up TDs). Raiders\' first championship.'
+    notableDetails: 'John Madden finally wins his Super Bowl. Fred Biletnikoff MVP (4 catches, 79 yards, 3 set up TDs). Raiders\' first championship.',
+    region: 'US',
   },
   {
     id: 'sb-xii', year: 1978, sport: 'Football',
     event: 'Super Bowl XII', winner: 'Dallas Cowboys', loser: 'Denver Broncos',
     score: '27-10', odds: 'Cowboys -7',
-    notableDetails: 'Craig Morton (Broncos QB) throws 4 INTs against his former team. Harvey Martin and Randy White share MVP (only co-MVPs in SB history). "Doomsday Defense" dominates.'
+    notableDetails: 'Craig Morton (Broncos QB) throws 4 INTs against his former team. Harvey Martin and Randy White share MVP (only co-MVPs in SB history). "Doomsday Defense" dominates.',
+    region: 'US',
   },
   {
     id: 'sb-xv', year: 1981, sport: 'Football',
     event: 'Super Bowl XV', winner: 'Oakland Raiders', loser: 'Philadelphia Eagles',
     score: '27-10', odds: 'Eagles -3',
-    notableDetails: 'Raiders become first wild card team to win the Super Bowl. Jim Plunkett MVP (261 yds, 3 TDs). Al Davis: "Just win, baby."'
+    notableDetails: 'Raiders become first wild card team to win the Super Bowl. Jim Plunkett MVP (261 yds, 3 TDs). Al Davis: "Just win, baby."',
+    region: 'US',
   },
   {
     id: 'sb-xix', year: 1985, sport: 'Football',
     event: 'Super Bowl XIX', winner: 'San Francisco 49ers', loser: 'Miami Dolphins',
     score: '38-16', odds: '49ers -3.5',
-    notableDetails: 'Montana vs Marino. Montana dominates (331 yds, 3 TD passes + 59 yds rushing). Marino\'s record-breaking season ends in a blowout. 49ers score 3 TDs in 7 minutes of the 2nd half.'
+    notableDetails: 'Montana vs Marino. Montana dominates (331 yds, 3 TD passes + 59 yds rushing). Marino\'s record-breaking season ends in a blowout. 49ers score 3 TDs in 7 minutes of the 2nd half.',
+    region: 'US',
   },
   {
     id: 'sb-xxvi', year: 1992, sport: 'Football',
     event: 'Super Bowl XXVI', winner: 'Washington Redskins', loser: 'Buffalo Bills',
     score: '37-24', odds: 'Redskins -7',
-    notableDetails: 'Mark Rypien MVP (292 yds, 2 TDs). Bills lose 2nd straight Super Bowl. Thurman Thomas loses his helmet before the game and misses the first 2 plays.'
+    notableDetails: 'Mark Rypien MVP (292 yds, 2 TDs). Bills lose 2nd straight Super Bowl. Thurman Thomas loses his helmet before the game and misses the first 2 plays.',
+    region: 'US',
   },
   {
     id: 'sb-xxvii', year: 1993, sport: 'Football',
     event: 'Super Bowl XXVII', winner: 'Dallas Cowboys', loser: 'Buffalo Bills',
     score: '52-17', odds: 'Cowboys -6.5',
-    notableDetails: 'Cowboys dominate. Troy Aikman 4 TDs. Leon Lett showboats on a fumble return and gets tackled at the 1 yard line by Don Beebe — the most famous hustle play in Super Bowl history. Bills lose 3rd straight.'
+    notableDetails: 'Cowboys dominate. Troy Aikman 4 TDs. Leon Lett showboats on a fumble return and gets tackled at the 1 yard line by Don Beebe  Ethe most famous hustle play in Super Bowl history. Bills lose 3rd straight.',
+    region: 'US',
   },
   {
     id: 'sb-xxix', year: 1995, sport: 'Football',
     event: 'Super Bowl XXIX', winner: 'San Francisco 49ers', loser: 'San Diego Chargers',
     score: '49-26', odds: '49ers -18.5',
-    notableDetails: 'Steve Young throws 6 TD passes (Super Bowl record). Finally out of Montana\'s shadow: "Get the monkey off my back!" 49ers score on every drive except the last one (kneel-down).'
+    notableDetails: 'Steve Young throws 6 TD passes (Super Bowl record). Finally out of Montana\'s shadow: "Get the monkey off my back!" 49ers score on every drive except the last one (kneel-down).',
+    region: 'US',
   },
   {
     id: 'sb-xxx', year: 1996, sport: 'Football',
     event: 'Super Bowl XXX', winner: 'Dallas Cowboys', loser: 'Pittsburgh Steelers',
     score: '27-17', odds: 'Cowboys -13.5',
-    notableDetails: 'Cowboys win 3rd Super Bowl in 4 years. Larry Brown becomes the unlikely MVP (2 INTs). Deion Sanders plays both ways. Neil O\'Donnell throws 2 devastating pick-sixes.'
+    notableDetails: 'Cowboys win 3rd Super Bowl in 4 years. Larry Brown becomes the unlikely MVP (2 INTs). Deion Sanders plays both ways. Neil O\'Donnell throws 2 devastating pick-sixes.',
+    region: 'US',
   },
   {
     id: 'sb-xxxi', year: 1997, sport: 'Football',
     event: 'Super Bowl XXXI', winner: 'Green Bay Packers', loser: 'New England Patriots',
     score: '35-21', odds: 'Packers -14',
-    notableDetails: 'Brett Favre\'s only Super Bowl win. Desmond Howard returns a kickoff 99 yards for a TD — the first special teams TD in Super Bowl history. Reggie White sacks Bledsoe 3 times.'
+    notableDetails: 'Brett Favre\'s only Super Bowl win. Desmond Howard returns a kickoff 99 yards for a TD  Ethe first special teams TD in Super Bowl history. Reggie White sacks Bledsoe 3 times.',
+    region: 'US',
   },
   {
     id: 'sb-xxxiv', year: 2000, sport: 'Football',
     event: 'Super Bowl XXXIV', winner: 'St. Louis Rams', loser: 'Tennessee Titans',
     score: '23-16', odds: 'Rams -7',
-    notableDetails: '"The Tackle" — Mike Jones stops Kevin Dyson at the 1-yard-line on the final play of the game. Kurt Warner goes from grocery stock boy to Super Bowl MVP (414 yds, 2 TDs). "The Greatest Show on Turf."'
+    notableDetails: '"The Tackle"  EMike Jones stops Kevin Dyson at the 1-yard-line on the final play of the game. Kurt Warner goes from grocery stock boy to Super Bowl MVP (414 yds, 2 TDs). "The Greatest Show on Turf."',
+    region: 'US',
   },
   {
     id: 'ws-1991', year: 1991, sport: 'Baseball',
     event: 'World Series 1991', winner: 'Minnesota Twins', loser: 'Atlanta Braves',
     score: '4-3', odds: 'Twins slight favorites',
-    notableDetails: 'Three games won in final at-bat. Game 7 is a 1-0 10-inning thriller; Jack Morris pitches complete game shutout.'
+    notableDetails: 'Three games won in final at-bat. Game 7 is a 1-0 10-inning thriller; Jack Morris pitches complete game shutout.',
+    region: 'US',
   },
   {
     id: 'ws-1993', year: 1993, sport: 'Baseball',
     event: 'World Series 1993', winner: 'Blue Jays', loser: 'Phillies',
     score: '4-2', odds: 'Blue Jays -140',
-    notableDetails: 'Joe Carter hits walk-off 3-run HR off Mitch Williams in bottom of 9th in Game 6. "Touch \'em all, Joe!"'
+    notableDetails: 'Joe Carter hits walk-off 3-run HR off Mitch Williams in bottom of 9th in Game 6. "Touch \'em all, Joe!"',
+    region: 'US',
   },
   {
     id: 'ws-2001', year: 2001, sport: 'Baseball',
     event: 'World Series 2001', winner: 'Arizona Diamondbacks', loser: 'New York Yankees',
     score: '4-3', odds: 'Yankees slight favorites',
-    notableDetails: 'First World Series after 9/11. D-backs score 2 runs in bottom of 9th in Game 7 off Mariano Rivera, Luis Gonzalez hits walk-off single.'
+    notableDetails: 'First World Series after 9/11. D-backs score 2 runs in bottom of 9th in Game 7 off Mariano Rivera, Luis Gonzalez hits walk-off single.',
+    region: 'US',
   },
   {
     id: 'nba-1993', year: 1993, sport: 'Basketball',
     event: 'NBA Finals 1993', winner: 'Chicago Bulls', loser: 'Phoenix Suns',
     score: '4-2', odds: 'Suns slight favorites (had home court)',
-    notableDetails: 'Bulls win first three-peat. John Paxson hits GW 3-pointer with 3.9 seconds left in Game 6. Michael Jordan averages 41.0 PPG.'
+    notableDetails: 'Bulls win first three-peat. John Paxson hits GW 3-pointer with 3.9 seconds left in Game 6. Michael Jordan averages 41.0 PPG.',
+    region: 'US',
   },
   {
     id: 'nba-1998', year: 1998, sport: 'Basketball',
     event: 'NBA Finals 1998', winner: 'Chicago Bulls', loser: 'Utah Jazz',
     score: '4-2', odds: 'Jazz -110 (had home court)',
-    notableDetails: 'Michael Jordan\'s final game with the Bulls. Steals ball from Malone and hits "The Last Shot" over Bryon Russell in Game 6.'
+    notableDetails: 'Michael Jordan\'s final game with the Bulls. Steals ball from Malone and hits "The Last Shot" over Bryon Russell in Game 6.',
+    region: 'US',
   },
   {
     id: 'tyson-holyfield-ii', year: 1997, sport: 'Boxing',
-    event: 'WBA Heavyweight Championship — "The Bite Fight"', winner: 'Evander Holyfield', loser: 'Mike Tyson',
+    event: 'WBA Heavyweight Championship  E"The Bite Fight"', winner: 'Evander Holyfield', loser: 'Mike Tyson',
     score: 'Disqualification', odds: 'Tyson -200',
-    notableDetails: 'Tyson bites Holyfield\'s ears twice in the third round and is disqualified. Sparks massive brawl in the ring.'
+    notableDetails: 'Tyson bites Holyfield\'s ears twice in the third round and is disqualified. Sparks massive brawl in the ring.',
+    region: 'US',
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // ── FIFA WORLD CUP (SOCCER) ──────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: 'wc-1978', year: 1978, sport: 'Soccer',
+    event: 'FIFA World Cup — Argentina 1978',
+    winner: 'Argentina', loser: 'Netherlands',
+    score: '3-1 AET', notableDetails: 'Hosts Argentina win their first World Cup in a controversial tournament held under a military dictatorship. Mario Kempes scores twice in extra time of the final at the Monumental in Buenos Aires. The tournament is remembered as much for its political backdrop as for the football.',
+    region: 'South America', country: 'Argentina', venue: 'Estadio Monumental, Buenos Aires',
+    playerOfTheTournament: 'Mario Kempes',
+  },
+  {
+    id: 'wc-1982', year: 1982, sport: 'Soccer',
+    event: 'FIFA World Cup — Spain 1982',
+    winner: 'Italy', loser: 'West Germany',
+    score: '3-1', notableDetails: 'Italy win their 3rd World Cup. Paolo Rossi, just back from a ban, scores 6 goals including a hat-trick against Brazil and the opener in the final. The tournament featured a vintage Brazil side (Sócrates, Zico) and a thrilling semi-final between West Germany and France.',
+    region: 'Europe', country: 'Italy', venue: 'Santiago Bernabéu, Madrid',
+    playerOfTheTournament: 'Paolo Rossi',
+  },
+  {
+    id: 'wc-1986', year: 1986, sport: 'Soccer',
+    event: 'FIFA World Cup — Mexico 1986',
+    winner: 'Argentina', loser: 'West Germany',
+    score: '3-2', notableDetails: 'Diego Maradona almost single-handedly carries Argentina to the title. In the quarter-final vs England he scored the "Hand of God" goal followed four minutes later by the "Goal of the Century" — a 60-yard dribble past five players. Argentina beat West Germany 3-2 in the final at the Azteca.',
+    region: 'South America', country: 'Argentina', venue: 'Estadio Azteca, Mexico City',
+    playerOfTheTournament: 'Diego Maradona',
+  },
+  {
+    id: 'wc-1990', year: 1990, sport: 'Soccer',
+    event: 'FIFA World Cup — Italy 1990',
+    winner: 'West Germany', loser: 'Argentina',
+    score: '1-0', notableDetails: 'A defensive, low-scoring tournament (lowest goals-per-game ever). West Germany gain revenge for the 1986 final through Andreas Brehme\'s disputed penalty. The defining image is a tearful Salvatore "Toto" Schillaci, the tournament\'s surprise top scorer. Cameroon\'s run to the quarter-finals introduced Africa to the world stage.',
+    region: 'Europe', country: 'West Germany', venue: 'Stadio Olimpico, Rome',
+    playerOfTheTournament: 'Salvatore Schillaci',
+  },
+  {
+    id: 'wc-1994', year: 1994, sport: 'Soccer',
+    event: 'FIFA World Cup — USA 1994',
+    winner: 'Brazil', loser: 'Italy',
+    score: '0-0 (3-2 pens)', notableDetails: 'The first World Cup decided on penalties. Roberto Baggio skied the decisive spot-kick over the bar at the Rose Bowl. Brazil claim their 4th title. Romário and Bebeto formed a lethal strike partnership. The tournament set attendance records and brought the World Cup to a country with little soccer tradition.',
+    region: 'US', country: 'Brazil', venue: 'Rose Bowl, Pasadena',
+    playerOfTheTournament: 'Romário',
+  },
+  {
+    id: 'wc-1998', year: 1998, sport: 'Soccer',
+    event: 'FIFA World Cup — France 1998',
+    winner: 'France', loser: 'Brazil',
+    score: '3-0', notableDetails: 'Hosts France win their first World Cup, dismantling a pre-match favorite Brazil 3-0 in the final at the newly-built Stade de France. Zinedine Zidane scored two headers and Emmanuel Petit added a third. Ronaldo\'s mysterious pre-final seizure remains one of the tournament\'s enduring mysteries.',
+    region: 'Europe', country: 'France', venue: 'Stade de France, Saint-Denis',
+    playerOfTheTournament: 'Ronaldo',
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // ── SUMMER OLYMPIC GAMES ─────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: 'oly-1976', year: 1976, sport: 'Olympics',
+    event: 'Summer Olympics — Montreal 1976',
+    winner: 'Soviet Union (49 gold)', loser: 'East Germany (40 gold)',
+    score: 'USSR top medal table', notableDetails: '14-year-old Nadia Comăneci of Romania scores the first perfect 10.0 in Olympic gymnastics history — on the uneven bars, seven times across the Games. Bruce Jenner wins the decathlon. The Games were boycotted by many African nations over apartheid and left Montreal with a billion-dollar debt.',
+    region: 'Europe', country: 'Soviet Union', venue: 'Montreal, Canada',
+    playerOfTheTournament: 'Nadia Comăneci',
+  },
+  {
+    id: 'oly-1980', year: 1980, sport: 'Olympics',
+    event: 'Summer Olympics — Moscow 1980',
+    winner: 'Soviet Union (80 gold)', loser: 'East Germany (47 gold)',
+    score: 'USSR dominate', notableDetails: 'A US-led boycott in protest of the Soviet invasion of Afghanistan halved the field. With the strongest nations absent, the USSR ran away with the medal table. Allan Wells of Britain won the 100m and distance runner Miruts Yifter of Ethiopia took double gold.',
+    region: 'Europe', country: 'Soviet Union', venue: 'Moscow, USSR',
+    playerOfTheTournament: 'Aleksandr Dityatin',
+  },
+  {
+    id: 'oly-1984', year: 1984, sport: 'Olympics',
+    event: 'Summer Olympics — Los Angeles 1984',
+    winner: 'United States (83 gold)', loser: 'Romania (20 gold)',
+    score: 'USA top table', notableDetails: 'A Soviet-led boycott (reciprocal to 1980) opened the door for a US sweep. Carl Lewis matched Jesse Owens\' four gold medals (100m, 200m, long jump, 4x100m). Mary Lou Retton became the first American gymnast to win all-around gold. The Games turned a profit and reshaped the Olympic business model.',
+    region: 'US', country: 'United States', venue: 'Los Angeles, USA',
+    playerOfTheTournament: 'Carl Lewis',
+  },
+  {
+    id: 'oly-1988', year: 1988, sport: 'Olympics',
+    event: 'Summer Olympics — Seoul 1988',
+    winner: 'Soviet Union (55 gold)', loser: 'East Germany (37 gold)',
+    score: 'USSR top table', notableDetails: 'The most notorious doping moment in Olympic history: Ben Johnson of Canada broke the 100m world record (9.79) only to test positive for steroids days later and be stripped of his gold. Florence Griffith-Joyner\'s 10.49 and 21.34 world records still stand. Greg Louganis hit his head on the springboard and still won gold.',
+    region: 'Asia', country: 'Soviet Union', venue: 'Seoul, South Korea',
+    playerOfTheTournament: 'Florence Griffith-Joyner',
+  },
+  {
+    id: 'oly-1992', year: 1992, sport: 'Olympics',
+    event: 'Summer Olympics — Barcelona 1992',
+    winner: 'Unified Team (45 gold)', loser: 'United States (37 gold)',
+    score: 'Unified Team top', notableDetails: 'The "Dream Team" — Jordan, Magic, Bird, Barkley — won basketball gold by an average of 43.8 points, the greatest team ever assembled. Gymnast Vitaly Scherbo won 6 golds. Derartu Tulu became the first black African woman to win Olympic gold. The Games marked the debut of the Unified Team after the USSR\'s collapse.',
+    region: 'Europe', country: 'Unified Team', venue: 'Barcelona, Spain',
+    playerOfTheTournament: 'Vitaly Scherbo',
+  },
+  {
+    id: 'oly-1996', year: 1996, sport: 'Olympics',
+    event: 'Summer Olympics — Atlanta 1996 (Centennial)',
+    winner: 'United States (44 gold)', loser: 'Germany (20 gold)',
+    score: 'USA top table', notableDetails: 'Michael Johnson became the first man to win the 200m and 400m, his 200m world record of 19.32 lasting 12 years. Kerri Strug landed her vault on an injured ankle to secure team gymnastics gold. Carl Lewis won his 4th straight long jump. The Games were marred by the Centennial Olympic Park bombing.',
+    region: 'US', country: 'United States', venue: 'Atlanta, USA',
+    playerOfTheTournament: 'Michael Johnson',
+  },
+  {
+    id: 'oly-2000', year: 2000, sport: 'Olympics',
+    event: 'Summer Olympics — Sydney 2000',
+    winner: 'United States (37 gold)', loser: 'Russia (32 gold)',
+    score: 'USA top table', notableDetails: 'Widely hailed as the best-organized Games ever. Cathy Freeman lit the cauldron and won 400m gold in a full-body suit before 112,000 home fans. Ian "Thorpedo" Thorpe won 3 golds at 17. Marion Jones won 5 golds (all later stripped for doping). The first Games held in spring in the Southern Hemisphere.',
+    region: 'Oceania', country: 'United States', venue: 'Sydney, Australia',
+    playerOfTheTournament: 'Ian Thorpe',
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // ── FORMULA 1 WORLD CHAMPIONSHIP ─────────────────────────────────
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: 'f1-1975', year: 1975, sport: 'F1',
+    event: 'F1 World Championship — 1975',
+    winner: 'Niki Lauda', loser: 'Emerson Fittipaldi',
+    score: '64.5 vs 45 pts', notableDetails: 'Lauda\'s first title, in his first Ferrari season. Ferrari built the 312T around Enzo\'s new ace. Lauda won 5 races and took 9 poles. The Scuderia\'s renaissance after years in the wilderness.',
+    region: 'Europe', country: 'Austria', venue: 'Scuderia Ferrari',
+    playerOfTheTournament: 'Niki Lauda',
+  },
+  {
+    id: 'f1-1976', year: 1976, sport: 'F1',
+    event: 'F1 World Championship — 1976',
+    winner: 'James Hunt', loser: 'Niki Lauda',
+    score: '69 vs 68 pts', notableDetails: 'The most dramatic title fight in F1 history. Lauda crashed at the Nürburgring and was given last rites with severe burns, yet returned to race 6 weeks later with bandages soaked in blood. Hunt took the title by a single point at a rain-soaked Fuji. Later immortalized in the film "Rush".',
+    region: 'Europe', country: 'United Kingdom', venue: 'McLaren',
+    playerOfTheTournament: 'James Hunt',
+  },
+  {
+    id: 'f1-1977', year: 1977, sport: 'F1',
+    event: 'F1 World Championship — 1977',
+    winner: 'Niki Lauda', loser: 'Jody Scheckter',
+    score: '72 vs 55 pts', notableDetails: 'Lauda wins his 2nd title with Ferrari despite a fractured relationship with Enzo Ferrari. He would walk away from the team with 2 races left. The season featured the Lotus 78 ground-effect car arriving late.',
+    region: 'Europe', country: 'Austria', venue: 'Scuderia Ferrari',
+    playerOfTheTournament: 'Niki Lauda',
+  },
+  {
+    id: 'f1-1978', year: 1978, sport: 'F1',
+    event: 'F1 World Championship — 1978',
+    winner: 'Mario Andretti', loser: ' Ronnie Peterson',
+    score: '64 vs 51 pts', notableDetails: 'Andretti — Italian-born American — wins the title in Colin Chapman\'s revolutionary Lotus 79 ground-effect car, the class of the field. Peterson, his teammate, died after a crash at Monza. The last posthumous Constructors\' title for Lotus\'s legacy of innovation.',
+    region: 'US', country: 'United States', venue: 'Lotus',
+    playerOfTheTournament: 'Mario Andretti',
+  },
+  {
+    id: 'f1-1979', year: 1979, sport: 'F1',
+    event: 'F1 World Championship — 1979',
+    winner: 'Jody Scheckter', loser: 'Gilles Villeneuve',
+    score: '51 vs 47 pts', notableDetails: 'Scheckter — a South African — gives Ferrari their last title for 21 years. The season is remembered for the famous "battle of Dijon" — Villeneuve and René Arnoux banging wheels for 2nd place on the last lap. The last driver title for the "grandfather" generation of F1.',
+    region: 'Africa', country: 'South Africa', venue: 'Scuderia Ferrari',
+    playerOfTheTournament: 'Jody Scheckter',
+  },
+  {
+    id: 'f1-1980', year: 1980, sport: 'F1',
+    event: 'F1 World Championship — 1980',
+    winner: 'Alan Jones', loser: 'Nelson Piquet',
+    score: '67 vs 54 pts', notableDetails: 'Williams\'s first drivers\' and constructors\' title. The Australian Jones won 5 races in the dominant FW07B. The turbo era was dawning — Renault introduced the turbo engine — but the Cosworth DFV still reigned.',
+    region: 'Oceania', country: 'Australia', venue: 'Williams',
+    playerOfTheTournament: 'Alan Jones',
+  },
+  {
+    id: 'f1-1981', year: 1981, sport: 'F1',
+    event: 'F1 World Championship — 1981',
+    winner: 'Nelson Piquet', loser: 'Carlos Reutemann',
+    score: '50 vs 49 pts', notableDetails: 'Piquet\'s first of 3 titles, won by a single point in Gordon Murray\'s Brabham BT49C. The season opened with the famous 1981 Long Beach GP — the first US GP won by a turbo car. The last full DFV-dominated season.',
+    region: 'South America', country: 'Brazil', venue: 'Brabham',
+    playerOfTheTournament: 'Nelson Piquet',
+  },
+  {
+    id: 'f1-1982', year: 1982, sport: 'F1',
+    event: 'F1 World Championship — 1982',
+    winner: 'Keke Rosberg', loser: 'Didier Pironi',
+    score: '44 vs 39 pts', notableDetails: 'Rosberg wins with only 1 race victory all season — the fewest wins for a champion at the time. A tragic, chaotic year: Gilles Villeneuve died at Zolder and Pironi\'s career ended in a crash at Hockenheim. The title race went to the final round.',
+    region: 'Europe', country: 'Finland', venue: 'Williams',
+    playerOfTheTournament: 'Keke Rosberg',
+  },
+  {
+    id: 'f1-1983', year: 1983, sport: 'F1',
+    event: 'F1 World Championship — 1983',
+    winner: 'Nelson Piquet', loser: 'Alain Prost',
+    score: '59 vs 57 pts', notableDetails: 'Piquet\'s 2nd title — the first for a turbo engine (BMW). Prost lost the title at the final race in South Africa when his Renault turbo failed. Brabham-BMW beat Renault at their own turbo game.',
+    region: 'South America', country: 'Brazil', venue: 'Brabham-BMW',
+    playerOfTheTournament: 'Nelson Piquet',
+  },
+  {
+    id: 'f1-1984', year: 1984, sport: 'F1',
+    event: 'F1 World Championship — 1984',
+    winner: 'Niki Lauda', loser: 'Alain Prost',
+    score: '72 vs 71.5 pts', notableDetails: 'The closest title in F1 history — half a point. Lauda, in his McLaren comeback, won only 5 races to Prost\'s 7. The McLaren MP4/2 dominated, taking 12 of 16 wins. Ayrton Senna announced his talent in the wet at Monaco. The season that began the turbo\'s golden age.',
+    region: 'Europe', country: 'Austria', venue: 'McLaren-TAG',
+    playerOfTheTournament: 'Niki Lauda',
+  },
+  {
+    id: 'f1-1985', year: 1985, sport: 'F1',
+    event: 'F1 World Championship — 1985',
+    winner: 'Alain Prost', loser: 'Michele Alboreto',
+    score: '73 vs 53 pts', notableDetails: 'Prost\'s first title — "The Professor" finally breaks through. McLaren dominates again with the MP4/2B. Nigel Mansell took his first win at Brands Hatch. The turbo cars hit 1,000+ hp in qualifying trim — peak turbo excess.',
+    region: 'Europe', country: 'France', venue: 'McLaren-TAG',
+    playerOfTheTournament: 'Alain Prost',
+  },
+  {
+    id: 'f1-1986', year: 1986, sport: 'F1',
+    event: 'F1 World Championship — 1986',
+    winner: 'Alain Prost', loser: 'Nigel Mansell',
+    score: '72 vs 70 pts', notableDetails: 'A 3-way finale: Mansell, Piquet, and Prost. Mansell\'s rear tyre exploded at 180mph in Adelaide, handing the title to Prost. The Williams-Honda was the fastest car but its two drivers took points from each other. Prost becomes the first back-to-back champion since Jack Brabham.',
+    region: 'Europe', country: 'France', venue: 'McLaren-TAG',
+    playerOfTheTournament: 'Alain Prost',
+  },
+  {
+    id: 'f1-1987', year: 1987, sport: 'F1',
+    event: 'F1 World Championship — 1987',
+    winner: 'Nelson Piquet', loser: 'Nigel Mansell',
+    score: '73 vs 61 pts', notableDetails: 'Piquet\'s 3rd and final title, in the dominant Williams-Honda FW11B. Mansell won more races (6 vs 3) but Piquet\'s consistency and a famous Japan GP incident settled it. The season marked Honda\'s engine dominance.',
+    region: 'South America', country: 'Brazil', venue: 'Williams-Honda',
+    playerOfTheTournament: 'Nelson Piquet',
+  },
+  {
+    id: 'f1-1988', year: 1988, sport: 'F1',
+    event: 'F1 World Championship — 1988',
+    winner: 'Ayrton Senna', loser: 'Alain Prost',
+    score: '90 vs 87 pts', notableDetails: 'The first Senna vs Prost McLaren-Honda season — they won 15 of 16 races (94% record). Senna took the title despite scoring fewer total points — only the best 11 results counted. The MP4/4 is widely considered the greatest F1 car ever built.',
+    region: 'South America', country: 'Brazil', venue: 'McLaren-Honda',
+    playerOfTheTournament: 'Ayrton Senna',
+  },
+  {
+    id: 'f1-1989', year: 1989, sport: 'F1',
+    event: 'F1 World Championship — 1989',
+    winner: 'Alain Prost', loser: 'Ayrton Senna',
+    score: '76 vs 60 pts', notableDetails: 'The title decided by the infamous Suzuka collision. Senna crashed into Prost, got going, won the race — but was disqualified for cutting the chicane. Prost claimed the title. The rivalry that defined an era exploded into outright hostility.',
+    region: 'Europe', country: 'France', venue: 'McLaren-Honda',
+    playerOfTheTournament: 'Alain Prost',
+  },
+  {
+    id: 'f1-1990', year: 1990, sport: 'F1',
+    event: 'F1 World Championship — 1990',
+    winner: 'Ayrton Senna', loser: 'Alain Prost',
+    score: '78 vs 71 pts', notableDetails: 'Senna\'s revenge at Suzuka — he deliberately crashed into Prost at the first corner of the Japanese GP, settling the title on the spot. Both men admitted it years later. Senna\'s 2nd title. Prost had moved to Ferrari.',
+    region: 'South America', country: 'Brazil', venue: 'McLaren-Honda',
+    playerOfTheTournament: 'Ayrton Senna',
+  },
+  {
+    id: 'f1-1991', year: 1991, sport: 'F1',
+    event: 'F1 World Championship — 1991',
+    winner: 'Ayrton Senna', loser: 'Nigel Mansell',
+    score: '96 vs 72 pts', notableDetails: 'Senna\'s 3rd and final title. The McLaren-Honda MP4/6 held off a charging Mansell in the Williams-Renault. Senna won 7 races including an emotional 3rd straight Monaco victory. His famous in-cockpit commentary lap of Suzuka became legendary.',
+    region: 'South America', country: 'Brazil', venue: 'McLaren-Honda',
+    playerOfTheTournament: 'Ayrton Senna',
+  },
+  {
+    id: 'f1-1992', year: 1992, sport: 'F1',
+    event: 'F1 World Championship — 1992',
+    winner: 'Nigel Mansell', loser: 'Riccardo Patrese',
+    score: '108 vs 56 pts', notableDetails: 'Mansell dominates with the FW14B — Adrian Newey\'s masterpiece with active suspension and traction control. Won the first 5 races and 9 total. Clinched the title with 5 races to spare. "Il Leone" finally gets his crown at age 39.',
+    region: 'Europe', country: 'United Kingdom', venue: 'Williams-Renault',
+    playerOfTheTournament: 'Nigel Mansell',
+  },
+  {
+    id: 'f1-1993', year: 1993, sport: 'F1',
+    event: 'F1 World Championship — 1993',
+    winner: 'Alain Prost', loser: 'Ayrton Senna',
+    score: '99 vs 73 pts', notableDetails: 'Prost\'s 4th and final title — fittingly in the all-conquering Williams FW15C. Senna, in the inferior McLaren, still won 5 races including his masterclass in the wet at Donington ("the lap of the gods"). Prost retired at the top.',
+    region: 'Europe', country: 'France', venue: 'Williams-Renault',
+    playerOfTheTournament: 'Alain Prost',
+  },
+  {
+    id: 'f1-1994', year: 1994, sport: 'F1',
+    event: 'F1 World Championship — 1994',
+    winner: 'Michael Schumacher', loser: 'Damon Hill',
+    score: '92 vs 91 pts', notableDetails: 'The darkest season in modern F1: Ayrton Senna was killed at Imola (alongside Roland Ratzenberger). Schumacher clinched the title by one point after deliberately (per many) crashing into Hill at Adelaide. Benetton-Ford\'s debut title. The season transformed F1 safety forever.',
+    region: 'Europe', country: 'Germany', venue: 'Benetton-Ford',
+    playerOfTheTournament: 'Michael Schumacher',
+  },
+  {
+    id: 'f1-1995', year: 1995, sport: 'F1',
+    event: 'F1 World Championship — 1995',
+    winner: 'Michael Schumacher', loser: 'Damon Hill',
+    score: '102 vs 69 pts', notableDetails: 'Schumacher\'s 2nd title, now with Benetton-Renault. Won 9 races. The season featured several on-track collisions between Schumacher and Hill. Benetton\'s last hurrah before Schumacher\'s move to Ferrari for 1996.',
+    region: 'Europe', country: 'Germany', venue: 'Benetton-Renault',
+    playerOfTheTournament: 'Michael Schumacher',
+  },
+  {
+    id: 'f1-1996', year: 1996, sport: 'F1',
+    event: 'F1 World Championship — 1996',
+    winner: 'Damon Hill', loser: 'Jacques Villeneuve',
+    score: '97 vs 78 pts', notableDetails: 'Hill becomes the first son of a world champion (Graham Hill, 1962/68) to also win the title. Won 8 races in the dominant Williams-Renault FW18. His rookie teammate Villeneuve won 4 races and nearly took the title. Schumacher won 3 in the under-powered Ferrari.',
+    region: 'Europe', country: 'United Kingdom', venue: 'Williams-Renault',
+    playerOfTheTournament: 'Damon Hill',
+  },
+  {
+    id: 'f1-1997', year: 1997, sport: 'F1',
+    event: 'F1 World Championship — 1997',
+    winner: 'Jacques Villeneuve', loser: 'Michael Schumacher',
+    score: '81 vs 78 pts', notableDetails: 'Villeneuve — son of Gilles — wins the title for Williams. Decided at the final race in Jerez where Schumacher tried to take Villeneuve out, but only damaged his own car. Schumacher was later stripped of 2nd in the championship for unsportsmanlike conduct.',
+    region: 'US', country: 'Canada', venue: 'Williams-Renault',
+    playerOfTheTournament: 'Jacques Villeneuve',
+  },
+  {
+    id: 'f1-1998', year: 1998, sport: 'F1',
+    event: 'F1 World Championship — 1998',
+    winner: 'Mika Häkkinen', loser: 'Michael Schumacher',
+    score: '100 vs 86 pts', notableDetails: 'Häkkinen\'s first title, delivering McLaren\'s first since 1991 in the Adrian Newey-designed MP4-13. The Finn won 8 races. Schumacher pushed him all the way, but stalled on the grid at Suzuka finale. Häkkinen\'s famous cry of "Yes, yes, yes!" on team radio.',
+    region: 'Europe', country: 'Finland', venue: 'McLaren-Mercedes',
+    playerOfTheTournament: 'Mika Häkkinen',
+  },
+  {
+    id: 'f1-1999', year: 1999, sport: 'F1',
+    event: 'F1 World Championship — 1999',
+    winner: 'Mika Häkkinen', loser: 'Eddie Irvine',
+    score: '76 vs 74 pts', notableDetails: 'Häkkinen back-to-back. Schumacher broke his leg at Silverstone, handing Ferrari\'s title hopes to Irvine. The Ulsterman nearly pulled off a stunning upset before Häkkinen sealed it at Suzuka. Ferrari did win the constructors\' — their first since 1983.',
+    region: 'Europe', country: 'Finland', venue: 'McLaren-Mercedes',
+    playerOfTheTournament: 'Mika Häkkinen',
+  },
+  {
+    id: 'f1-2000', year: 2000, sport: 'F1',
+    event: 'F1 World Championship — 2000',
+    winner: 'Michael Schumacher', loser: 'Mika Häkkinen',
+    score: '108 vs 89 pts', notableDetails: 'Schumacher ends Ferrari\'s 21-year drivers\' title drought — the longest in their history. Won the last 4 races after trailing Häkkinen mid-season. The emotion at Monza, post-win, was palpable. The start of Ferrari\'s 5-year dynasty.',
+    region: 'Europe', country: 'Germany', venue: 'Ferrari',
+    playerOfTheTournament: 'Michael Schumacher',
+  },
+  {
+    id: 'f1-2001', year: 2001, sport: 'F1',
+    event: 'F1 World Championship — 2001',
+    winner: 'Michael Schumacher', loser: 'David Coulthard',
+    score: '123 vs 62 pts', notableDetails: 'Schumacher\'s 4th title, clinched with 4 races to spare — the earliest ever at the time. Won 9 races and stood on the podium in all 17. His brother Ralf won 3 races for Williams-BMW. The most dominant season of the Schumacher-Ferrari era.',
+    region: 'Europe', country: 'Germany', venue: 'Ferrari',
+    playerOfTheTournament: 'Michael Schumacher',
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // ── TENNIS GRAND SLAMS ───────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════
+
+  // ── WIMBLEDON ────────────────────────────────────────────
+  {
+    id: 'wim-m-1976', year: 1976, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1976',
+    winner: 'Björn Borg', loser: 'Ilie Năstase',
+    score: '6-4, 6-2, 6-9 retired', notableDetails: 'Borg wins the first of 5 straight Wimbledon titles. The ice-cool Swede barely broke a sweat in the final. The beginning of tennis\'s most iconic dynasty at the All England Club.',
+    region: 'Europe', country: 'Sweden', venue: 'All England Club, London',
+    playerOfTheTournament: 'Björn Borg',
+  },
+  {
+    id: 'wim-m-1980', year: 1980, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1980',
+    winner: 'Björn Borg', loser: 'John McEnroe',
+    score: '1-6, 7-5, 6-3, 6-7(16), 8-6', notableDetails: 'The greatest Wimbledon final ever. The legendary 4th-set tie-break (18-16 to McEnroe) had 5 match points saved by Borg and 7 set points saved by McEnroe. Borg won his 5th straight — a record that still stands.',
+    region: 'Europe', country: 'Sweden', venue: 'All England Club, London',
+    playerOfTheTournament: 'Björn Borg',
+  },
+  {
+    id: 'wim-m-1981', year: 1981, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1981',
+    winner: 'John McEnroe', loser: 'Björn Borg',
+    score: '4-6, 7-6, 7-6, 6-4', notableDetails: 'McEnroe ends Borg\'s 5-year reign. Borg would retire at 26 shortly after. McEnroe\'s artistry and temper both on full display. The changing of the guard at the top of men\'s tennis.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'John McEnroe',
+  },
+  {
+    id: 'wim-m-1982', year: 1982, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1982',
+    winner: 'Jimmy Connors', loser: 'John McEnroe',
+    score: '3-6, 6-3, 6-7, 6-7, 6-4', notableDetails: 'Connors, at nearly 30, came back from 2 sets down against the defending champion. At 30 years old, Connors proved his longevity. The defining win of his late career.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Jimmy Connors',
+  },
+  {
+    id: 'wim-m-1985', year: 1985, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1985',
+    winner: 'Boris Becker', loser: 'Kevin Curren',
+    score: '6-3, 6-7, 7-6, 6-4', notableDetails: 'Becker becomes the youngest men\'s champion at 17 years, 7 months — and the first unseeded champion, and the first German. "Boom Boom" Becker\'s diving, athletic style made him an instant Wimbledon favorite.',
+    region: 'Europe', country: 'Germany', venue: 'All England Club, London',
+    playerOfTheTournament: 'Boris Becker',
+  },
+  {
+    id: 'wim-m-1989', year: 1989, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1989',
+    winner: 'Boris Becker', loser: 'Stefan Edberg',
+    score: '6-0, 7-6, 6-4', notableDetails: 'Becker\'s 3rd Wimbledon title. A bagel in the first set of a men\'s final was shocking. The rivalry between Becker and Edberg defined the late-80s serve-and-volley era.',
+    region: 'Europe', country: 'Germany', venue: 'All England Club, London',
+    playerOfTheTournament: 'Boris Becker',
+  },
+  {
+    id: 'wim-m-1992', year: 1992, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1992',
+    winner: 'Andre Agassi', loser: 'Goran Ivanišević',
+    score: '6-7, 6-4, 6-4, 1-6, 6-4', notableDetails: 'Agassi wins his first Wimbledon and completes a career milestone on his least-favorite surface (grass). The flamboyant Agassi, who once refused to play Wimbledon, now holds the trophy. The first step toward his eventual Career Grand Slam.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+  {
+    id: 'wim-m-1993', year: 1993, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1993',
+    winner: 'Pete Sampras', loser: 'Jim Courier',
+    score: '7-6, 7-6, 3-6, 6-3', notableDetails: 'Sampras wins his first Wimbledon — the beginning of his 7-title reign at the All England Club. The serve-and-volley master at his peak. He would win 7 Wimbledons, breaking Borg\'s record.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Pete Sampras',
+  },
+  {
+    id: 'wim-m-1999', year: 1999, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 1999',
+    winner: 'Pete Sampras', loser: 'Andre Agassi',
+    score: '6-3, 6-4, 7-5', notableDetails: 'Sampras wins his 6th Wimbledon and ties Roy Emerson\'s all-time record of 12 Grand Slam titles. A straight-sets dismissal of his great rival Agassi. Pure serve-and-volley dominance.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Pete Sampras',
+  },
+  {
+    id: 'wim-m-2000', year: 2000, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 2000',
+    winner: 'Pete Sampras', loser: 'Pat Rafter',
+    score: '6-7, 7-6, 6-4, 6-2', notableDetails: 'Sampras wins his 7th Wimbledon, breaking Emerson\'s record with 13 Grand Slams. His 4th straight Wimbledon title. Played through tendinitis in his foot and hip. The high point of "Pistol Pete\'s" career.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Pete Sampras',
+  },
+  {
+    id: 'wim-m-2001', year: 2001, sport: 'Tennis',
+    event: 'Wimbledon Men\'s Singles — 2001',
+    winner: 'Goran Ivanišević', loser: 'Pat Rafter',
+    score: '6-3, 3-6, 6-3, 2-6, 9-7', notableDetails: 'Ivanišević becomes the first wildcard to win a Grand Slam and the first to win on a Monday after rain delays. A 3-time runner-up finally breaks through. An emotional, against-all-odds victory by one of tennis\'s most beloved characters.',
+    region: 'Europe', country: 'Croatia', venue: 'All England Club, London',
+    playerOfTheTournament: 'Goran Ivanišević',
+  },
+
+  // ── WIMBLEDON WOMEN ──────────────────────────────────────
+  {
+    id: 'wim-w-1976', year: 1976, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1976',
+    winner: 'Chris Evert', loser: 'Evonne Goolagong',
+    score: '6-3, 3-6, 8-6', notableDetails: 'Evert wins her 2nd Wimbledon. "The Ice Maiden" reigned with her two-handed backhand and baseline consistency. Evert and Goolagong would contest many finals in the mid-70s.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Chris Evert',
+  },
+  {
+    id: 'wim-w-1978', year: 1978, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1978',
+    winner: 'Martina Navratilova', loser: 'Chris Evert',
+    score: '2-6, 6-4, 7-5', notableDetails: 'Navratilova\'s first Wimbledon title. She would go on to win a record 9 singles titles here. The start of the greatest rivalry in women\'s tennis — Navratilova vs Evert contested 80 times.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Martina Navratilova',
+  },
+  {
+    id: 'wim-w-1985', year: 1985, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1985',
+    winner: 'Martina Navratilova', loser: 'Chris Evert',
+    score: '4-6, 6-3, 6-2', notableDetails: 'Navratilova wins her 6th straight Wimbledon — a streak only she has achieved. At her absolute peak, she lost just one match all year. The most dominant player of the 1980s.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Martina Navratilova',
+  },
+  {
+    id: 'wim-w-1988', year: 1988, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1988',
+    winner: 'Steffi Graf', loser: 'Martina Navratilova',
+    score: '5-7, 6-2, 6-1', notableDetails: 'Graf wins Wimbledon as part of her historic 1988 — the Golden Slam (all 4 Slams + Olympic gold). She ended Navratilova\'s 6-year Wimbledon reign. The changing of the guard in women\'s tennis.',
+    region: 'Europe', country: 'Germany', venue: 'All England Club, London',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'wim-w-1992', year: 1992, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1992',
+    winner: 'Steffi Graf', loser: 'Monica Seles',
+    score: '6-2, 6-1', notableDetails: 'Graf dismantles Seles in the final. The rivalry between Graf and Seles defined women\'s tennis until Seles was stabbed by a fan in 1993, robbing the sport of its defining matchup.',
+    region: 'Europe', country: 'Germany', venue: 'All England Club, London',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'wim-w-1995', year: 1995, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 1995',
+    winner: 'Steffi Graf', loser: 'Arantxa Sánchez Vicario',
+    score: '4-6, 6-1, 7-5', notableDetails: 'Graf wins her 6th Wimbledon. The final featured the longest game in Wimbledon final history (32 points, 13 deuces) and the longest set (20 games in set 2 of their earlier Roland-Garros epic). Graf\'s 7th and final Slam of the year.',
+    region: 'Europe', country: 'Germany', venue: 'All England Club, London',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'wim-w-2000', year: 2000, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 2000',
+    winner: 'Venus Williams', loser: 'Lindsay Davenport',
+    score: '6-3, 7-6', notableDetails: 'Venus Williams wins her first Grand Slam at age 20. The power game she and her sister Serena pioneered would transform women\'s tennis. The first all-power era champion.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Venus Williams',
+  },
+  {
+    id: 'wim-w-2001', year: 2001, sport: 'Tennis',
+    event: 'Wimbledon Women\'s Singles — 2001',
+    winner: 'Venus Williams', loser: 'Justine Henin',
+    score: '6-1, 3-6, 6-0', notableDetails: 'Venus defends her Wimbledon title. A bagel in the final set of a Wimbledon final was remarkable. Venus became the first woman since Graf to defend Wimbledon.',
+    region: 'US', country: 'United States', venue: 'All England Club, London',
+    playerOfTheTournament: 'Venus Williams',
+  },
+
+  // ── US OPEN MEN ──────────────────────────────────────────
+  {
+    id: 'uso-m-1974', year: 1974, sport: 'Tennis',
+    event: 'US Open Men\'s Singles — 1974',
+    winner: 'Jimmy Connors', loser: 'Ken Rosewall',
+    score: '6-1, 6-0, 6-1', notableDetails: 'Connors wins his 2nd straight Slam of the year. A 6-0 set in a Grand Slam final was emphatic. Connors would win 3 of the 4 Slams in 1974, missing only the French (which he was banned from).',
+    region: 'US', country: 'United States', venue: 'Forest Hills, New York',
+    playerOfTheTournament: 'Jimmy Connors',
+  },
+  {
+    id: 'uso-m-1980', year: 1980, sport: 'Tennis',
+    event: 'US Open Men\'s Singles — 1980',
+    winner: 'John McEnroe', loser: 'Björn Borg',
+    score: '7-6, 6-1, 6-7, 5-7, 6-4', notableDetails: 'The 4th Slam final of the year between McEnroe and Borg. McEnroe wins his 2nd consecutive US Open in a 5-set classic. Borg would never win the US Open — the only Slam to elude him.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'John McEnroe',
+  },
+  {
+    id: 'uso-m-1990', year: 1990, sport: 'Tennis',
+    event: 'US Open Men\'s Singles — 1990',
+    winner: 'Pete Sampras', loser: 'Andre Agassi',
+    score: '6-4, 6-3, 6-2', notableDetails: 'Sampras wins his first Grand Slam at 19 years, 28 days — the youngest US Open men\'s champion ever. The start of a 12-year reign at the top of men\'s tennis.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Pete Sampras',
+  },
+  {
+    id: 'uso-m-1994', year: 1994, sport: 'Tennis',
+    event: 'US Open Men\'s Singles — 1994',
+    winner: 'Andre Agassi', loser: 'Michael Stich',
+    score: '6-1, 7-6, 7-5', notableDetails: 'Agassi wins his 2nd US Open. Did not drop a set en route to the final. Agassi\'s late-career renaissance began here — he would complete the Career Grand Slam in 1999.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+  {
+    id: 'uso-m-1999', year: 1999, sport: 'Tennis',
+    event: 'US Open Men\'s Singles — 1999',
+    winner: 'Andre Agassi', loser: 'Todd Martin',
+    score: '6-4, 6-7, 6-7, 6-3, 6-2', notableDetails: 'Agassi wins his 2nd US Open and ascends to world #1. Came back from 2 sets to 1 down. Capping a stunning comeback year — from outside the top 100 to Grand Slam champion. The defining chapter of his career revival.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+
+  // ── US OPEN WOMEN ────────────────────────────────────────
+  {
+    id: 'uso-w-1975', year: 1975, sport: 'Tennis',
+    event: 'US Open Women\'s Singles — 1975',
+    winner: 'Chris Evert', loser: 'Evonne Goolagong',
+    score: '5-7, 6-4, 6-2', notableDetails: 'Evert wins her first US Open. She would go on to win 6 US Opens — a record she shares with Serena Williams. Evert\'s baseline consistency ruled the hard courts of Forest Hills.',
+    region: 'US', country: 'United States', venue: 'Forest Hills, New York',
+    playerOfTheTournament: 'Chris Evert',
+  },
+  {
+    id: 'uso-w-1983', year: 1983, sport: 'Tennis',
+    event: 'US Open Women\'s Singles — 1983',
+    winner: 'Martina Navratilova', loser: 'Chris Evert',
+    score: '6-1, 6-3', notableDetails: 'Navratilova\'s 3rd straight US Open. She went 86-1 for the 1983 season — one of the most dominant years in tennis history. Navratilova at her absolute peak.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Martina Navratilova',
+  },
+  {
+    id: 'uso-w-1988', year: 1988, sport: 'Tennis',
+    event: 'US Open Women\'s Singles — 1988',
+    winner: 'Steffi Graf', loser: 'Martina Navratilova',
+    score: '3-6, 7-5, 6-1', notableDetails: 'Graf completes the Grand Slam — all 4 majors in one calendar year, the first since Margaret Court in 1970 (and the Golden Slam with her Olympic gold weeks later). She came back from a set down against Navratilova.',
+    region: 'Europe', country: 'Germany', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'uso-w-1999', year: 1999, sport: 'Tennis',
+    event: 'US Open Women\'s Singles — 1999',
+    winner: 'Serena Williams', loser: 'Martina Hingis',
+    score: '6-3, 7-6', notableDetails: 'Serena wins her first Grand Slam at age 17. The beginning of one of the greatest tennis careers ever. Beat world #1 Hingis and defending champion Lindsay Davenport en route.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Serena Williams',
+  },
+  {
+    id: 'uso-w-2001', year: 2001, sport: 'Tennis',
+    event: 'US Open Women\'s Singles — 2001',
+    winner: 'Venus Williams', loser: 'Serena Williams',
+    score: '6-2, 6-4', notableDetails: 'The first all-sister US Open final since 1884. Venus defeats Serena in straight sets. The Williams sisters\' dominance of women\'s tennis had begun in earnest — they would meet in 9 Grand Slam finals.',
+    region: 'US', country: 'United States', venue: 'Flushing Meadows, New York',
+    playerOfTheTournament: 'Venus Williams',
+  },
+
+  // ── FRENCH OPEN MEN ──────────────────────────────────────
+  {
+    id: 'fo-m-1974', year: 1974, sport: 'Tennis',
+    event: 'French Open Men\'s Singles — 1974',
+    winner: 'Björn Borg', loser: 'Manuel Orantes',
+    score: '2-6, 6-7, 6-0, 6-1, 6-1', notableDetails: 'Borg wins his first Grand Slam at age 18 — his first of 6 French Opens. Came back from 2 sets down. The Ice Man of clay would dominate Roland-Garros like no one before or since.',
+    region: 'Europe', country: 'Sweden', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Björn Borg',
+  },
+  {
+    id: 'fo-m-1979', year: 1979, sport: 'Tennis',
+    event: 'French Open Men\'s Singles — 1979',
+    winner: 'Björn Borg', loser: 'Victor Pecci',
+    score: '6-3, 1-6, 7-6, 6-4', notableDetails: 'Borg wins his 4th French Open. He would not lose at Roland-Garros until 1981 — a 28-match winning streak. The king of clay.',
+    region: 'Europe', country: 'Sweden', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Björn Borg',
+  },
+  {
+    id: 'fo-m-1989', year: 1989, sport: 'Tennis',
+    event: 'French Open Men\'s Singles — 1989',
+    winner: 'Michael Chang', loser: 'Stefan Edberg',
+    score: '6-1, 3-6, 4-6, 6-4, 6-2', notableDetails: '17-year-old Chang becomes the youngest men\'s Grand Slam champion. His 4th-round underhand serve vs Lendl is one of the most famous moments in tennis. The first American man to win Roland-Garros since 1955.',
+    region: 'US', country: 'United States', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Michael Chang',
+  },
+  {
+    id: 'fo-m-1999', year: 1999, sport: 'Tennis',
+    event: 'French Open Men\'s Singles — 1999',
+    winner: 'Andre Agassi', loser: 'Andrei Medvedev',
+    score: '1-6, 2-6, 6-4, 6-3, 6-3', notableDetails: 'Agassi completes the Career Grand Slam — only the 5th man to do so. Came back from 2 sets down. He also became the first man to win all 4 Slams on 3 different surfaces. The defining moment of his late career.',
+    region: 'US', country: 'United States', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+
+  // ── FRENCH OPEN WOMEN ────────────────────────────────────
+  {
+    id: 'fo-w-1974', year: 1974, sport: 'Tennis',
+    event: 'French Open Women\'s Singles — 1974',
+    winner: 'Chris Evert', loser: 'Olga Morozova',
+    score: '6-1, 6-2', notableDetails: 'Evert wins her first Grand Slam at age 19. She would win 7 French Opens — tied for the Open Era record. Her baseline game was tailor-made for clay.',
+    region: 'US', country: 'United States', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Chris Evert',
+  },
+  {
+    id: 'fo-w-1984', year: 1984, sport: 'Tennis',
+    event: 'French Open Women\'s Singles — 1984',
+    winner: 'Martina Navratilova', loser: 'Chris Evert',
+    score: '6-2, 6-0', notableDetails: 'Navratilova wins the French to hold all 4 Slam titles simultaneously (though not in one calendar year). The bagel against Evert — her great rival — was stunning. Navratilova\'s peak year.',
+    region: 'US', country: 'United States', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Martina Navratilova',
+  },
+  {
+    id: 'fo-w-1987', year: 1987, sport: 'Tennis',
+    event: 'French Open Women\'s Singles — 1987',
+    winner: 'Steffi Graf', loser: 'Martina Navratilova',
+    score: '6-4, 4-6, 8-6', notableDetails: 'Graf wins her first Grand Slam at age 17. She came back from 3-5 down in the deciding set against the world #1. The birth of the Graf era, which would peak the following year with the Golden Slam.',
+    region: 'Europe', country: 'Germany', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'fo-w-1988', year: 1988, sport: 'Tennis',
+    event: 'French Open Women\'s Singles — 1988',
+    winner: 'Steffi Graf', loser: 'Natasha Zvereva',
+    score: '6-0, 6-0', notableDetails: 'The shortest Grand Slam final in Open Era history — 32 minutes, a "double bagel". Graf won the first 22 points of the match. The most dominant final performance in tennis history, part of her Grand Slam year.',
+    region: 'Europe', country: 'Germany', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'fo-w-1999', year: 1999, sport: 'Tennis',
+    event: 'French Open Women\'s Singles — 1999',
+    winner: 'Steffi Graf', loser: 'Martina Hingis',
+    score: '4-6, 7-5, 6-2', notableDetails: 'Graf wins her 22nd and final Grand Slam — coming back from a set down against the world #1. Hingis famously melted down, receiving a code violation and bursting into tears. Graf\'s emotional farewell to Roland-Garros.',
+    region: 'Europe', country: 'Germany', venue: 'Roland-Garros, Paris',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+
+  // ── AUSTRALIAN OPEN MEN ──────────────────────────────────
+  {
+    id: 'ao-m-1983', year: 1983, sport: 'Tennis',
+    event: 'Australian Open Men\'s Singles — 1983',
+    winner: 'Mats Wilander', loser: 'Ivan Lendl',
+    score: '6-1, 6-4, 6-4', notableDetails: 'Wilander wins his 2nd Australian Open. He would win 7 Slams total. Lendl, despite reaching 19 Slam finals, never won the Australian Open.',
+    region: 'Europe', country: 'Sweden', venue: 'Kooyong, Melbourne',
+    playerOfTheTournament: 'Mats Wilander',
+  },
+  {
+    id: 'ao-m-1985', year: 1985, sport: 'Tennis',
+    event: 'Australian Open Men\'s Singles — 1985',
+    winner: 'Stefan Edberg', loser: 'Mats Wilander',
+    score: '6-4, 6-3, 6-3', notableDetails: 'Edberg\'s first Grand Slam title. The elegant Swede\'s serve-and-volley artistry would win him 6 Slams. The first of two straight Australian Open titles on the Kooyong grass.',
+    region: 'Europe', country: 'Sweden', venue: 'Kooyong, Melbourne',
+    playerOfTheTournament: 'Stefan Edberg',
+  },
+  {
+    id: 'ao-m-1995', year: 1995, sport: 'Tennis',
+    event: 'Australian Open Men\'s Singles — 1995',
+    winner: 'Andre Agassi', loser: 'Pete Sampras',
+    score: '4-6, 6-1, 7-6, 6-4', notableDetails: 'Agassi wins his 3rd Slam. Beat rival Sampras in a 4-set classic. The semi-final between the two — a 4-setter won by Agassi — is one of the most celebrated matches in tennis.',
+    region: 'US', country: 'United States', venue: 'Flinders Park, Melbourne',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+  {
+    id: 'ao-m-2001', year: 2001, sport: 'Tennis',
+    event: 'Australian Open Men\'s Singles — 2001',
+    winner: 'Andre Agassi', loser: 'Arnaud Clément',
+    score: '6-4, 6-2, 6-2', notableDetails: 'Agassi wins his 3rd Australian Open. Did not drop a set in the final. Agassi would go on to win 4 Australian Opens — his most successful Slam. The dominant champion of the early-2000s hard courts.',
+    region: 'US', country: 'United States', venue: 'Melbourne Park, Melbourne',
+    playerOfTheTournament: 'Andre Agassi',
+  },
+
+  // ── AUSTRALIAN OPEN WOMEN ────────────────────────────────
+  {
+    id: 'ao-w-1988', year: 1988, sport: 'Tennis',
+    event: 'Australian Open Women\'s Singles — 1988',
+    winner: 'Steffi Graf', loser: 'Chris Evert',
+    score: '6-1, 7-6', notableDetails: 'Graf wins the Australian Open as part of her historic 1988 Grand Slam. First time the Australian Open was played at the new Flinders Park hard courts. Graf\'s dominance defined the year.',
+    region: 'Europe', country: 'Germany', venue: 'Flinders Park, Melbourne',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'ao-w-1989', year: 1989, sport: 'Tennis',
+    event: 'Australian Open Women\'s Singles — 1989',
+    winner: 'Steffi Graf', loser: 'Helena Suková',
+    score: '6-4, 6-4', notableDetails: 'Graf wins her 2nd straight Australian Open. Began the year with 5 straight Slam finals. Her hard-court dominance was unmatched.',
+    region: 'Europe', country: 'Germany', venue: 'Flinders Park, Melbourne',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+  {
+    id: 'ao-w-1994', year: 1994, sport: 'Tennis',
+    event: 'Australian Open Women\'s Singles — 1994',
+    winner: 'Steffi Graf', loser: 'Arantxa Sánchez Vicario',
+    score: '6-0, 6-2', notableDetails: 'Graf wins her 4th Australian Open. A near-double-bagel in the final showed her complete dominance. Graf at the peak of her powers — she would win 4 Slams that year.',
+    region: 'Europe', country: 'Germany', venue: 'Flinders Park, Melbourne',
+    playerOfTheTournament: 'Steffi Graf',
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // ── CRICKET WORLD CUP ────────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: 'cwc-1975', year: 1975, sport: 'Cricket',
+    event: 'Cricket World Cup — 1975 (Prudential Cup)',
+    winner: 'West Indies', loser: 'Australia',
+    score: '291/8 vs 274', notableDetails: 'The first-ever Cricket World Cup, a 60-over tournament in England. Clive Lloyd\'s West Indies set the template for dominant limited-overs cricket with a thrilling 102-run stand in the final. The birth of one-day cricket as a global spectacle.',
+    region: 'South America', country: 'West Indies', venue: 'Lord\'s, London',
+    playerOfTheTournament: 'Clive Lloyd',
+  },
+  {
+    id: 'cwc-1979', year: 1979, sport: 'Cricket',
+    event: 'Cricket World Cup — 1979 (Prudential Cup)',
+    winner: 'West Indies', loser: 'England',
+    score: '286/9 vs 194', notableDetails: 'West Indies defend their title at Lord\'s. Viv Richards\' unbeaten 138 in the final is one of the great World Cup innings. Joel Garner took 5 wickets. The West Indies confirmed their status as the kings of world cricket.',
+    region: 'South America', country: 'West Indies', venue: 'Lord\'s, London',
+    playerOfTheTournament: 'Viv Richards',
+  },
+  {
+    id: 'cwc-1983', year: 1983, sport: 'Cricket',
+    event: 'Cricket World Cup — 1983 (Prudential Cup)',
+    winner: 'India', loser: 'West Indies',
+    score: '183 vs 140', notableDetails: 'The greatest upset in early World Cup history. Kapil Dev\'s India, massive underdogs, defended just 183 against the 2-time defending champions. Kapil\'s iconic catch to dismiss Viv Richards turned the match. This win sparked India\'s obsession with cricket.',
+    region: 'Asia', country: 'India', venue: 'Lord\'s, London',
+    playerOfTheTournament: 'Kapil Dev',
+  },
+  {
+    id: 'cwc-1987', year: 1987, sport: 'Cricket',
+    event: 'Cricket World Cup — 1987 (Reliance Cup)',
+    winner: 'Australia', loser: 'England',
+    score: '253/5 vs 246', notableDetails: 'The first World Cup held outside England (co-hosted by India and Pakistan). Reduced to 50 overs per side due to shorter daylight. Australia, under Allan Border, won their first title — the start of a dynasty that would dominate world cricket.',
+    region: 'Oceania', country: 'Australia', venue: 'Eden Gardens, Kolkata',
+    playerOfTheTournament: 'David Boon',
+  },
+  {
+    id: 'cwc-1992', year: 1992, sport: 'Cricket',
+    event: 'Cricket World Cup — 1992 (Benson & Hedges Cup)',
+    winner: 'Pakistan', loser: 'England',
+    score: '249/6 vs 227', notableDetails: 'The first World Cup with colored clothing, floodlights, and a round-robin format. Pakistan, led by Imran Khan and inspired by young Inzamam-ul-Haq, came back from the brink of elimination to win. Wasim Akram\'s 2 wickets in 2 balls in the final sealed it.',
+    region: 'Asia', country: 'Pakistan', venue: 'Melbourne Cricket Ground',
+    playerOfTheTournament: 'Wasim Akram',
+  },
+  {
+    id: 'cwc-1996', year: 1996, sport: 'Cricket',
+    event: 'Cricket World Cup — 1996 (Wills Cup)',
+    winner: 'Sri Lanka', loser: 'Australia',
+    score: '245/3 vs 241/7', notableDetails: 'Sri Lanka — co-hosts and minnows — stunned the cricket world. Aravinda de Silva\'s unbeaten 107 in the final chased down Australia\'s target. Sri Lanka\'s revolutionary opening strategy of attacking from ball one changed one-day cricket forever.',
+    region: 'Asia', country: 'Sri Lanka', venue: 'Gaddafi Stadium, Lahore',
+    playerOfTheTournament: 'Aravinda de Silva',
+  },
+  {
+    id: 'cwc-1999', year: 1999, sport: 'Cricket',
+    event: 'Cricket World Cup — 1999 (ICC Cup)',
+    winner: 'Australia', loser: 'Pakistan',
+    score: '133/2 vs 132', notableDetails: 'Australia\'s 2nd World Cup, won with barely a challenge in a one-sided final — Pakistan collapsed to 132 all out. Shane Warne took 4 wickets. The start of Australia\'s unprecedented run of 3 consecutive World Cups (1999, 2003, 2007).',
+    region: 'Oceania', country: 'Australia', venue: 'Lord\'s, London',
+    playerOfTheTournament: 'Shane Warne',
   },
 ];

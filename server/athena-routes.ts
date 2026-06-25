@@ -2,7 +2,7 @@ import { Router } from 'express';
 import crypto from 'node:crypto';
 import type { AthenaDb } from './db.js';
 import { getCommentary, upsertCommentary, getEntry } from './db.js';
-import { callProviderChain, type ProviderId } from './providers.js';
+import { callProviderChain } from './providers.js';
 import { findBestTagMatch } from './tagMatch.js';
 
 export function createAthenaRoutes(db: AthenaDb): Router {

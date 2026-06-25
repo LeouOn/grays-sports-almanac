@@ -37,7 +37,7 @@ const MODULES: Record<ModuleName, { data: KnowledgeEntry[]; label: string }> = {
 };
 
 // ── API Key middleware (optional) ───────────────────────────
-function apiKeyAuth(req: Request, res: Response, next: Function) {
+function apiKeyAuth(req: Request, res: Response, next: () => void) {
   const configuredKey = process.env.API_KEY;
   if (!configuredKey) return next(); // No key configured = open access
 

@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { safetyProtocols } from '@/data/safety';
+import { useState, useEffect } from 'react';
+import { loadSafety } from '@/data/loader';
+import type { SafetyProtocol } from '@/data/safety';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -7,6 +8,7 @@ import { AthenaCommentary } from '@/components/AthenaCommentary';
 import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
+import { useURLState } from '../hooks/useURLState';
 
 const categoryIcons: Record<string, string> = {
   'Identity': '🪪',
@@ -18,10 +20,33 @@ const categoryIcons: Record<string, string> = {
 };
 
 export function SafetyProtocols() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const categories = Array.from(new Set(safetyProtocols.map(e => e.category)));
+  // useURLState must run unconditionally (Rules of Hooks), so it is called
+  // before the data-load early return. The default is resolved after data
+  // loads via `activeTab` reconciliation below.
+  const [searchTerm, setSearchTerm] = useURLState('search', '');
+  const [urlTab, setUrlTab] = useURLState('tab', '');
+  const [protocols, setProtocols] = useState<SafetyProtocol[] | null>(null);
 
-  const filtered = safetyProtocols.filter(e =>
+  useEffect(() => {
+    void loadSafety().then(setProtocols);
+  }, []);
+
+  if (!protocols) {
+    return (
+      <div className="space-y-6 animate-pulse" role="status" aria-live="polite">
+        <div className="h-9 w-72 bg-neutral-900 rounded" />
+        <div className="h-10 max-w-sm bg-neutral-900 rounded" />
+        <div className="h-80 bg-neutral-900/50 rounded-lg border border-neutral-800" />
+        <span className="sr-only">Loading safety protocols…</span>
+      </div>
+    );
+  }
+
+  const categories = Array.from(new Set(protocols.map(e => e.category)));
+  // Fall back to the first category when the URL has no (or a stale) value.
+  const activeTab = categories.includes(urlTab) ? urlTab : categories[0];
+
+  const filtered = protocols.filter(e =>
     e.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.protocol.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -31,7 +56,7 @@ export function SafetyProtocols() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Personal Safety &amp; Dead Drops</h2>
+        <h1 className="text-3xl font-bold tracking-tight">Personal Safety &amp; Dead Drops</h1>
         <p className="text-neutral-400 mt-2">Identity, banking, housing, medical preparedness, and methods for communicating across time.</p>
       </div>
 
@@ -41,6 +66,7 @@ export function SafetyProtocols() {
           placeholder="Search protocols..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
+          aria-label="Search safety protocols"
           className="bg-neutral-900 border-neutral-800 focus-visible:ring-indigo-500"
         />
       </div>
@@ -83,7 +109,7 @@ export function SafetyProtocols() {
           )}
         </Accordion>
       ) : (
-        <Tabs defaultValue={categories[0]} className="w-full">
+        <Tabs value={activeTab} onValueChange={setUrlTab} className="w-full">
           <TabsList className="bg-neutral-900 border border-neutral-800 flex-wrap h-auto">
             {categories.map(cat => (
               <TabsTrigger key={cat} value={cat} className="data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-neutral-400">
@@ -94,7 +120,7 @@ export function SafetyProtocols() {
           {categories.map(cat => (
             <TabsContent key={cat} value={cat} className="mt-6">
               <Accordion className="w-full space-y-3">
-                {safetyProtocols.filter(e => e.category === cat).map((e, idx) => (
+                {protocols.filter(e => e.category === cat).map((e, idx) => (
                   <AccordionItem key={e.id} value={`safety-${cat}-${idx}`} className="border border-neutral-800 rounded-lg px-4 bg-neutral-900/50">
                     <AccordionTrigger className="hover:no-underline hover:text-indigo-400 transition-colors py-4">
                       <div className="flex items-center gap-3 text-left">

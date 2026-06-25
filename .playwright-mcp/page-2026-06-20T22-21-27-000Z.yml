@@ -1,0 +1,98 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - link "Time Traveler's Guide" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e8]:
+        - button "Open navigation menu" [ref=e10] [cursor=pointer]:
+          - img [ref=e11]
+        - 'button "Active Companion: Athena. Click to change." [ref=e13] [cursor=pointer]':
+          - generic [ref=e14]: 🦉
+          - generic [ref=e15]: Athena
+          - img [ref=e16]
+        - button "Search the archive" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e22]: Search archive...
+          - generic: Ctrl+K
+        - button "Switch to light theme" [pressed] [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - generic [ref=e30]: Light
+        - button "Print guide" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e36]: Print Guide
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - heading "Welcome, Traveler." [level=1] [ref=e40]
+        - paragraph [ref=e41]: You are about to depart for the modern era (1970s–2001). Select a module to prepare.
+      - status
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: 🏈 Sports Almanac
+            - generic [ref=e46]: Super Bowls, World Series, boxing, Triple Crown, and bracket-busting upsets.
+          - link "View Almanac" [ref=e48] [cursor=pointer]:
+            - /url: /sports
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: 📈 Financial Almanac
+            - generic [ref=e52]: Market crashes, commodity spikes, IPOs, and currency events — your bootstrap fund.
+          - link "View Almanac" [ref=e54] [cursor=pointer]:
+            - /url: /finance
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: 🕰️ Era Integration Guide
+            - generic [ref=e58]: Prices, slang, tech constraints, fashion, and identity — blend in.
+          - link "View Guide" [ref=e60] [cursor=pointer]:
+            - /url: /era-guide
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: 🛟 Disaster Prevention
+            - generic [ref=e64]: Preventable tragedies with low-profile intervention strategies.
+          - link "View Protocols" [ref=e66] [cursor=pointer]:
+            - /url: /disasters
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: 🧠 LLM Testing Module
+            - generic [ref=e70]: Tier 1 Factual Recall — prove you know the era before you go.
+          - link "Take the Quiz" [ref=e72] [cursor=pointer]:
+            - /url: /quiz
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]: 🔬 Technology Transfer
+            - generic [ref=e76]: What to send, to whom, and when — accelerating good tech.
+          - link "View Targets" [ref=e78] [cursor=pointer]:
+            - /url: /tech-transfer
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: 💊 Medical Interventions
+            - generic [ref=e82]: Life-saving medical knowledge with minimal butterfly risk.
+          - link "View Interventions" [ref=e84] [cursor=pointer]:
+            - /url: /medical
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: 🦋 Butterfly Risk Calculator
+            - generic [ref=e88]: Score your intervention before you act. Avoid timeline collapse.
+          - link "Calculate Risk" [ref=e90] [cursor=pointer]:
+            - /url: /butterfly
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]: 🛡️ Safety & Dead Drops
+            - generic [ref=e94]: Identity, banking, housing, and methods to communicate across time.
+          - link "View Protocols" [ref=e96] [cursor=pointer]:
+            - /url: /safety
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: 🗺️ Temporal Strategy Map
+            - generic [ref=e100]: Checklist-simulate key operations and analyze timeline distortion effects.
+          - link "View Strategy Map" [ref=e102] [cursor=pointer]:
+            - /url: /timeline
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: 🛠️ Bootstrap Blueprints
+            - generic [ref=e106]: Preserved specs to build semiconductors, CNC tooling, and flat transistors from scratch.
+          - link "View Blueprints" [ref=e108] [cursor=pointer]:
+            - /url: /blueprints
+  - region "Notifications alt+T"

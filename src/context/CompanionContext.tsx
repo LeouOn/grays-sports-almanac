@@ -1,7 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { defaultCompanions, type Companion } from '../data/companions';
 import { athenaPreferences, formatPreferences } from '../data/companions/athena-preferences';
+import { migrateFromLocalStorage } from '../services/companionMigration';
+import { getActiveCompanion, setActiveDefault, setActiveCustom } from '../services/activeCompanionSelector';
+import { type CustomCompanion } from '@/lib/idb';
 
 export type ProviderId = 'google' | 'deepseek' | 'zhipu' | 'minimax' | 'openrouter';
 
@@ -11,6 +14,7 @@ export const COMPANION_PROVIDER_FALLBACK: ProviderId[] = ['minimax', 'zhipu', 'd
 interface CompanionContextType {
   activeCompanion: Companion;
   selectCompanion: (id: string) => void;
+  selectCustomCompanion: (companion: CustomCompanion) => void;
   customName: string;
   setCustomName: (name: string) => void;
   customPrompt: string;
@@ -24,8 +28,23 @@ interface CompanionContextType {
 const CompanionContext = createContext<CompanionContextType | undefined>(undefined);
 
 export function CompanionProvider({ children }: { children: React.ReactNode }) {
+  // Migration effect — runs once on mount, fire-and-forget
+  useEffect(() => {
+    migrateFromLocalStorage();
+  }, []);
+
   const [activeId, setActiveId] = useState<string>(() => {
-    return localStorage.getItem('companion_active_id') || 'athena';
+    const active = getActiveCompanion();
+    return active.defaultId || 'athena';
+  });
+
+  // For custom companions loaded from IndexedDB
+  const [customCompanion, setCustomCompanionState] = useState<CustomCompanion | null>(() => {
+    // Custom companions are loaded async; start with null
+    return null;
+  });
+  const [activeType, setActiveType] = useState<'default' | 'custom'>(() => {
+    return getActiveCompanion().type;
   });
 
   const [companionProvider, setCompanionProviderState] = useState<ProviderId>(() => {
@@ -43,10 +62,6 @@ export function CompanionProvider({ children }: { children: React.ReactNode }) {
   const [customPrompt, setCustomPromptState] = useState<string>(() => {
     return localStorage.getItem('companion_custom_prompt') || 'You are a sarcastic time cop from the year 3000. You make dry jokes, mock the user\'s simplistic temporal strategies, and constant references to hover-vehicles.';
   });
-
-  useEffect(() => {
-    localStorage.setItem('companion_active_id', activeId);
-  }, [activeId]);
 
   const setCustomName = (name: string) => {
     setCustomNameState(name);
@@ -70,6 +85,17 @@ export function CompanionProvider({ children }: { children: React.ReactNode }) {
 
   // Compute active companion
   const activeCompanion: Companion = (() => {
+    // Custom companion from IndexedDB takes priority
+    if (activeType === 'custom' && customCompanion) {
+      return {
+        id: customCompanion.id,
+        name: customCompanion.name,
+        avatar: customCompanion.avatar || '🤖',
+        description: customCompanion.styleTags.join(', ') || 'Custom companion',
+        prompt: customCompanion.prompt,
+      };
+    }
+
     const base = defaultCompanions.find(c => c.id === activeId) || defaultCompanions[0];
     if (base.id === 'custom') {
       return {
@@ -92,15 +118,25 @@ export function CompanionProvider({ children }: { children: React.ReactNode }) {
 
   const selectCompanion = (id: string) => {
     if (defaultCompanions.some(c => c.id === id)) {
+      setActiveDefault(id);
       setActiveId(id);
+      setActiveType('default');
+      setCustomCompanionState(null);
     }
   };
+
+  const selectCustomCompanion = useCallback((companion: CustomCompanion) => {
+    setActiveCustom(companion.id);
+    setCustomCompanionState(companion);
+    setActiveType('custom');
+  }, []);
 
   return (
     <CompanionContext.Provider
       value={{
         activeCompanion,
         selectCompanion,
+        selectCustomCompanion,
         customName,
         setCustomName,
         customPrompt,

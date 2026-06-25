@@ -220,7 +220,7 @@ Max Concurrent: 9 (Wave 3)
 
 ## TODOs
 
-- [ ] 1. Initialize Git Repository + .gitignore
+- [x] 1. Initialize Git Repository + .gitignore
 
   **What to do**:
   - Create `.gitignore` with: `node_modules/`, `dist/`, `.env`, `*.db`, `*.db-shm`, `*.db-wal`, `*.log`, `*.stackdump`, `.omo/evidence/`, `.omo/run-continuation/`
@@ -283,7 +283,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `.gitignore`, all existing project files
   - Pre-commit: `npx tsc --noEmit && npx vitest run`
 
-- [ ] 2. Record Test + Build Baseline
+- [x] 2. Record Test + Build Baseline
 
   **What to do**:
   - Run `npx vitest run` and record exact output (test count, pass/fail)
@@ -326,7 +326,7 @@ Max Concurrent: 9 (Wave 3)
 
   **Commit**: NO (evidence file, not code)
 
-- [ ] 3. Fix Duplicate Export Route Handlers in api-v1.ts
+- [x] 3. Fix Duplicate Export Route Handlers in api-v1.ts
 
   **What to do**:
   - In `server/api-v1.ts`, there are TWO `GET /export` handlers (lines 452-471 and lines 500-510)
@@ -387,7 +387,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/api-v1.ts`
   - Pre-commit: `npx vitest run`
 
-- [ ] 4. Add Zod Validation to API v1 POST Endpoints
+- [x] 4. Add Zod Validation to API v1 POST Endpoints
 
   **What to do**:
   - Create `server/schemas.ts` with Zod schemas for POST request bodies:
@@ -467,7 +467,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/schemas.ts`, `server/api-v1.ts`
   - Pre-commit: `npx vitest run`
 
-- [ ] 5. Remove `as any` from Non-Provider Server Code
+- [x] 5. Remove `as any` from Non-Provider Server Code
 
   **What to do**:
   - In `server/api-v1.ts`, replace `any` type annotations with proper types:
@@ -528,7 +528,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/api-v1.ts`
   - Pre-commit: `npx tsc --noEmit && npx vitest run`
 
-- [ ] 6. Add Request Logging Middleware to Express Server
+- [x] 6. Add Request Logging Middleware to Express Server
 
   **What to do**:
   - Create `server/middleware.ts` with a lightweight request logger:
@@ -582,7 +582,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/middleware.ts`, `server/index.ts`
   - Pre-commit: `npx tsc --noEmit && npx vitest run`
 
-- [ ] 7. Add 404 Catch-All Route with Themed Page
+- [x] 7. Add 404 Catch-All Route with Themed Page
 
   **What to do**:
   - Create `src/pages/NotFound.tsx` with a themed 404 page:
@@ -644,7 +644,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/pages/NotFound.tsx`, `src/App.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 8. Add React Error Boundary Wrapping App Routes
+- [x] 8. Add React Error Boundary Wrapping App Routes
 
   **What to do**:
   - Create `src/components/ErrorBoundary.tsx`:
@@ -706,7 +706,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/components/ErrorBoundary.tsx`, `src/components/ErrorBoundary.test.tsx`, `src/App.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 9. Add Toast Notification System (shadcn Sonner)
+- [x] 9. Add Toast Notification System (shadcn Sonner)
 
   **What to do**:
   - Install `sonner` package: `npx shadcn@latest add sonner`
@@ -776,7 +776,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/components/ui/sonner.tsx`, `src/lib/toast.ts`, `src/App.tsx`, `package.json`
   - Pre-commit: `npx vitest run`
 
-- [ ] 10. Add Mobile Responsive Navigation
+- [x] 10. Add Mobile Responsive Navigation
 
   **What to do**:
   - Create `src/components/MobileNav.tsx`:
@@ -852,7 +852,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/components/MobileNav.tsx`, `src/App.tsx`, `src/components/ui/sheet.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 11. Add Loading Skeletons for 11 Lazy-Loaded Pages
+- [x] 11. Add Loading Skeletons for 11 Lazy-Loaded Pages
 
   **What to do**:
   - Install skeleton component: `npx shadcn@latest add skeleton`
@@ -913,7 +913,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/components/PageSkeleton.tsx`, `src/components/ui/skeleton.tsx`, `src/App.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 12. Add Theme Toggle (Dark/Light via CSS Variables)
+- [x] 12. Add Theme Toggle (Dark/Light via CSS Variables)
 
   **What to do**:
   - Check if shadcn/ui base-nova already defines CSS variables for light/dark themes in `src/index.css`
@@ -997,7 +997,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/components/ThemeToggle.tsx`, `src/App.tsx`, `src/index.css`, `index.html`
   - Pre-commit: `npx vitest run`
 
-- [ ] 13. Add Keyboard Shortcuts (Escape, ?, B, Ctrl+K)
+- [x] 13. Add Keyboard Shortcuts (Escape, ?, B, Ctrl+K)
 
   **What to do**:
   - Extend the existing keyboard handler in `App.tsx` Layout (currently only Ctrl+K for search)
@@ -1066,7 +1066,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/App.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 14. Add Print CSS Styles
+- [x] 14. Add Print CSS Styles
 
   **What to do**:
   - Add `@media print` rules to `src/index.css`:
@@ -1140,7 +1140,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/index.css`, `src/App.tsx` (add print:hidden classes)
   - Pre-commit: `npx vitest run`
 
-- [ ] 15. Add URL State Management for Filters
+- [x] 15. Add URL State Management for Filters
 
   **What to do**:
   - Create `src/hooks/useURLState.ts`:
@@ -1208,7 +1208,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/hooks/useURLState.ts`, `src/pages/TemporalMap.tsx`, `src/pages/EraGuide.tsx`, `src/pages/ButterflyCalculator.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 16. Design Unified DB Schema (Spaced Repetition + Bookmarks + Progress)
+- [x] 16. Design Unified DB Schema (Spaced Repetition + Bookmarks + Progress)
 
   **What to do**:
   - Design and implement SQLite schema in `server/db.ts` for three new features:
@@ -1299,7 +1299,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/db.ts`, `server/feature-routes.ts`, `server/index.ts`
   - Pre-commit: `npx tsc --noEmit && npx vitest run`
 
-- [ ] 17. Add Financial Data Visualization — Line/Area Charts
+- [x] 17. Add Financial Data Visualization — Line/Area Charts
 
   **What to do**:
   - Install `recharts` package: `npm install recharts`
@@ -1369,7 +1369,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/pages/FinancialAlmanac.tsx`, `package.json`
   - Pre-commit: `npx vitest run`
 
-- [ ] 18. Add Butterfly Risk Visualization — Radar/Bar Charts
+- [x] 18. Add Butterfly Risk Visualization — Radar/Bar Charts
 
   **What to do**:
   - Add a `RiskVisualization` component to `src/pages/ButterflyCalculator.tsx`:
@@ -1427,7 +1427,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/pages/ButterflyCalculator.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 19. Add Data Export (JSON + CSV)
+- [x] 19. Add Data Export (JSON + CSV)
 
   **What to do**:
   - Add export endpoints to `server/api-v1.ts`:
@@ -1496,7 +1496,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/lib/export.ts`, `src/pages/FinancialAlmanac.tsx`, `src/pages/SportsAlmanac.tsx`, `src/pages/TemporalMap.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 20. Add Bookmarking/Favorites System
+- [x] 20. Add Bookmarking/Favorites System
 
   **What to do**:
   - Create `src/hooks/useBookmarks.ts`:
@@ -1574,7 +1574,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/hooks/useBookmarks.ts`, `src/components/BookmarkButton.tsx`, `src/pages/Bookmarks.tsx`, `src/App.tsx`, `src/components/RelatedEntries.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 21. Add Spaced Repetition Scheduling (Basic Intervals)
+- [x] 21. Add Spaced Repetition Scheduling (Basic Intervals)
 
   **What to do**:
   - Create `src/hooks/useSpacedRepetition.ts`:
@@ -1653,7 +1653,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/hooks/useSpacedRepetition.ts`, `src/components/ReviewSession.tsx`, `src/App.tsx`, `server/index.ts`
   - Pre-commit: `npx vitest run`
 
-- [ ] 22. Add Progress Tracking Dashboard
+- [x] 22. Add Progress Tracking Dashboard
 
   **What to do**:
   - Create `src/hooks/useProgress.ts`:
@@ -1725,7 +1725,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/hooks/useProgress.ts`, `src/pages/Progress.tsx`, `src/App.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 23. Add PWA Support — Manifest + Icons + Service Worker
+- [x] 23. Add PWA Support — Manifest + Icons + Service Worker
 
   **What to do**:
   - Install vite-plugin-pwa: `npm install -D vite-plugin-pwa`
@@ -1795,7 +1795,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `vite.config.ts`, `public/pwa-icon-192.png`, `public/pwa-icon-512.png`, `package.json`
   - Pre-commit: `npm run build`
 
-- [ ] 24. Add Tests for 7 Untested Pages
+- [x] 24. Add Tests for 7 Untested Pages
 
   **What to do**:
   - Write test files for the following pages that currently have no tests:
@@ -1862,7 +1862,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: 7 new test files in `src/pages/`
   - Pre-commit: `npx vitest run`
 
-- [ ] 25. Add Quiz Page Tests (LLM Stream Mocking)
+- [x] 25. Add Quiz Page Tests (LLM Stream Mocking)
 
   **What to do**:
   - Write `src/pages/Quiz.test.tsx`:
@@ -1919,7 +1919,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `src/pages/Quiz.test.tsx`
   - Pre-commit: `npx vitest run`
 
-- [ ] 26. Add Zod Validation Schema Tests
+- [x] 26. Add Zod Validation Schema Tests
 
   **What to do**:
   - Write `server/schemas.test.ts`:
@@ -1972,7 +1972,7 @@ Max Concurrent: 9 (Wave 3)
   - Files: `server/schemas.test.ts`
   - Pre-commit: `npx vitest run`
 
-- [ ] 27. Add E2E Test Setup (Playwright) + Critical Path Tests
+- [x] 27. Add E2E Test Setup (Playwright) + Critical Path Tests
 
   **What to do**:
   - Install Playwright: `npm install -D @playwright/test`
@@ -2043,19 +2043,19 @@ Max Concurrent: 9 (Wave 3)
 > 4 review agents run in PARALLEL. ALL must APPROVE. Present consolidated results to user and get explicit "okay" before completing.
 > Never mark F1-F4 as checked before getting user's okay.
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read the plan end-to-end. For each "Must Have": verify implementation exists (read file, curl endpoint, run command). For each "Must NOT Have": search codebase for forbidden patterns — reject with file:line if found. Check evidence files exist in .omo/evidence/. Compare deliverables against plan.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `tsc --noEmit` + linter + `vitest run`. Review all changed files for: `as any`/`@ts-ignore`, empty catches, console.log in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction, generic names (data/result/item/temp).
   Output: `Build [PASS/FAIL] | Lint [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high` (+ `playwright` skill)
+- [x] F3. **Real Manual QA** — `unspecified-high` (+ `playwright` skill)
   Start from clean state. Execute EVERY QA scenario from EVERY task — follow exact steps, capture evidence. Test cross-task integration (features working together, not isolation). Test edge cases: empty state, invalid input, rapid actions. Save to `.omo/evidence/final-qa/`.
   Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task: read "What to do", read actual diff (git log/diff). Verify 1:1 — everything in spec was built (no missing), nothing beyond spec was built (no creep). Check "Must NOT do" compliance. Detect cross-task contamination: Task N touching Task M's files. Flag unaccounted changes.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
