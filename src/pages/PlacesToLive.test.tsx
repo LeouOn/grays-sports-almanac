@@ -72,4 +72,23 @@ describe('PlacesToLive page', () => {
     renderPage();
     expect(screen.getByText(/of 47/)).toBeTruthy();
   });
+
+  it('opens detail modal on card click', () => {
+    renderPage();
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+    // Modal should show the close button
+    expect(screen.getByLabelText(/close/i)).toBeTruthy();
+  });
+
+  it('closes modal on backdrop click', () => {
+    renderPage();
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+    expect(screen.getByLabelText(/close/i)).toBeTruthy();
+    // Click backdrop (the fixed overlay)
+    const overlay = screen.getByLabelText(/close/i).closest('.fixed');
+    if (overlay) fireEvent.click(overlay);
+    expect(screen.queryByLabelText(/close/i)).toBeNull();
+  });
 });

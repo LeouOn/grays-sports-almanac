@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
-import { ArrowLeft, MapPin, Calendar, Clock, Wallet } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Clock, Wallet, Download } from 'lucide-react';
 import { loadPlacesToVisit } from '@/data/loader';
 import { type TouristDestination } from '@/data/places-to-visit';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
+import { exportToCSV } from '@/lib/export';
+import { RelatedEntries } from '@/components/RelatedEntries';
 import { useURLState } from '../hooks/useURLState';
 
 const DECADES = ['1970s', '1980s', '1990s', '2000s'] as const;
@@ -41,6 +44,7 @@ export function PlacesToVisit() {
   const [loading, setLoading] = useState(true);
   const [decade, setDecade] = useURLState('decade', 'all');
   const [category, setCategory] = useURLState('category', 'all');
+  const [activeEntry, setActiveEntry] = useState<TouristDestination | null>(null);
 
   useEffect(() => {
     // NOTE: `setLoading(false)` is invoked inside `.then`/`.catch` rather than
@@ -58,6 +62,15 @@ export function PlacesToVisit() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!activeEntry) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveEntry(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [activeEntry]);
 
   const filtered = useMemo(() => {
     return places.filter(p => {
@@ -133,6 +146,16 @@ export function PlacesToVisit() {
         <span className="text-xs text-neutral-500">
           Showing {filtered.length} of {places.length}
         </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => exportToCSV(filtered as unknown as Record<string, unknown>[], 'places-to-visit.csv')}
+          disabled={filtered.length === 0}
+          className="gap-2"
+        >
+          <Download className="size-4" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Empty state */}
@@ -145,7 +168,11 @@ export function PlacesToVisit() {
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(p => (
-          <Card key={p.id} className="bg-neutral-900/50 border-neutral-800">
+          <Card
+            key={p.id}
+            className="bg-neutral-900/50 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
+            onClick={() => setActiveEntry(p)}
+          >
             <CardContent className="pt-1 space-y-3">
               <div>
                 <h3 className="font-semibold text-white leading-snug">{p.name}</h3>
@@ -188,10 +215,75 @@ export function PlacesToVisit() {
                   ))}
                 </div>
               )}
+              <RelatedEntries tags={p.tags ?? []} excludeId={p.id} />
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {activeEntry && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setActiveEntry(null)}
+        >
+          <div
+            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveEntry(null)}
+              className="float-right text-neutral-400 hover:text-white"
+              aria-label="Close detail"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-xl font-bold text-white leading-snug">{activeEntry.name}</h2>
+
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="flex items-center gap-1 text-neutral-500">
+                <MapPin className="size-3" /> {activeEntry.location}
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-[10px] text-neutral-400 flex items-center gap-1">
+                <Calendar className="size-2.5" /> {activeEntry.decade}
+              </span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${CATEGORY_COLORS[activeEntry.category]}`}>
+                {activeEntry.category}
+              </span>
+            </div>
+
+            <p className="text-sm text-neutral-300 leading-relaxed">{activeEntry.description}</p>
+
+            <div className="bg-neutral-950 border border-neutral-800 rounded p-3 text-xs flex items-center gap-2">
+              <Clock className="size-4 text-indigo-400 shrink-0" />
+              <div>
+                <div className="text-neutral-500 uppercase tracking-wider text-[10px] font-bold">Best time to visit</div>
+                <div className="text-neutral-200 font-medium">{activeEntry.bestTimeToVisit}</div>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-neutral-500 uppercase tracking-wider text-[10px] font-bold">Cost tier:</span>{' '}
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${COST_COLORS[activeEntry.costTier]}`}>
+                <Wallet className="size-2.5" /> {activeEntry.costTier}
+              </span>
+            </div>
+
+            {activeEntry.tags && activeEntry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {activeEntry.tags.map(t => (
+                  <span
+                    key={t}
+                    className="px-1.5 py-0.5 rounded bg-neutral-800 text-[10px] text-neutral-500"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

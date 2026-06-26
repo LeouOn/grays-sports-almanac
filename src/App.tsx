@@ -13,6 +13,7 @@ import { defaultCompanions } from './data/companions';
 import { CompanionSelector } from './components/CompanionSelector';
 import { Toaster } from 'sonner';
 import { OfflineBanner } from './components/OfflineBanner';
+import { BookmarkButton } from '@/components/BookmarkButton';
 import { showSuccess } from './lib/toast';
 import { PageSkeleton } from './components/PageSkeleton';
 import { useSpacedRepetition } from './hooks/useSpacedRepetition';
@@ -449,23 +450,28 @@ function Layout({ children }: { children: React.ReactNode }) {
                     <h3 className="text-xs font-semibold tracking-wider text-indigo-400 uppercase">{module}</h3>
                     <div className="space-y-2">
                       {items.map((item, idx) => (
-                        <Link
+                        <div
                           key={idx}
-                          to={item.link}
-                          onClick={closeSearch}
-                          className="block p-3 rounded-lg border border-neutral-800/50 bg-neutral-950/40 hover:bg-neutral-950/80 hover:border-indigo-500/30 transition-all"
+                          className="flex items-start gap-2 p-3 rounded-lg border border-neutral-800/50 bg-neutral-950/40 hover:bg-neutral-950/80 hover:border-indigo-500/30 transition-all"
                         >
-                          <div className="flex justify-between items-start gap-2">
-                            <span className="font-semibold text-neutral-200">{item.title}</span>
-                            {item.year && (
-                              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-neutral-800 text-neutral-400 rounded">
-                                {item.year}
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-xs text-neutral-400 mt-1">{item.subtitle}</div>
-                          <div className="text-xs text-neutral-500 mt-1 line-clamp-1 italic">{item.description}</div>
-                        </Link>
+                          <Link
+                            to={item.link}
+                            onClick={closeSearch}
+                            className="flex-1 min-w-0"
+                          >
+                            <div className="flex justify-between items-start gap-2">
+                              <span className="font-semibold text-neutral-200">{item.title}</span>
+                              {item.year && (
+                                <span className="px-1.5 py-0.5 text-[10px] font-medium bg-neutral-800 text-neutral-400 rounded">
+                                  {item.year}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-neutral-400 mt-1">{item.subtitle}</div>
+                            <div className="text-xs text-neutral-500 mt-1 line-clamp-1 italic">{item.description}</div>
+                          </Link>
+                          <BookmarkButton module={item.module} entryId={item.title} title={item.title} />
+                        </div>
                       ))}
                     </div>
                   </div>

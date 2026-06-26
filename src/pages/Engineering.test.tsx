@@ -221,4 +221,43 @@ describe('Engineering page', () => {
     expect(screen.queryByText(/MIT Servomechanisms Lab CNC/i)).toBeNull();
     expect(screen.queryByText(/Basic Oxygen Steelmaking/i)).toBeNull();
   });
+
+  it('opens detail modal on card click', async () => {
+    render(
+      <BrowserRouter>
+        <Engineering />
+      </BrowserRouter>
+    );
+    await waitFor(() => screen.getByText(/MIT Servomechanisms Lab CNC/i));
+
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/close/i)).toBeTruthy();
+    });
+  });
+
+  it('closes modal on backdrop click', async () => {
+    render(
+      <BrowserRouter>
+        <Engineering />
+      </BrowserRouter>
+    );
+    await waitFor(() => screen.getByText(/MIT Servomechanisms Lab CNC/i));
+
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/close/i)).toBeTruthy();
+    });
+    // Click backdrop (the fixed overlay).
+    const overlay = screen.getByLabelText(/close/i).closest('.fixed');
+    if (overlay) fireEvent.click(overlay);
+
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/close/i)).toBeNull();
+    });
+  });
 });

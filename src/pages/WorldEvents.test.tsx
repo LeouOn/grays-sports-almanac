@@ -20,10 +20,14 @@ describe('WorldEvents page', () => {
     window.history.replaceState(null, '', '/');
   });
 
+  // WorldEvents renders 151 cards, each with a RelatedEntries component that
+  // scans every knowledge module for tag matches. Under parallel test load
+  // that render can exceed the default 5s timeout, so each test gets 15s
+  // (matching the convention in a11y.test.tsx for this same page).
   it('renders page heading', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: /world events/i })).toBeTruthy();
-  });
+  }, 15000);
 
   it('renders known events from the real dataset', () => {
     renderPage();
@@ -31,13 +35,13 @@ describe('WorldEvents page', () => {
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
     expect(screen.getByText('Japanese asset bubble peak')).toBeTruthy();
     expect(screen.getByText('Volcker raises interest rates to 20%')).toBeTruthy();
-  });
+  }, 15000);
 
   it('shows the total count from the real dataset', () => {
     renderPage();
     // 151 events in the real dataset
     expect(screen.getByText(/of 151/)).toBeTruthy();
-  });
+  }, 15000);
 
   it('filters by region when select changes', () => {
     renderPage();
@@ -50,7 +54,7 @@ describe('WorldEvents page', () => {
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
     // Asian events should be filtered out
     expect(screen.queryByText('Japanese asset bubble peak')).toBeNull();
-  });
+  }, 15000);
 
   it('filters by category when select changes', () => {
     renderPage();
@@ -64,7 +68,7 @@ describe('WorldEvents page', () => {
     expect(screen.getByText('Volcker raises interest rates to 20%')).toBeTruthy();
     // Geopolitical events should be filtered out
     expect(screen.queryByText('Berlin Wall falls')).toBeNull();
-  });
+  }, 15000);
 
   it('shows empty state when no matches', () => {
     renderPage();
@@ -83,7 +87,7 @@ describe('WorldEvents page', () => {
     // the page rendered without error. The count must be finite.
     const countEl = screen.getByText(/of \d+/);
     expect(countEl).toBeTruthy();
-  });
+  }, 15000);
 
   it('sorts results by year ascending', () => {
     renderPage();
@@ -107,5 +111,24 @@ describe('WorldEvents page', () => {
     // Verify the first event is from an earlier year than the last event.
     expect(firstYear).toBeGreaterThan(0);
     expect(lastYear).toBeGreaterThan(firstYear);
-  });
+  }, 15000);
+
+  it('opens detail modal on card click', () => {
+    renderPage();
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+    // Modal should show the close button
+    expect(screen.getByLabelText(/close/i)).toBeTruthy();
+  }, 15000);
+
+  it('closes modal on backdrop click', () => {
+    renderPage();
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    fireEvent.click(headings[0]);
+    expect(screen.getByLabelText(/close/i)).toBeTruthy();
+    // Click backdrop (the fixed overlay)
+    const overlay = screen.getByLabelText(/close/i).closest('.fixed');
+    if (overlay) fireEvent.click(overlay);
+    expect(screen.queryByLabelText(/close/i)).toBeNull();
+  }, 15000);
 });

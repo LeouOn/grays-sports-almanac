@@ -1,12 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
-import { ArrowLeft, Cpu, Cog, Wrench, Radio, FlaskConical, Plane, Search, Tag, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Cpu, Cog, Wrench, Radio, FlaskConical, Plane, Search, Tag, CheckCircle2, Download } from 'lucide-react';
 import { loadEngineering } from '@/data/loader';
 import type { EngineeringSpec, ConfidenceLevel } from '@/data/engineering';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
+import { exportToCSV } from '@/lib/export';
+import { RelatedEntries } from '@/components/RelatedEntries';
 
 const SUB_DOMAINS = ['cnc_machining', 'semiconductors', 'metallurgy', 'aerospace', 'telecommunications'] as const;
 const ERAS = ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s'] as const;
@@ -68,6 +71,7 @@ export function Engineering() {
   const [subDomain, setSubDomain] = useState<SubDomain | 'all'>('all');
   const [era, setEra] = useState<Era | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeEntry, setActiveEntry] = useState<EngineeringSpec | null>(null);
 
   useEffect(() => {
     loadEngineering()
@@ -80,6 +84,15 @@ export function Engineering() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!activeEntry) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveEntry(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [activeEntry]);
 
   const filtered = useMemo(() => {
     const q = searchTerm.toLowerCase().trim();
@@ -176,6 +189,16 @@ export function Engineering() {
         <span className="text-xs text-neutral-500">
           Showing {filtered.length} of {specs.length}
         </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => exportToCSV(filtered as unknown as Record<string, unknown>[], 'engineering.csv')}
+          disabled={filtered.length === 0}
+          className="gap-2"
+        >
+          <Download className="size-4" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Empty state */}
@@ -188,7 +211,11 @@ export function Engineering() {
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((s) => (
-          <Card key={s.id} className="bg-neutral-900 border-neutral-800">
+          <Card
+            key={s.id}
+            className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
+            onClick={() => setActiveEntry(s)}
+          >
             <CardContent className="pt-5 space-y-3">
               <div className="flex items-center gap-2 text-xs flex-wrap">
                 <span
@@ -230,10 +257,91 @@ export function Engineering() {
                   ))}
                 </div>
               )}
+              <RelatedEntries tags={s.tags ?? []} excludeId={s.id} />
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {activeEntry && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setActiveEntry(null)}
+        >
+          <div
+            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveEntry(null)}
+              className="float-right text-neutral-400 hover:text-white"
+              aria-label="Close detail"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-xl font-bold text-white leading-snug">{activeEntry.conceptName}</h2>
+
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${ERA_COLORS[activeEntry.era]}`}>
+                {activeEntry.era}
+              </span>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${SUB_DOMAIN_COLORS[activeEntry.subDomain]}`}>
+                {SUB_DOMAIN_ICONS[activeEntry.subDomain]} {SUB_DOMAIN_LABELS[activeEntry.subDomain]}
+              </span>
+            </div>
+
+            <p className="text-sm text-neutral-300 leading-relaxed">{activeEntry.description}</p>
+
+            <div>
+              <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Key Specs</h3>
+              <dl className="grid grid-cols-1 gap-1">
+                {Object.entries(activeEntry.keySpecs).map(([k, v]) => (
+                  <div key={k} className="flex items-baseline gap-2 text-xs">
+                    <dt className="font-mono text-neutral-500 shrink-0">{k}:</dt>
+                    <dd className="text-neutral-300">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div className="border-t border-neutral-800 pt-3 space-y-1 text-xs text-neutral-400">
+              <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Provenance</h3>
+              <div>Source: <span className="text-neutral-300">{activeEntry.provenance.sourceSite}</span></div>
+              <div>
+                URL:{' '}
+                <a
+                  href={activeEntry.provenance.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-400 hover:text-indigo-300 underline break-all"
+                >
+                  {activeEntry.provenance.sourceUrl}
+                </a>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${CONFIDENCE_COLORS[activeEntry.provenance.confidence]}`}>
+                  <CheckCircle2 className="size-2.5" /> {activeEntry.provenance.confidence}
+                </span>
+                <span className="text-neutral-500">Extracted: {activeEntry.provenance.extractedAt}</span>
+              </div>
+            </div>
+
+            {activeEntry.tags && activeEntry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {activeEntry.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-neutral-800 text-[10px] text-neutral-500"
+                  >
+                    <Tag className="size-2.5" /> {t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

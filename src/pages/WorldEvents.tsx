@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
-import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Download } from 'lucide-react';
 import { loadWorldEvents } from '@/data/loader';
 import { type WorldEvent } from '@/data/world-events';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
+import { exportToCSV } from '@/lib/export';
+import { RelatedEntries } from '@/components/RelatedEntries';
 import { useURLState } from '../hooks/useURLState';
 
 const REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Middle East'] as const;
@@ -34,6 +37,7 @@ export function WorldEvents() {
   const [loading, setLoading] = useState(true);
   const [region, setRegion] = useURLState('region', 'all');
   const [category, setCategory] = useURLState('category', 'all');
+  const [activeEntry, setActiveEntry] = useState<WorldEvent | null>(null);
 
   useEffect(() => {
     loadWorldEvents()
@@ -46,6 +50,15 @@ export function WorldEvents() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!activeEntry) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveEntry(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [activeEntry]);
 
   const filtered = useMemo(() => {
     return events
@@ -115,6 +128,16 @@ export function WorldEvents() {
         <span className="text-xs text-neutral-500">
           Showing {filtered.length} of {events.length}
         </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => exportToCSV(filtered as unknown as Record<string, unknown>[], 'world-events.csv')}
+          disabled={filtered.length === 0}
+          className="gap-2"
+        >
+          <Download className="size-4" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Empty state */}
@@ -127,7 +150,11 @@ export function WorldEvents() {
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((e) => (
-          <Card key={e.id} className="bg-neutral-900 border-neutral-800">
+          <Card
+            key={e.id}
+            className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
+            onClick={() => setActiveEntry(e)}
+          >
             <CardContent className="pt-5 space-y-3">
               <div className="flex items-center gap-2 text-xs flex-wrap">
                 <span className="flex items-center gap-1 text-neutral-500">
@@ -161,10 +188,66 @@ export function WorldEvents() {
                   ))}
                 </div>
               )}
+              <RelatedEntries tags={e.tags ?? []} excludeId={e.id} />
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {activeEntry && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setActiveEntry(null)}
+        >
+          <div
+            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveEntry(null)}
+              className="float-right text-neutral-400 hover:text-white"
+              aria-label="Close detail"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-xl font-bold text-white leading-snug">{activeEntry.event}</h2>
+
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="flex items-center gap-1 text-neutral-500">
+                <Calendar className="size-3" /> {activeEntry.year}
+              </span>
+              <span className="flex items-center gap-1 text-neutral-500">
+                <MapPin className="size-3" /> {activeEntry.country}
+              </span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${REGION_COLORS[activeEntry.region]}`}>
+                {activeEntry.region}
+              </span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${CATEGORY_COLORS[activeEntry.category]}`}>
+                {activeEntry.category}
+              </span>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Significance</h3>
+              <p className="text-sm text-neutral-300 leading-relaxed">{activeEntry.significance}</p>
+            </div>
+
+            {activeEntry.tags && activeEntry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {activeEntry.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="px-1.5 py-0.5 rounded bg-neutral-800 text-[10px] text-neutral-500"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
