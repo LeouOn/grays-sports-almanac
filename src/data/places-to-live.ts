@@ -420,4 +420,406 @@ export const relocationDestinations: RelocationDestination[] = [
     bestFor: ['Artists', 'Entrepreneurs', 'Families'],
     tags: ['europe', 'olympics', 'mediterranean'],
   },
+
+  // ── KUALA LUMPUR — tiger-cub emerging market ────
+  {
+    id: 'kuala-lumpur-1990s', city: 'Kuala Lumpur', country: 'Malaysia', decade: '1990s',
+    costOfLivingIndex: 28, qualityOfLifeScore: 60, politicalStability: 'Stable',
+    highlights: ['Petronas Twins under construction, signaling national ambition', 'Multicultural Malay-Chinese-Indian culture', 'English widely spoken'],
+    cautions: ['Tropical heat and humidity year-round', 'Restricted press freedoms'],
+    bestFor: ['Entrepreneurs', 'Corporate professionals', 'Oil and gas workers'],
+    tags: ['asia', 'emerging-market', 'multicultural'],
+  },
+  {
+    id: 'kuala-lumpur-2000s', city: 'Kuala Lumpur', country: 'Malaysia', decade: '2000s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 66, politicalStability: 'Stable',
+    highlights: ['Modern transit (LRT, KLIA Ekspres) and infrastructure', 'Low cost of living relative to income', 'Booming Islamic finance and halal hub'],
+    cautions: ['Uneven air quality and haze from regional fires', 'Relatively low wage levels for skilled work'],
+    bestFor: ['Entrepreneurs', 'Corporate professionals', 'Families'],
+    tags: ['asia', 'infrastructure', 'islamic-finance'],
+  },
+
+  // ── BANGKOK — Southeast Asian hub ────
+  {
+    id: 'bangkok-1980s', city: 'Bangkok', country: 'Thailand', decade: '1980s',
+    costOfLivingIndex: 25, qualityOfLifeScore: 52, politicalStability: 'Stable',
+    highlights: ['Booming tourism and manufacturing base', 'Very low cost of living', 'Cosmopolitan expatriate scene forming'],
+    cautions: ['Traffic and pollution already severe', 'Occasional military coups'],
+    bestFor: ['Entrepreneurs', 'English teachers', 'Hospitality workers'],
+    tags: ['asia', 'asean', 'low-cost'],
+  },
+  {
+    id: 'bangkok-1990s', city: 'Bangkok', country: 'Thailand', decade: '1990s',
+    costOfLivingIndex: 30, qualityOfLifeScore: 60, politicalStability: 'Stable',
+    highlights: ['Asian-boom financial and manufacturing hub', 'World-class street food at low prices', '1997 crisis creating distressed-asset opportunities'],
+    cautions: ['1997 Asian financial crisis severe disruption', 'Notorious traffic and flooding'],
+    bestFor: ['Entrepreneurs', 'Investors', 'Hospitality workers'],
+    tags: ['asia', 'financial-hub', 'crisis-recovery'],
+  },
+
+  // ── MUMBAI/BOMBAY — India commercial capital ────
+  {
+    id: 'mumbai-1990s', city: 'Mumbai (Bombay)', country: 'India', decade: '1990s',
+    costOfLivingIndex: 25, qualityOfLifeScore: 50, politicalStability: 'Stable',
+    highlights: ['1991 liberalization sparking financial-services growth', 'Bollywood and media industries expanding', 'Stock exchange and corporate HQs'],
+    cautions: ['Extreme density and infrastructure strain', 'Communal tensions occasionally flaring'],
+    bestFor: ['Finance workers', 'Media professionals', 'Entrepreneurs'],
+    tags: ['asia', 'liberalization', 'finance'],
+  },
+  {
+    id: 'mumbai-2000s', city: 'Mumbai', country: 'India', decade: '2000s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 58, politicalStability: 'Stable',
+    highlights: ['Outsourcing and financial-services boom', 'New suburban metro rail easing commutes', 'Global capital flowing into real estate'],
+    cautions: ['Among the most expensive real estate in Asia', 'Severe traffic and 2008 terror attacks'],
+    bestFor: ['Finance workers', 'Entrepreneurs', 'Tech workers'],
+    tags: ['asia', 'finance', 'outsourcing'],
+  },
+
+  // ── TAIPEI — Taiwanese tiger ────
+  {
+    id: 'taipei-1980s', city: 'Taipei', country: 'Taiwan', decade: '1980s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 62, politicalStability: 'Transitional',
+    highlights: ['Martial law lifted in 1987, opening politics', 'Surging electronics and PC manufacturing', 'Affordable, safe city with strong food scene'],
+    cautions: ['Air quality declining from rapid industrial growth', 'Cross-strait tensions with Beijing'],
+    bestFor: ['Engineers', 'Manufacturing professionals', 'Entrepreneurs'],
+    tags: ['asia', 'tiger-economy', 'democratization'],
+  },
+  {
+    id: 'taipei-1990s', city: 'Taipei', country: 'Taiwan', decade: '1990s',
+    costOfLivingIndex: 45, qualityOfLifeScore: 70, politicalStability: 'Stable',
+    highlights: ['First direct presidential election in 1996', 'World-leading semiconductor and PC industries', 'Modern metro (MRT) under construction'],
+    cautions: ['High cost of housing', 'Traffic congestion in older districts'],
+    bestFor: ['Engineers', 'Entrepreneurs', 'Tech workers'],
+    tags: ['asia', 'semiconductor', 'democracy'],
+  },
+
+  // ── LISBON — Carnation Revolution aftermath ────
+  {
+    id: 'lisbon-1970s', city: 'Lisbon', country: 'Portugal', decade: '1970s',
+    costOfLivingIndex: 25, qualityOfLifeScore: 52, politicalStability: 'Turbulent',
+    highlights: ['1974 Carnation Revolution ending dictatorship', 'Decolonization opening new cultural ties', 'Cheap, sun-drenched, Atlantic capital'],
+    cautions: ['Revolutionary upheaval and land-reform chaos', 'Economic dislocation and high emigration'],
+    bestFor: ['Writers', 'Artists', 'Adventurous expatriates'],
+    tags: ['europe', 'post-revolution', 'affordable'],
+  },
+  {
+    id: 'lisbon-1990s', city: 'Lisbon', country: 'Portugal', decade: '1990s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 65, politicalStability: 'Stable',
+    highlights: ['EU membership funding infrastructure modernization', '1998 Expo bringing urban renewal', 'Mild climate, low costs, and safety'],
+    cautions: ['Economy growing more slowly than northern Europe', 'Limited domestic job market'],
+    bestFor: ['Retirees', 'Artists', 'Families'],
+    tags: ['europe', 'eu-member', 'expo-renewal'],
+  },
+
+  // ── WARSAW — post-communist transformation ────
+  {
+    id: 'warsaw-1990s', city: 'Warsaw', country: 'Poland', decade: '1990s',
+    costOfLivingIndex: 25, qualityOfLifeScore: 55, politicalStability: 'Transitional',
+    highlights: ['Shock-therapy market reforms underway', 'Rebuilt Old Town gaining cultural energy', 'Very low cost of living for a European capital'],
+    cautions: ['High unemployment during transition', 'Heavy pollution from legacy industry'],
+    bestFor: ['Entrepreneurs', 'Investors', 'Adventurous expatriates'],
+    tags: ['europe', 'post-communist', 'transition'],
+  },
+  {
+    id: 'warsaw-2000s', city: 'Warsaw', country: 'Poland', decade: '2000s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 66, politicalStability: 'Stable',
+    highlights: ['2004 EU accession accelerating growth', 'Becoming a major BPO and shared-services hub', 'Modern shopping, dining, and transport infrastructure'],
+    cautions: ['Wages still below Western European levels', 'Brain drain of young professionals'],
+    bestFor: ['Tech workers', 'Entrepreneurs', 'Corporate professionals'],
+    tags: ['europe', 'eu-member', 'bpo'],
+  },
+
+  // ── BUDAPEST — Danube metropolis ────
+  {
+    id: 'budapest-1990s', city: 'Budapest', country: 'Hungary', decade: '1990s',
+    costOfLivingIndex: 28, qualityOfLifeScore: 58, politicalStability: 'Transitional',
+    highlights: ['Post-Communist privatization creating opportunities', 'Stunning architecture along the Danube', 'Thermal baths and café culture'],
+    cautions: ['Inflation during economic transition', 'Corruption in early privatization'],
+    bestFor: ['Entrepreneurs', 'Artists', 'Investors'],
+    tags: ['europe', 'post-communist', 'thermal-baths'],
+  },
+  {
+    id: 'budapest-2000s', city: 'Budapest', country: 'Hungary', decade: '2000s',
+    costOfLivingIndex: 38, qualityOfLifeScore: 68, politicalStability: 'Stable',
+    highlights: ['2004 EU membership opening markets', 'Growing automotive and IT sectors', 'Affordable European lifestyle with strong culture'],
+    cautions: ['Political polarization', 'Wages lagging behind cost of living'],
+    bestFor: ['Entrepreneurs', 'Tech workers', 'Artists'],
+    tags: ['europe', 'eu-member', 'automotive'],
+  },
+
+  // ── VIENNA — imperial stability ────
+  {
+    id: 'vienna-1970s', city: 'Vienna', country: 'Austria', decade: '1970s',
+    costOfLivingIndex: 48, qualityOfLifeScore: 76, politicalStability: 'Stable',
+    highlights: ['UN and OPEC agencies making it a diplomatic hub', 'Outstanding classical music and opera', 'High-quality public housing and transit'],
+    cautions: ['Conservative social atmosphere', 'High taxes'],
+    bestFor: ['Diplomats', 'Families', 'Musicians'],
+    tags: ['europe', 'diplomacy', 'culture'],
+  },
+  {
+    id: 'vienna-1980s', city: 'Vienna', country: 'Austria', decade: '1980s',
+    costOfLivingIndex: 52, qualityOfLifeScore: 80, politicalStability: 'Stable',
+    highlights: ['Vienna UN headquarters expanding international presence', 'Neutral ground bridging East and West', 'World-class healthcare and education'],
+    cautions: ['Expensive relative to southern Europe', 'Restrictive shopping hours and bureaucracy'],
+    bestFor: ['Diplomats', 'Families', 'Corporate professionals'],
+    tags: ['europe', 'neutrality', 'diplomacy'],
+  },
+
+  // ── ZURICH — Alpine finance ────
+  {
+    id: 'zurich-1980s', city: 'Zurich', country: 'Switzerland', decade: '1980s',
+    costOfLivingIndex: 70, qualityOfLifeScore: 82, politicalStability: 'Stable',
+    highlights: ['Global private-banking capital', 'Lake and Alps within commuting distance', 'High wages and impeccable infrastructure'],
+    cautions: ['Among the most expensive cities on Earth', 'Strict foreign-residency regulations'],
+    bestFor: ['Finance workers', 'Corporate professionals', 'Families'],
+    tags: ['europe', 'finance', 'alpine'],
+  },
+  {
+    id: 'zurich-1990s', city: 'Zurich', country: 'Switzerland', decade: '1990s',
+    costOfLivingIndex: 75, qualityOfLifeScore: 85, politicalStability: 'Stable',
+    highlights: ['Swiss banking attracting global capital', 'Highest quality-of-life rankings worldwide', 'Multilingual, well-connected European location'],
+    cautions: ['Cost of living exceptionally high', 'Difficulty integrating for outsiders'],
+    bestFor: ['Finance workers', 'Researchers', 'Corporate professionals'],
+    tags: ['europe', 'banking', 'high-qol'],
+  },
+
+  // ── COPENHAGEN — Scandinavian welfare model ────
+  {
+    id: 'copenhagen-1970s', city: 'Copenhagen', country: 'Denmark', decade: '1970s',
+    costOfLivingIndex: 50, qualityOfLifeScore: 75, politicalStability: 'Stable',
+    highlights: ['Strong welfare state and workers\' rights', 'Bicycle-first urban planning pioneering', 'Design, architecture, and food culture'],
+    cautions: ['High taxes', 'Cold, dark winters'],
+    bestFor: ['Designers', 'Families', 'Writers'],
+    tags: ['europe', 'welfare-state', 'cycling'],
+  },
+  {
+    id: 'copenhagen-1990s', city: 'Copenhagen', country: 'Denmark', decade: '1990s',
+    costOfLivingIndex: 60, qualityOfLifeScore: 82, politicalStability: 'Stable',
+    highlights: ['Øresund Bridge under construction, linking to Sweden', 'Cutting-edge clean-tech and pharma cluster', 'Renowned New Nordic food movement forming'],
+    cautions: ['High cost of living', 'Strict immigration rules'],
+    bestFor: ['Designers', 'Pharma professionals', 'Families'],
+    tags: ['europe', 'clean-tech', 'design'],
+  },
+
+  // ── STOCKHOLM — Nordic telecom and welfare ────
+  {
+    id: 'stockholm-1980s', city: 'Stockholm', country: 'Sweden', decade: '1980s',
+    costOfLivingIndex: 55, qualityOfLifeScore: 78, politicalStability: 'Stable',
+    highlights: ['Ericsson and early telecom leadership', 'Strong gender equality in the workforce', 'Clean, safe, family-friendly environment'],
+    cautions: ['High marginal tax rates', 'Long, dark winters'],
+    bestFor: ['Engineers', 'Families', 'Researchers'],
+    tags: ['europe', 'telecom', 'welfare-state'],
+  },
+
+  // ── ATHENS — EU accession era ────
+  {
+    id: 'athens-1980s', city: 'Athens', country: 'Greece', decade: '1980s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 60, politicalStability: 'Stable',
+    highlights: ['1981 EU membership raising living standards', 'Mediterranean climate and cuisine', 'Rich ancient and Byzantine heritage'],
+    cautions: ['Bureaucracy and inflation', 'Earthquake risk'],
+    bestFor: ['Retirees', 'Writers', 'Self-employed expatriates'],
+    tags: ['europe', 'eu-member', 'mediterranean'],
+  },
+
+  // ── ISTANBUL — bridge between continents ────
+  {
+    id: 'istanbul-1990s', city: 'Istanbul', country: 'Turkey', decade: '1990s',
+    costOfLivingIndex: 30, qualityOfLifeScore: 55, politicalStability: 'Transitional',
+    highlights: ['Bridge between European and Asian markets', 'Vibrant bazaar and food culture', 'Very affordable for visitors from the West'],
+    cautions: ['Political instability and 1999 earthquake', 'Inflation eroding purchasing power'],
+    bestFor: ['Entrepreneurs', 'Trade professionals', 'Adventurous expatriates'],
+    tags: ['eurasia', 'emerging-market', 'bazaar'],
+  },
+
+  // ── BUENOS AIRES — dictatorship to democracy ────
+  {
+    id: 'buenos-aires-1980s', city: 'Buenos Aires', country: 'Argentina', decade: '1980s',
+    costOfLivingIndex: 30, qualityOfLifeScore: 55, politicalStability: 'Transitional',
+    highlights: ['1983 return to democracy restoring freedoms', 'Rich literary and tango culture', 'European-style architecture at low cost'],
+    cautions: ['Hyperinflation eroding wages', 'Memories of the dictatorship still raw'],
+    bestFor: ['Writers', 'Artists', 'Adventurous expatriates'],
+    tags: ['south-america', 'democratization', 'tango'],
+  },
+  {
+    id: 'buenos-aires-1990s', city: 'Buenos Aires', country: 'Argentina', decade: '1990s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 65, politicalStability: 'Stable',
+    highlights: ['Convertibility plan stabilizing the economy', 'Privatization drawing foreign investment', 'Bohemian café and arts scene'],
+    cautions: ['Growing unemployment from reforms', 'Economic vulnerability to currency peg'],
+    bestFor: ['Entrepreneurs', 'Artists', 'Investors'],
+    tags: ['south-america', 'stabilization', 'culture'],
+  },
+
+  // ── SANTIAGO — post-Pinochet transition ────
+  {
+    id: 'santiago-1990s', city: 'Santiago', country: 'Chile', decade: '1990s',
+    costOfLivingIndex: 32, qualityOfLifeScore: 64, politicalStability: 'Stable',
+    highlights: ['1990 democratic transition peaceful and steady', 'Economic growth averaging 6%+', 'Andes backdrop and wine country'],
+    cautions: ['Pinochet-era constitution still in force', 'Inequality persisting'],
+    bestFor: ['Entrepreneurs', 'Mining professionals', 'Corporate professionals'],
+    tags: ['south-america', 'transition', 'mining'],
+  },
+
+  // ── MEXICO CITY — capital of a corporatist state ────
+  {
+    id: 'mexico-city-1970s', city: 'Mexico City', country: 'Mexico', decade: '1970s',
+    costOfLivingIndex: 28, qualityOfLifeScore: 52, politicalStability: 'Authoritarian',
+    highlights: ['Oil boom funding urban expansion', 'World-class museums and Aztec heritage', 'Affordable, vibrant cultural life'],
+    cautions: ['One-party (PRI) rule limiting dissent', 'Severe air pollution'],
+    bestFor: ['Artists', 'Writers', 'Adventurous expatriates'],
+    tags: ['north-america', 'oil-boom', 'culture'],
+  },
+  {
+    id: 'mexico-city-1990s', city: 'Mexico City', country: 'Mexico', decade: '1990s',
+    costOfLivingIndex: 30, qualityOfLifeScore: 60, politicalStability: 'Transitional',
+    highlights: ['NAFTA driving manufacturing growth', 'Democratic reforms ending PRI monopoly', 'Booming culinary and design scene'],
+    cautions: ['1994 peso crisis severe shock', 'Crime and air-quality issues'],
+    bestFor: ['Entrepreneurs', 'Artists', 'Corporate professionals'],
+    tags: ['north-america', 'nafta', 'democratization'],
+  },
+
+  // ── VANCOUVER — Pacific gateway ────
+  {
+    id: 'vancouver-1980s', city: 'Vancouver', country: 'Canada', decade: '1980s',
+    costOfLivingIndex: 45, qualityOfLifeScore: 72, politicalStability: 'Stable',
+    highlights: ['Expo 86 launching the city onto the world stage', 'Spectacular ocean-and-mountain setting', 'Diverse, multicultural population'],
+    cautions: ['Rising housing costs as foreign investment grows', 'Rainy winters'],
+    bestFor: ['Entrepreneurs', 'Families', 'Film-industry workers'],
+    tags: ['north-america', 'pacific', 'expo'],
+  },
+  {
+    id: 'vancouver-1990s', city: 'Vancouver', country: 'Canada', decade: '1990s',
+    costOfLivingIndex: 55, qualityOfLifeScore: 78, politicalStability: 'Stable',
+    highlights: ['Hong Kong handover driving immigration and capital', 'Hollywood North film industry booming', 'Clean, safe, outdoor-oriented lifestyle'],
+    cautions: ['Housing affordability worsening', 'Limited high-wage job market outside film'],
+    bestFor: ['Film-industry workers', 'Entrepreneurs', 'Families'],
+    tags: ['north-america', 'immigration', 'film'],
+  },
+
+  // ── TORONTO — Canadian metropolis ────
+  {
+    id: 'toronto-1970s', city: 'Toronto', country: 'Canada', decade: '1970s',
+    costOfLivingIndex: 42, qualityOfLifeScore: 70, politicalStability: 'Stable',
+    highlights: ['CN Tower (1976) signaling modern ambitions', 'Strong banking and manufacturing base', 'Multicultural, English-speaking'],
+    cautions: ['Cold winters', 'Provincial-federal political tensions'],
+    bestFor: ['Finance workers', 'Families', 'Engineers'],
+    tags: ['north-america', 'finance', 'multicultural'],
+  },
+  {
+    id: 'toronto-1980s', city: 'Toronto', country: 'Canada', decade: '1980s',
+    costOfLivingIndex: 50, qualityOfLifeScore: 76, politicalStability: 'Stable',
+    highlights: ['Canada\'s financial capital consolidating', 'SkyDome and waterfront redevelopment', 'Strong South Asian and Caribbean communities'],
+    cautions: ['Housing affordability declining', 'Racial tensions occasionally flaring'],
+    bestFor: ['Finance workers', 'Entrepreneurs', 'Families'],
+    tags: ['north-america', 'finance', 'multicultural'],
+  },
+
+  // ── MONTREAL — francophone cultural capital ────
+  {
+    id: 'montreal-1970s', city: 'Montreal', country: 'Canada', decade: '1970s',
+    costOfLivingIndex: 40, qualityOfLifeScore: 68, politicalStability: 'Turbulent',
+    highlights: ['Olympics 1976 modernizing the city', 'North American francophone culture capital', 'Affordable, cosmopolitan, artistic'],
+    cautions: ['Quebec sovereignty movement and language laws', 'Corporate HQs departing for Toronto'],
+    bestFor: ['Artists', 'Writers', 'Bilingual professionals'],
+    tags: ['north-america', 'francophone', 'sovereignty'],
+  },
+
+  // ── AUSTIN — Texas tech and music ────
+  {
+    id: 'austin-1990s', city: 'Austin', country: 'United States', decade: '1990s',
+    costOfLivingIndex: 38, qualityOfLifeScore: 72, politicalStability: 'Stable',
+    highlights: ['Dell and semiconductor cluster expanding rapidly', 'SXSW music and tech festival growing', 'University town with live-music scene'],
+    cautions: ['Heat and allergies', 'Smaller airport and transit network'],
+    bestFor: ['Tech workers', 'Musicians', 'Entrepreneurs'],
+    tags: ['north-america', 'tech', 'music'],
+  },
+
+  // ── PORTLAND — pre-hipster cheap living ────
+  {
+    id: 'portland-1990s', city: 'Portland', country: 'United States', decade: '1990s',
+    costOfLivingIndex: 40, qualityOfLifeScore: 74, politicalStability: 'Stable',
+    highlights: ['Remarkably cheap housing for a West Coast city', 'Indie music, zine, and craft culture forming', 'Outdoor access to mountains and coast'],
+    cautions: ['Job market thinner than Seattle or SF', 'Rainy winters'],
+    bestFor: ['Artists', 'Writers', 'Slackers'],
+    tags: ['north-america', 'indie', 'affordable'],
+  },
+
+  // ── CHARLOTTE — New South banking capital ────
+  {
+    id: 'charlotte-1990s', city: 'Charlotte', country: 'United States', decade: '1990s',
+    costOfLivingIndex: 35, qualityOfLifeScore: 68, politicalStability: 'Stable',
+    highlights: ['Bank of America and Wachovia headquarters', 'Low cost of living for a financial center', 'Mild four-season climate'],
+    cautions: ['Culture less cosmopolitan than coastal hubs', 'Suburban sprawl'],
+    bestFor: ['Finance workers', 'Families', 'Corporate professionals'],
+    tags: ['north-america', 'finance', 'banking'],
+  },
+
+  // ── DENVER — mile-high growth ────
+  {
+    id: 'denver-1990s', city: 'Denver', country: 'United States', decade: '1990s',
+    costOfLivingIndex: 38, qualityOfLifeScore: 72, politicalStability: 'Stable',
+    highlights: ['New airport (1995) and Coors Field revitalizing downtown', 'Mountain-West tech and telecom growth', 'Outdoor lifestyle with Rockies access'],
+    cautions: ['Ozone and brown cloud at times', 'Dry climate and altitude adjustment'],
+    bestFor: ['Tech workers', 'Outdoor enthusiasts', 'Families'],
+    tags: ['north-america', 'rockies', 'outdoor'],
+  },
+
+  // ── SALT LAKE CITY — Wasatch Front boom ────
+  {
+    id: 'salt-lake-city-2000s', city: 'Salt Lake City', country: 'United States', decade: '2000s',
+    costOfLivingIndex: 40, qualityOfLifeScore: 74, politicalStability: 'Stable',
+    highlights: ['2002 Winter Olympics boosting infrastructure', 'Tech and finance corridor expanding', 'World-class skiing within 30 minutes'],
+    cautions: ['LDS cultural dominance', 'Winter inversion trapping smog'],
+    bestFor: ['Tech workers', 'Outdoor enthusiasts', 'Families'],
+    tags: ['north-america', 'olympics', 'skiing'],
+  },
+
+  // ── SAN DIEGO — navy and biotech ────
+  {
+    id: 'san-diego-1990s', city: 'San Diego', country: 'United States', decade: '1990s',
+    costOfLivingIndex: 50, qualityOfLifeScore: 76, politicalStability: 'Stable',
+    highlights: ['Biotech and telecom cluster (Qualcomm) expanding', 'Best weather of any major US city', 'Mexican cultural crossroads'],
+    cautions: ['Defense-dependent economy', 'Limited public transit'],
+    bestFor: ['Biotech professionals', 'Engineers', 'Families'],
+    tags: ['north-america', 'biotech', 'coastal'],
+  },
+
+  // ── AUCKLAND — South Pacific gateway ────
+  {
+    id: 'auckland-1980s', city: 'Auckland', country: 'New Zealand', decade: '1980s',
+    costOfLivingIndex: 45, qualityOfLifeScore: 70, politicalStability: 'Stable',
+    highlights: ['Largest Polynesian city in the world', 'Sailing capital of the Southern Hemisphere', 'Safe, clean, English-speaking'],
+    cautions: ['Geographic isolation from major markets', 'Limited job-market depth'],
+    bestFor: ['Families', 'Sailors', 'Adventurous expatriates'],
+    tags: ['oceania', 'polynesian', 'sailing'],
+  },
+
+  // ── MELBOURNE — cultural capital ────
+  {
+    id: 'melbourne-1990s', city: 'Melbourne', country: 'Australia', decade: '1990s',
+    costOfLivingIndex: 50, qualityOfLifeScore: 78, politicalStability: 'Stable',
+    highlights: ['World-leading livability rankings', 'Multicultural food and arts scene', 'Sporting capital of Australia'],
+    cautions: ['Expensive housing', 'Variable "four-seasons-in-a-day" weather'],
+    bestFor: ['Families', 'Artists', 'Corporate professionals'],
+    tags: ['oceania', 'livability', 'culture'],
+  },
+
+  // ── BRISBANE — sunbelt growth ────
+  {
+    id: 'brisbane-1990s', city: 'Brisbane', country: 'Australia', decade: '1990s',
+    costOfLivingIndex: 42, qualityOfLifeScore: 72, politicalStability: 'Stable',
+    highlights: ['Sunbelt migration driving growth', 'Warm climate and outdoor lifestyle', 'Affordable relative to Sydney and Melbourne'],
+    cautions: ['Subtropical humidity', 'Distance from global markets'],
+    bestFor: ['Families', 'Retirees', 'Hospitality workers'],
+    tags: ['oceania', 'sunbelt', 'warm-climate'],
+  },
+
+  // ── TEL AVIV — Mediterranean tech hub ────
+  {
+    id: 'tel-aviv-1990s', city: 'Tel Aviv', country: 'Israel', decade: '1990s',
+    costOfLivingIndex: 50, qualityOfLifeScore: 70, politicalStability: 'Stable',
+    highlights: ['Soviet Jewish immigration expanding tech talent', 'Mediterranean beach culture and Bauhaus architecture', 'Start-up nation beginnings'],
+    cautions: ['Regional security concerns', 'High cost of housing'],
+    bestFor: ['Tech workers', 'Entrepreneurs', 'Researchers'],
+    tags: ['middle-east', 'startup-nation', 'mediterranean'],
+  },
 ];

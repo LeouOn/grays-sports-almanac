@@ -152,4 +152,185 @@ export const safetyProtocols: SafetyProtocol[] = [
     protocol: '1. Secure all communications with early PGP (Pretty Good Privacy) encryption. 2. Never input future-based credentials on HTTP web forms. 3. Ignore early email scams (Nigerian Prince letters emerge on AOL in the late 90s). 4. Use multiple anonymous screen names to split your digital identity.',
     eraNote: 'SSL/TLS encryption emerges in 1995 with Netscape, but is rare outside checkout pages. Most email and web traffic is fully visible to ISP administrators.'
   },
+
+  // ── DIGITAL / COMMUNICATION (continued) ────────────────────
+  {
+    id: 'pgp-public-key-1991',
+    category: 'Communication',
+    title: 'PGP & Public Key Cryptography',
+    description: 'Philip Zimmermann releases Pretty Good Privacy (PGP) v1.0 in June 1991. By mid-90s, RSA keys offer real confidentiality for email — and the US government opens a criminal investigation for "munitions export without a license."',
+    protocol: '1. By 1993-94, generate a 1024-bit RSA keypair on an air-gapped DOS or Linux machine. 2. Print your public key as a paper backup; memorize the passphrase (Diceware-style). 3. Publish your public key on a keyserver (pgp.mit.edu from 1995). 4. Sign and encrypt ALL sensitive email — assume the SMTP backbone is monitored. 5. Verify keys via fingerprint over a separate channel (phone, in person). 6. After 1996, treat 512-bit keys as broken; rotate to 2048+.',
+    eraNote: 'Pre-1996 ITAR rules classify strong crypto as a munition. Exporting PGP from the US is technically a felony until Clinton\'s 1996 executive order. Print the source code in books (legally protected speech) as a workaround.',
+    tags: ['encryption', 'pgp', 'cryptography', 'email', 'privacy', 'munitions']
+  },
+  {
+    id: 'computer-security-1990s',
+    category: 'Communication',
+    title: 'Pre-Firewall Computer Hygiene',
+    description: 'Internet-connected hosts in the early 90s are wide open. Default installs of Windows, Mac, and Linux ship with telnet, FTP, and unpatched services. Firewalls are rare until 1994-95.',
+    protocol: '1. Disable telnet/rsh/rexec — use SSH (released 1995) as soon as it is available. 2. Patch weekly; most exploits are 0-days for months before CVE numbering begins (1999). 3. Run packet filtering on the host (ipfw on BSD, ipchains on Linux 2.0+). 4. Never store passwords in plaintext — use crypt() or MD5 hashes. 5. Treat every floppy as infected — boot-sector viruses (Stoned, Michelangelo) are rampant. 6. Physical access = root access. Lock the chassis.',
+    eraNote: 'The Morris Worm (Nov 1988) is the wakeup call, but the average desktop has no antivirus until McAfee and Norton spread in the early 90s. CIH/Chernobyl (1998) destroys BIOSes on Win9x — keep bootable DOS floppies handy.',
+    tags: ['computers', 'security', 'firewall', 'ssh', 'antivirus', 'patching']
+  },
+  {
+    id: 'ham-radio-basics',
+    category: 'Communication',
+    title: 'Ham Radio — The Only Decentralized Network',
+    description: 'Amateur ("ham") radio works when phones, internet, and the power grid all fail. It spans the globe on shortwave with zero infrastructure. A US Technician-class license requires a simple written test (Morse code required until 2000).',
+    protocol: '1. Get licensed: written exams (Novice/Tech/General/Extra) administered by Volunteer Examiners at any ham radio club. Morse code (5-20 WPM) required for General+ until 2000; dropped after. 2. Equipment by era: 1970s — used Heathkit, Swan, or Yaesu FT-101 HF rigs ($300-500). 1980s — Icom IC-730, Kenwood TS-440. 1990s — Yaesu FT-1000MP, Icom IC-756. 3. Practice antenna theory — a good dipole beats a bad amplifier. 4. Know HF band plans (40m/20m by day, 80m/160m by night). 5. Modes: voice (SSB), CW (Morse), RTTY, then PSK31 (1997) for digital.',
+    eraNote: 'The FCC dropped the Morse code requirement entirely in February 2000 (Tech/General) and April 2000 (Extra). Getting licensed before this is a meaningful time investment.',
+    tags: ['ham-radio', 'amateur-radio', 'emergency', 'shortwave', 'fcc', 'antenna']
+  },
+  {
+    id: 'phone-phreaking-era',
+    category: 'Communication',
+    title: 'Phone Phreaking & Blue Box Era Notes',
+    description: 'From the 1950s to mid-80s, the Bell System\'s in-band signaling (2600 Hz MF tones) lets anyone with a "blue box" route free long-distance calls. By the 90s, common-channel signaling (SS7) makes blue boxes obsolete — but the culture persists.',
+    protocol: '1. AS A TIME TRAVELER: do not rely on phreaking. The 1971 Esquire article "Secrets of the Little Blue Box" draws massive law-enforcement attention. By 1975, AT&T has signal detectors on most trunks. 2. For ANONYMOUS calls in the 1970s: payphones are ubiquitous and accept coins. 3. In the 1980s: caller ID does not exist widely until 1990. *67 per-line blocking appears in 1992. 4. In the 1990s: avoid calling cards — calling-card fraud detection is aggressive. 5. Know that "2600: The Hacker Quarterly" magazine (founded 1984) is monitored by the Secret Service.',
+    eraNote: 'Blue boxes become federally illegal to own or ship in 1976 (FCC). Captain Crunch (John Draper) is raided in 1972 and 1976. Wozniak and Jobs sold blue boxes pre-Apple (1971-72) — Steve\'s one felony.',
+    tags: ['phreaking', 'blue-box', 'att', 'payphone', 'caller-id', 'hacker']
+  },
+  {
+    id: 'map-navigation-pre-gps',
+    category: 'Communication',
+    title: 'Map & Compass Navigation (Pre-GPS)',
+    description: 'GPS is military-only until the 1983 KAL 007 shootdown prompts Reagan to make it partially civilian. Selective Availability degrades civilian GPS accuracy until May 2000. For most of the era, navigation is map, compass, and dead reckoning.',
+    protocol: '1. Carry a quality baseplate compass (Silva Ranger, Suunto MC-2). 2. Buy USGS topo quads (7.5-minute series) for any area you operate in — $2-4 each at outdoor stores. 3. Learn to shoot a bearing and account for declination (changes by region and year — printed on the map). 4. Triangulate position from two landmarks with a 60-90° angle between them. 5. Pace-count (steps per 100m) for distance in featureless terrain. 6. Hand-draw sketch maps for any dead-drop or cache site — do not photograph it (photo development is logged).',
+    eraNote: 'Topographic map declination changes ~1° every 5-15 years depending on location. Use the declination printed ON the map for that map\'s vintage, not a modern value.',
+    tags: ['navigation', 'map', 'compass', 'orienteering', 'usgs', 'dead-reckoning']
+  },
+  {
+    id: 'celestial-navigation-basics',
+    category: 'Communication',
+    title: 'Celestial Navigation Fundamentals',
+    description: 'For ocean crossings or wilderness travel, the night sky is a reliable clock and compass. Polaris gives latitude directly in the Northern Hemisphere; a sextant plus a nautical almanac gives longitude.',
+    protocol: '1. Polaris is within ~1° of true north. Latitude = altitude of Polaris (corrected for the small offset). 2. For longitude: measure local solar noon vs GMT (a chronometer). 1 hour = 15° of longitude. 3. Buy a Davis Mark 3 plastic sextant ($100, post-1960s) or a used Astra IIIB. 4. Carry the Nautical Almanac for the exact year — solar and lunar tables change annually. 5. Pre-1990, GPS is unavailable; this is the only backup to LORAN-C (marine, 1958-2010).',
+    eraNote: 'LORAN-C covers coastal US, Europe, and Japan. Inland or mid-ocean, celestial is the gold standard until selective-availability GPS in the 90s.',
+    tags: ['celestial', 'sextant', 'polaris', 'longitude', 'loran', 'astronomy']
+  },
+  {
+    id: 'public-transit-mastery',
+    category: 'Communication',
+    title: 'Public Transit Systems By City',
+    description: 'Cars leave paper trails: registration, license plate, insurance, toll records. Public transit — especially cash-paid subway and bus — is one of the most anonymous ways to move in any era.',
+    protocol: '1. NYC: token system until May 2003 (MetroCard from 1993). Tokens can be bought with cash at booths, exchanged person-to-person. 2. London: paper Travelcards until the Oyster smartcard (2003). 3. Tokyo: magnetic-card tickets until Suica (2001). 4. Pay with CASH. Stored-value cards (post-2000) leave transaction logs. 5. Vary your route — never take the same train at the same time daily. 6. Avoid monthly passes — they require name and address. 7. Pre-1990s, transit police are minimal; turnstile-jumping is low-risk in many systems.',
+    eraNote: 'Tokens and coins are truly anonymous. The shift to magstripe (1990s) and contactless smart cards (2000s+) creates a permanent movement database.',
+    tags: ['transit', 'subway', 'anonymous-travel', 'tokens', 'nyc', 'london', 'tokyo']
+  },
+  {
+    id: 'emergency-contact-protocol',
+    category: 'Communication',
+    title: 'Emergency Contact & Dead-Man Protocols',
+    description: 'A scheduled check-in with a designated contact is your canary. Missing a check-in by more than X hours triggers a contingency script — even if you cannot explain your situation to a 1970s police officer.',
+    protocol: '1. Set up a "no-show" protocol with a confederate: "Call me at 9pm every Sunday. If I miss 2 in a row, execute Plan B." 2. Use a "duress word" — if you mention the word "LAVENDER" in any call, the confederate knows you are under duress and acts accordingly. 3. Hide a sealed "in case of my disappearance" envelope with a notary or lawyer — instructions, passwords (post-90s), emergency cash. 4. Rotate payphones and numbers you call from. 5. Pre-arrange dates: "If you don\'t hear from me by [anniversary], the safety-deposit box at [bank] has everything you need."',
+    eraNote: 'Pre-cellphone, scheduled calls happen from payphones at known times — variation is the giveaway. A "duress protocol" is a real-world espionage tradecraft tactic.',
+    tags: ['emergency', 'duress', 'check-in', 'contingency', 'tradecraft', 'no-show']
+  },
+
+  // ── MEDICAL (continued) ────────────────────────────────────
+  {
+    id: 'medical-emergency-kit',
+    category: 'Medical',
+    title: 'Era-Appropriate Emergency Medical Kit',
+    description: 'Modern trauma kits (CAT tourniquets, hemostatic gauze, naloxone) are not yet standard. Build your own from era-available components.',
+    protocol: '1. BLOOD STOPPAGE: cotton gauze plus pressure. CAT tourniquets do not exist commercially until the 1990s — improvise with a cravat and stick (windlass). 2. WOUND CLOSURE: butterfly bandages (Band-Aid brand, 1950s+), sterile saline (make your own: 1 tsp salt + 1 pint boiled water). 3. ANTISEPTICS: Betadine (povidone-iodine, 1955+), rubbing alcohol, hydrogen peroxide (avoid peroxide in deep wounds). 4. ANTIBIOTICS (Rx required, stockpile via "I lost my prescription"): penicillin, tetracycline, erythromycin, Bactrim. 5. PAIN: aspirin, Tylenol #3 (acetaminophen + codeine, commonly prescribed). 6. Allergies: Benadryl (1946+). Epinephrine auto-injector: EpiPen launches 1987. 7. Carry QuikClot only after 2002 — pre-2002 versions cause burns.',
+    eraNote: 'Naloxone (Narcan) is FDA-approved in 1971 but only as injectable — nasal Narcan is 2015. EMS: 911 dispatch is generalized in the US by 1976, but pre-hospital care is patchy until the mid-80s.',
+    tags: ['medical-kit', 'trauma', 'tourniquet', 'antiseptic', 'ems', 'stockpile']
+  },
+  {
+    id: 'first-aid-basics',
+    category: 'Medical',
+    title: 'First Aid Procedures (Era-Specific Risks)',
+    description: 'Common 1970s-90s hazards differ from modern ones: more industrial accidents, smoking-related burns, fewer seatbelt laws (federal mandate 1984, state laws spread through the 90s).',
+    protocol: '1. CPR: pre-2008, it is 15 compressions : 2 breaths. Post-2008, "hands-only" CPR is endorsed by the AHA. 2. HEIMLICH (1974): for choking — recognize by the universal clutching sign. Pre-1974, back blows were taught. 3. BURNS: cool with running water 20 min; do NOT apply butter or oil (old wives\' tale of the era). 4. ELECTRIC SHOCK: cut power first — many 1970s appliances lack grounding. 5. CAR ACCIDENTS: pre-1984 seatbelt laws, injuries are far worse. Wear your belt — it is unusual but legal. 6. CARBON MONOXIDE: catalytic converters (1975+) reduce but do not eliminate risk. Have detectors (available from ~1985).',
+    eraNote: 'The 911 emergency number is established by AT&T in 1968 but only reaches 50% of the US population by 1985 and 93% by 2000. Know local 7-digit direct police/fire numbers as backup.',
+    tags: ['cpr', 'heimlich', 'first-aid', 'burns', 'seatbelts', '911']
+  },
+  {
+    id: 'prescription-stockpiling',
+    category: 'Medical',
+    title: 'Building A Prescription Stockpile',
+    description: 'Many essential medications (insulin, antibiotics, thyroid, cardiac) are needed continuously. The modern insurance/pharmacy system is unforgiving of gaps. Build a buffer.',
+    protocol: '1. REFILL EARLY, OFTEN: most US pharmacies allow 7-10 day early refills. Over years this builds a 30-90 day buffer. 2. SUMMER/WINTER VACATION OVERRIDE: insurance allows a "vacation override" for a 90-day supply once per year — request it annually. 3. MAIL-ORDER 90-DAY: from the 1990s, insurance favors mail-order for 90-day supplies. Use this to build buffers. 4. ROTATE STOCK: label everything with expiration, FIFO consumption. Many drugs (doxycycline, ciprofloxacin) remain effective years past expiration per FDA SLEP data. 5. INSULIN is the hardest — short shelf life, refrigeration required. Have a backup access plan. 6. PRE-1970s, prescription laws are laxer — pharmacists often refill on request without an MD call.',
+    eraNote: 'The prescription system tightens dramatically after the Controlled Substances Act (1970) and the Kefauver-Harris Amendment (1962). Pre-1970, "legend drugs" (Rx) are loosely enforced.',
+    tags: ['prescription', 'stockpile', 'medication', 'insulin', 'rotation', 'expiration']
+  },
+
+  // ── SELF-DEFENSE / IDENTITY ────────────────────────────────
+  {
+    id: 'situational-awareness',
+    category: 'Identity',
+    title: 'Situational Awareness & The Cooper Color Code',
+    description: 'Self-defense begins long before any physical confrontation. Jeff Cooper\'s "Color Code" (1970s, popularized in "Principles of Personal Defense") is the era-appropriate framework: White (unaware) → Yellow (relaxed alert) → Orange (focused alert) → Red (action).',
+    protocol: '1. Live in Condition Yellow at all times. Scan hands, eyes, and exits. 2. Condition Orange when something feels wrong — commit to a plan ("if he crosses the curb I am in the store"). 3. Condition Red = execute the plan. 4. Maintain the "21-foot rule" (Tueller Drill, 1983): a knife-wielder can close 21 feet in 1.5 seconds. 5. Trust your gut — primitive pattern recognition flags anomalies faster than conscious thought. 6. If you can avoid a fight by leaving, ALWAYS leave. Pride is for people who cannot afford bail.',
+    eraNote: 'Concealed-carry laws are restrictive through the 1970s (only ~8 shall-issue states by 1986). Florida becomes the first major shall-issue state in 1987. Self-defense law = "duty to retreat" in most states until the Castle Doctrine spread (post-2005).',
+    tags: ['self-defense', 'awareness', 'cooper', 'condition-yellow', 'tueller', 'concealed-carry']
+  },
+  {
+    id: 'improvised-self-defense',
+    category: 'Identity',
+    title: 'Improvised & Legal Self-Defense Tools',
+    description: 'Gun laws vary wildly by state and era. Pepper spray (mace) is legal most places from 1965. Many everyday objects double as effective defensive tools.',
+    protocol: '1. MACE (CN gas aerosol): legal in most states from mid-60s. Carry for keychain defense. OC pepper spray (stronger, non-flammable) becomes standard from the late 80s. 2. PERSONAL ALARM: small screecher alarms ($5-15) draw attention and deter. 3. TACTICAL PEN / KUBOTAN: a short rod (Yawara stick tradition), legal everywhere, durable force multiplier. 4. MAG-LITE FLASHLIGHT: 4-6 cell D-battery Mag-Lite doubles as a club — favored by cops in the era. 5. WALKING STICK/CANE: legal everywhere, does not require a permit, plausible deniability. 6. KEYS between fingers: classic last-ditch. 7. AVOID nunchaku, switchblades, brass knuckles — illegal in most states and brandishing is a felony.',
+    eraNote: 'The original Mace brand (1965) uses CN (tear gas). OC pepper spray becomes commercially dominant after the FBI adopts it in 1987. TASER devices (1969) fire tethered darts; the wireless AIR TASER is 1994.',
+    tags: ['mace', 'pepper-spray', 'kubotan', 'maglite', 'cane', 'legal-weapons']
+  },
+
+  // ── LANGUAGE / CULTURAL ASSIMILATION ───────────────────────
+  {
+    id: 'rapid-language-acquisition',
+    category: 'Identity',
+    title: 'Rapid Language Acquisition Strategies',
+    description: 'Fitting into a non-English environment requires functional fluency in weeks, not years. Pre-internet tools (Pimsleur, Berlitz, Foreign Service Institute tapes) are your best accelerators.',
+    protocol: '1. FSI COURSES: US Foreign Service Institute tapes are in the public domain — covers 70+ languages. Available at major public libraries through the 70s-90s. 2. PIMSLEUR (audio, 1963+): the gold standard for conversational fluency. Do one 30-min lesson daily; 90 lessons per level. 3. BERLITZ books + cassettes: cheap, common, decent. 4. SHADOWING: repeat aloud immediately after the recording — your mouth needs the muscle memory. 5. THE 1,000-WORD LIST: ~85% of daily speech uses ~1,000 words. Master those first (frequency dictionaries exist). 6. LANGUAGE EXCHANGE: place a classified ("Language exchange: my English for your French") — this is THE era method. 7. Live in a homestay if possible; full immersion accelerates 4-5x.',
+    eraNote: 'Pre-Duolingo (2012) and pre-internet, language learning means tapes, books, and humans. The cassette Walkman (1979) is a game-changer for mobile study.',
+    tags: ['language', 'pimsleur', 'fsi', 'berlitz', 'immersion', 'fluency']
+  },
+  {
+    id: 'accent-management',
+    category: 'Identity',
+    title: 'Accent Management & Neutralization',
+    description: 'An accent is the single hardest part of identity to change. Native listeners detect micro-deviations even when vocabulary and grammar are perfect.',
+    protocol: '1. PICK A TARGET: General American (Midwest, no r-dropping) is the safest US target. In the UK, aim for Received Pronunciation or generic London. 2. MIMICRY: listen to era-appropriate recordings (radio newscasters are the gold standard) — Walter Cronkite, Edward R. Murrow, BBC Newsreaders. 3. RECORD YOURSELF — you cannot fix what you cannot hear. Cheap cassette recorders from the 1970s suffice. 4. THE TELL-TALE PHONEMES: the American "r" (rhotic), the vowel in "cat" vs "cah," the "th" sounds, the dark American "L." These mark you instantly. 5. SLOW DOWN. Speaking too fast plus hesitation patterns (ums, ahs) reveal non-native processing. 6. If you cannot fully neutralize, lean into a "regional" cover story: "I grew up in [region], then lived abroad for years."',
+    eraNote: 'Speech coaching is expensive and rare in the era. DIY with cassette recordings and a mirror for mouth position. The "transatlantic accent" (Katharine Hepburn) is still taught in elite US schools through the 60s and is fading fast by the 70s.',
+    tags: ['accent', 'phonetics', 'speech', 'dialect', 'neutralization', 'cover-story']
+  },
+  {
+    id: 'cultural-norms-assimilation',
+    category: 'Identity',
+    title: 'Era-Specific Cultural Norms',
+    description: 'Social etiquette changes faster than people realize. Behaviors that are normal in 2025 are rude or bizarre in 1980, and vice versa. Failure to assimilate marks you instantly.',
+    protocol: '1. SMOKING: ubiquitous through the 70s-80s. ~40% of US adults smoke in 1970, declining through the 90s. NOT smoking is more notable than smoking until ~1990. 2. DRESS: men wear hats outdoors but remove them indoors (pre-1960s holdover, fading). Collared shirts and slacks are baseline casual. T-shirts as outerwear are working-class/sportswear until the late 70s. 3. FORMS OF ADDRESS: "sir/ma\'am" expected from younger to older through the 70s. "Mr./Mrs. Surname" until invited to first names. 4. CHECKS: writing a paper check at the grocery store is normal through the 90s. 5. DRINKING: 18 is the drinking age in many US states until 1984 (federal highway funds push it to 21 by 1988). 6. RACIAL/SEXIST NORMS: openly racist or sexist language is far more common in casual conversation. You need not adopt it but do not visibly react — your reaction marks you.',
+    eraNote: 'Smoking bans in restaurants spread from the late 80s (Surgeon General 1986 report). The 18-to-21 drinking age change is driven by the 1984 National Minimum Drinking Age Act.',
+    tags: ['culture', 'etiquette', 'smoking', 'dress', 'norms', 'assimilation']
+  },
+  {
+    id: 'avoid-anachronisms',
+    category: 'Identity',
+    title: 'Avoiding Anachronistic Behavior',
+    description: 'The single biggest giveaway that you are from the future. Behaviors, vocabulary, and references that are 5+ years out of sync with the era will mark you instantly.',
+    protocol: '1. SLANG: refresh yearly. "Groovy" dies by 1975. "Cool" survives all eras. "Rad" peaks ~1985. "Awesome" universalizes by 1990. Avoid any slang you have not heard locally this month. 2. REFERENCES: never reference movies, songs, or events that have not happened yet. If asked "have you seen [movie]," claim you do not get out much. 3. TECHNOLOGY: do not gesture at non-existent screens. Do not try to "swipe" things. Do not photograph everything — cameras are deliberate acts in this era. 4. POLITICAL OPINIONS: future-consensus views on gender, race, sexuality will mark you as bizarre, hostile, or both. Adopt era-appropriate silences or platitudes. 5. MONEY: never quote exact future prices. Never complain prices are "cheap" — even small inflation-aware comments are weird. 6. HEALTH HABITS: jogging is eccentric in 1970, mainstream by 1980. Helmet-wearing while biking is eccentric until late 90s. Do not be the only person wearing a seatbelt in 1972.',
+    eraNote: 'The seatbelt adoption curve: 14% of US drivers wear belts in 1982, 60% by 1994, 80%+ by 2002. Motorcycle helmet laws spread state-by-state through the 60s-70s.',
+    tags: ['anachronism', 'slang', 'future-knowledge', 'cover', 'behavior']
+  },
+  {
+    id: 'fashion-adaptation',
+    category: 'Identity',
+    title: 'Era Fashion Adaptation',
+    description: 'Clothing is the fastest visual signal you send. Wearing 2025 fashion in 1975 is impossible to hide. Buy local, current clothes immediately upon arrival.',
+    protocol: '1. ON ARRIVAL: visit Goodwill or Salvation Army first. Even secondhand, era clothes beat any modern clothing you may have brought. 2. PURCHASE: at a Sears, JCPenney, or local department store. Avoid couture — you want the AVERAGE LOOK. 3. MEN 1970s: wide lapels, polyester, bell-bottoms (early 70s), platform shoes. By late 70s, narrower lapels, fitted jeans (Sasson, Calvin Klein 1978+). 4. MEN 1980s: preppy (Ralph Lauren, Izod Lacoste, Brooks Brothers), power suits with shoulder pads, Members Only jackets. By late 80s, oversized casual. 5. MEN 1990s: grunge (flannel, ripped jeans), OR frat/prep revival (Abercrombie from 1992, J.Crew), OR hip-hop (baggy, FUBU 1996+). Pick one subculture and commit. 6. HAIR: era-appropriate haircut matters as much as clothes. 7. UNDERWEAR: brands and styles change; replace yours.',
+    eraNote: 'Pre-1980, most clothes are made in USA. A "Made in China" tag is unusual and marks the garment as futuristic. Check all labels.',
+    tags: ['fashion', 'clothing', 'style', 'arrival', 'sears', 'goodwill', 'subculture']
+  },
+
+  // ── BANKING / FINANCIAL DIVERSIFICATION ────────────────────
+  {
+    id: 'financial-diversification',
+    category: 'Banking',
+    title: 'Financial Diversification Across Decades',
+    description: 'A single bank, broker, or currency is a single point of failure. Time travelers face unique risks: institution collapse, identity exposure, currency redenomination, and the possibility that "your" records do not survive your interventions.',
+    protocol: '1. MULTIPLE BANKS: maintain accounts at 2-3 unrelated institutions in different cities. Never single-bank. 2. CASH RESERVES: keep 1-3 months of living expenses in physical currency, in a safety-deposit box (NOT home). Mix small and large bills. 3. PRECIOUS METALS: 5-10% of net worth in physical gold coins (Krugerrand importable from 1967, Canadian Maple from 1979, American Eagle from 1986). Avoid numismatic markup — buy bullion. 4. OFFSHORE (era-dependent): 1970s — Swiss bank accounts are still quasi-anonymous (numbered accounts). 1980s — Cayman Islands emerge. By 2001 (Patriot Act soon), all of this closes. 5. DIVERSIFY JURISDICTIONS: never hold all assets in one country. 6. DUAL-CURRENCY HEDGING: keep some assets in CHF, DEM, or JPY (pre-euro); post-1999 in EUR. 7. RETAIN BORING RECORDS: every bank statement, every tax return, every property deed. Survives audits, disputes, and your own memory failures.',
+    eraNote: 'Numbered Swiss accounts survive until 1991 (you must prove identity but it is not in the bank\'s general system). The Bank Secrecy Act (1970), Money Laundering Control Act (1986), and Patriot Act (2001) progressively eliminate offshore secrecy.',
+    tags: ['diversification', 'offshore', 'swiss', 'cayman', 'gold', 'krugerrand', 'reserves']
+  },
 ];

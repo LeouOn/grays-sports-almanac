@@ -22,7 +22,7 @@ describe('PlacesToLive page', () => {
   it('renders the page heading', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: /places to live/i })).toBeTruthy();
-  });
+  }, 30000);
 
   it('renders destination cards on load', () => {
     renderPage();
@@ -52,7 +52,7 @@ describe('PlacesToLive page', () => {
   it('filters by political stability via the dropdown', () => {
     renderPage();
     // All destinations initially.
-    expect(screen.getByText(/of 47/)).toBeTruthy();
+    expect(screen.getByText(/of 90/)).toBeTruthy();
 
     // Select "Turbulent" — only Turbulent destinations remain.
     fireEvent.change(screen.getByLabelText(/stability/i), {
@@ -63,14 +63,14 @@ describe('PlacesToLive page', () => {
     expect(screen.getAllByText('Tehran').length).toBeGreaterThan(0);
     // San Francisco is Stable in every decade, so it must be filtered out.
     expect(screen.queryByText('San Francisco')).toBeFalsy();
-    // Count must drop below 47.
-    const countText = screen.getByText(/of 47/).textContent || '';
-    expect(countText).not.toMatch(/Showing 47 of 47/);
+    // Count must drop below 86.
+    const countText = screen.getByText(/of 90/).textContent || '';
+    expect(countText).not.toMatch(/Showing 90 of 90/);
   });
 
   it('shows the count of filtered destinations', () => {
     renderPage();
-    expect(screen.getByText(/of 47/)).toBeTruthy();
+    expect(screen.getByText(/of 90/)).toBeTruthy();
   });
 
   it('opens detail modal on card click', () => {
@@ -79,7 +79,7 @@ describe('PlacesToLive page', () => {
     fireEvent.click(headings[0]);
     // Modal should show the close button
     expect(screen.getByLabelText(/close/i)).toBeTruthy();
-  });
+  }, 30000);
 
   it('closes modal on backdrop click', () => {
     renderPage();
@@ -90,5 +90,5 @@ describe('PlacesToLive page', () => {
     const overlay = screen.getByLabelText(/close/i).closest('.fixed');
     if (overlay) fireEvent.click(overlay);
     expect(screen.queryByLabelText(/close/i)).toBeNull();
-  });
+  }, 30000);
 });

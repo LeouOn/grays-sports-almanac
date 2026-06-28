@@ -25,9 +25,12 @@ describe('Bootstrap Blueprints Data & Search', () => {
   it('integrates successfully with the search utility for titles', async () => {
     const results = await searchAll('Czochralski');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].module).toBe('Blueprints');
-    expect(results[0].title).toBe('Silicon Crystal Pulling (Czochralski Method)');
-    expect(results[0].link).toBe('/blueprints');
+    // Czochralski may also appear in Tech/Engineering modules, so find the
+    // Blueprints result specifically rather than assuming it's first.
+    const blueprintResult = results.find(r => r.module === 'Blueprints');
+    expect(blueprintResult).toBeDefined();
+    expect(blueprintResult!.title).toBe('Silicon Crystal Pulling (Czochralski Method)');
+    expect(blueprintResult!.link).toBe('/blueprints');
   });
 
   it('finds blueprints via related keywords or principles', async () => {

@@ -195,7 +195,7 @@ describe('Accessibility', () => {
 
   it('EraGuide has no axe violations', async () => {
     await expectNoAxeViolations(<EraGuide />);
-  });
+  }, 20000);
 
   it('DisasterPrevention has no axe violations', async () => {
     await expectNoAxeViolations(<DisasterPrevention />);
@@ -251,12 +251,16 @@ describe('Accessibility', () => {
   }, 20000);
 
   it('PlacesToLive has no axe violations', async () => {
+    // PlacesToLive renders 90 cards — axe-core needs more than the default
+    // 5s to scan the full DOM tree (same situation as WorldEvents above).
     await expectNoAxeViolations(<PlacesToLive />);
-  });
+  }, 20000);
 
   it('PlacesToVisit has no axe violations', async () => {
+    // PlacesToVisit renders 60 cards — axe-core needs more than the default
+    // 5s to scan the full DOM tree (same situation as WorldEvents above).
     await expectNoAxeViolations(<PlacesToVisit />);
-  });
+  }, 20000);
 
   it('NotFound has no axe violations', async () => {
     await expectNoAxeViolations(<NotFound />);

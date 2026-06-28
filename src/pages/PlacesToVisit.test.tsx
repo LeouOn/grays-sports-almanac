@@ -22,14 +22,14 @@ describe('PlacesToVisit page', () => {
     expect(screen.getByText(/Temporal tourism guide/)).toBeTruthy();
   });
 
-  it('renders all 28 destinations on load', () => {
+  it('renders all 60 destinations on load', () => {
     renderPage();
     // Anchors from each of the four decades.
     expect(screen.getByText('Apollo Lunar Landing Sites')).toBeTruthy(); // 1970s
     expect(screen.getByText('The Berlin Wall & Checkpoint Charlie')).toBeTruthy(); // 1980s
     expect(screen.getByText('Hong Kong Handover Ceremony')).toBeTruthy(); // 1990s
     expect(screen.getByText('Kyoto Cherry Blossoms')).toBeTruthy(); // 2000s
-    expect(screen.getByText(/Showing 28 of 28/)).toBeTruthy();
+    expect(screen.getByText(/Showing 60 of 60/)).toBeTruthy();
   });
 
   it('filters by decade via the chip controls', () => {
@@ -42,7 +42,7 @@ describe('PlacesToVisit page', () => {
     // Non-1990s entries are filtered out.
     expect(screen.queryByText('Apollo Lunar Landing Sites')).toBeNull();
     expect(screen.queryByText('Kyoto Cherry Blossoms')).toBeNull();
-    expect(screen.getByText(/Showing 7 of 28/)).toBeTruthy();
+    expect(screen.getByText(/Showing 8 of 60/)).toBeTruthy();
   });
 
   it('filters by category via the dropdown', () => {
@@ -58,7 +58,7 @@ describe('PlacesToVisit page', () => {
     expect(screen.getByText(/Woodstock/)).toBeTruthy();
     // Non-Music entries are filtered out.
     expect(screen.queryByText('Apollo Lunar Landing Sites')).toBeNull();
-    expect(screen.getByText(/Showing 4 of 28/)).toBeTruthy();
+    expect(screen.getByText(/Showing 5 of 60/)).toBeTruthy();
   });
 
   it('shows cost tier badges across the grid', () => {
@@ -93,10 +93,10 @@ describe('PlacesToVisit page', () => {
     renderPage();
 
     fireEvent.click(screen.getByRole('button', { name: '1990s' }));
-    expect(screen.getByText(/Showing 7 of 28/)).toBeTruthy();
+    expect(screen.getByText(/Showing 8 of 60/)).toBeTruthy();
 
     fireEvent.click(screen.getByRole('button', { name: 'All' }));
-    expect(screen.getByText(/Showing 28 of 28/)).toBeTruthy();
+    expect(screen.getByText(/Showing 60 of 60/)).toBeTruthy();
     expect(screen.getByText('Apollo Lunar Landing Sites')).toBeTruthy();
   });
 
