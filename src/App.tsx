@@ -3,7 +3,7 @@ import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useModalFocus } from './hooks/useModalFocus';
 import { searchAll, preloadSearchData, type SearchResult } from './lib/search';
-import { Search, X, Printer } from 'lucide-react';
+import { Search, X, Printer, Settings as SettingsIcon } from 'lucide-react';
 import { ThemeToggle } from './components/ThemeToggle';
 import { MobileNav } from './components/MobileNav';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -37,6 +37,7 @@ const WorldEvents = lazy(() => import('./pages/WorldEvents').then(m => ({ defaul
 const PlacesToLive = lazy(() => import('./pages/PlacesToLive').then(m => ({ default: m.PlacesToLive })));
 const PlacesToVisit = lazy(() => import('./pages/PlacesToVisit').then(m => ({ default: m.PlacesToVisit })));
 const Engineering = lazy(() => import('./pages/Engineering').then(m => ({ default: m.Engineering })));
+const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function Lazy({ children }: { children: React.ReactNode }) {
@@ -372,6 +373,15 @@ function Layout({ children }: { children: React.ReactNode }) {
                 Ctrl+K
               </kbd>
             </button>
+            <Link
+              to="/settings"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+              aria-label="LLM Settings"
+              title="Configure LLM API keys"
+            >
+              <SettingsIcon className="size-3.5" />
+              <span className="hidden sm:inline">Settings</span>
+            </Link>
             <ThemeToggle />
             <button
               onClick={() => window.print()}
@@ -690,6 +700,7 @@ function App() {
             <Route path="/places-to-live" element={<Lazy><PlacesToLive /></Lazy>} />
             <Route path="/places-to-visit" element={<Lazy><PlacesToVisit /></Lazy>} />
             <Route path="/engineering" element={<Lazy><Engineering /></Lazy>} />
+            <Route path="/settings" element={<Lazy><Settings /></Lazy>} />
             <Route path="*" element={<Lazy><NotFound /></Lazy>} />
           </Routes>
         </ErrorBoundary>
