@@ -776,7 +776,7 @@ export function Quiz() {
               )}
             </div>
 
-            <form onSubmit={handleSubmit} className="sticky bottom-0 bg-neutral-950/95 backdrop-blur-sm -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 border-t border-neutral-800 flex gap-2 items-end">
+            <form onSubmit={handleSubmit} className="sticky bottom-0 bg-neutral-950/95 backdrop-blur-sm -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 border-t border-neutral-800 flex gap-2 items-end safe-area-bottom">
               <textarea
                 data-chat-input
                 value={input}

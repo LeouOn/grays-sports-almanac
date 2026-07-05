@@ -326,7 +326,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         Skip to main content
       </a>
       <OfflineBanner />
-      <header className="border-b border-neutral-800 bg-neutral-950/50 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-neutral-800 bg-neutral-950/50 backdrop-blur-md sticky top-0 z-50 safe-area-top">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <Link to="/" className="text-xl font-extrabold tracking-tight bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent shrink-0">
             Time Traveler's Guide
@@ -385,7 +385,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <main id="main-content" tabIndex={-1} className="flex-1 container mx-auto px-4 py-12 focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="flex-1 container mx-auto px-4 py-12 pb-20 focus:outline-none safe-area-bottom">
         {children}
       </main>
 
