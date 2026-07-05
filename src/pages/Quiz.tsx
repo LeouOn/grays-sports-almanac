@@ -13,14 +13,17 @@ import { AthenaQuizReaction } from '../components/AthenaQuizReaction';
 import { useSearchParams } from 'react-router';
 
 type Tier = 'tier1' | 'tier2' | 'tier3';
-type ProviderId = 'google' | 'deepseek' | 'zhipu' | 'minimax' | 'openrouter';
+type ProviderId = 'openai' | 'deepseek' | 'openrouter' | 'zai' | 'minimax' | 'gemini' | 'claude' | 'ollama';
 
 const PROVIDERS: { id: ProviderId; label: string; icon: string; defaultModel: string }[] = [
-  { id: 'google',     label: 'Gemini',    icon: '🔵', defaultModel: 'gemini-2.5-flash' },
-  { id: 'deepseek',   label: 'DeepSeek',  icon: '🐋', defaultModel: 'deepseek-v4-pro' },
-  { id: 'zhipu',      label: 'Zhipu',     icon: '🧠', defaultModel: 'GLM-4' },
-  { id: 'minimax',    label: 'MiniMax',   icon: '⚡', defaultModel: 'MiniMax-M3' },
-  { id: 'openrouter', label: 'OpenRouter', icon: '🔀', defaultModel: 'google/gemini-2.5-flash' },
+  { id: 'gemini',     label: 'Gemini',     icon: '🔵', defaultModel: 'gemini-2.0-flash' },
+  { id: 'claude',     label: 'Claude',     icon: '🟠', defaultModel: 'claude-sonnet-4-20250514' },
+  { id: 'deepseek',   label: 'DeepSeek',   icon: '🐋', defaultModel: 'deepseek-v4-flash' },
+  { id: 'zai',        label: 'GLM',        icon: '🧠', defaultModel: 'glm-5.1' },
+  { id: 'minimax',    label: 'MiniMax',    icon: '⚡', defaultModel: 'minimax-m3' },
+  { id: 'openai',     label: 'OpenAI',     icon: '🟢', defaultModel: 'gpt-4o' },
+  { id: 'openrouter', label: 'OpenRouter', icon: '🔀', defaultModel: 'anthropic/claude-sonnet-latest' },
+  { id: 'ollama',     label: 'Ollama',     icon: '🦙', defaultModel: 'llama3.3' },
 ];
 
 const ALL_ERAS = ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s', 'global'];
@@ -37,7 +40,7 @@ const ALL_SUBCATEGORIES = Object.values(CATEGORY_TREE).flat();
 export function Quiz() {
   const { activeCompanion, selectCompanion, customName } = useCompanion();
   const [selectedTier, setSelectedTier] = useState<Tier>('tier1');
-  const [providerId, setProviderId] = useState<ProviderId>('zhipu');
+  const [providerId, setProviderId] = useState<ProviderId>('minimax');
   const [selectedModel, setSelectedModel] = useState('');
   const [availableModels, setAvailableModels] = useState<string[]>([]);
   const [modelsLoading, setModelsLoading] = useState(false);
@@ -351,29 +354,31 @@ export function Quiz() {
       </div>
 
       {/* Provider Selector */}
-      <div className="flex items-center justify-center gap-2">
-        <Cpu className="size-3.5 text-neutral-600" />
-        <div className="flex gap-1 p-0.5 bg-neutral-900 border border-neutral-800/60 rounded-md" role="radiogroup" aria-label="LLM provider">
+      <div className="flex items-center gap-2">
+        <Cpu className="size-3.5 text-neutral-600 shrink-0" />
+        <div
+          className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 rounded-md bg-neutral-900 border border-neutral-800/60"
+          role="radiogroup"
+          aria-label="LLM provider"
+        >
           {PROVIDERS.map(p => (
             <button
               key={p.id}
               onClick={() => setProviderId(p.id)}
               role="radio"
               aria-checked={providerId === p.id}
-              className={`px-3 py-2 text-[11px] font-medium rounded transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-3 py-2 text-base font-medium rounded transition-all cursor-pointer shrink-0 ${
                 providerId === p.id
                   ? 'bg-neutral-800 text-neutral-100 shadow-sm'
                   : 'text-neutral-500 hover:text-neutral-300'
               }`}
-              title={`${p.label} — ${p.id === 'google' ? 'gemini-2.0-flash' : p.id === 'deepseek' ? 'deepseek-chat' : p.id === 'zhipu' ? 'glm-4-flash' : p.id === 'minimax' ? 'MiniMax-Text-01' : 'via OpenRouter'}`}
+              title={`${p.label} — ${p.defaultModel}`}
             >
-              {p.icon}
+              <span aria-hidden="true">{p.icon}</span>
+              <span className="hidden md:inline text-[11px]">{p.label}</span>
             </button>
           ))}
         </div>
-        <span className="text-[10px] text-neutral-600 ml-1 hidden sm:inline">
-          {PROVIDERS.find(p => p.id === providerId)?.label}
-        </span>
       </div>
 
       {/* Model Selector */}

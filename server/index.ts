@@ -1,17 +1,19 @@
 import express from 'express';
 import cors from 'cors';
-import { streamText, generateText, tool, convertToModelMessages, type LanguageModelV2 } from 'ai';
+import { streamText, tool, convertToModelMessages } from 'ai';
 import { z } from 'zod';
-import { google } from '@ai-sdk/google';
-import { createOpenAI } from '@ai-sdk/openai';
-import { deepseek } from '@ai-sdk/deepseek';
-import { createAnthropic } from '@ai-sdk/anthropic';
 import dotenv from 'dotenv';
 import { initAthenaDb, runFeatureMigrations, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
 import { registerEntries } from './entry-registry.js';
 import { requestLogger } from './middleware.js';
 import { createAthenaRoutes } from './athena-routes.js';
 import { createFeatureRoutes } from './feature-routes.js';
+import {
+  getModel,
+  PROVIDER_DEFAULTS,
+  KEY_ENV_MAP,
+  type ProviderId,
+} from './providers.js';
 import athenaStatic from '../src/data/athena-static.json' with { type: 'json' };
 
 dotenv.config();
@@ -34,62 +36,15 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
-// ── Provider Configuration ──────────────────────────────────
-type ProviderId = 'google' | 'deepseek' | 'zhipu' | 'minimax' | 'openrouter';
-
-const KEY_ENV_MAP: Record<string, string> = {
-  google:     'GOOGLE_GENERATIVE_AI_API_KEY',
-  deepseek:   'DEEPSEEK_API_KEY',
-  zhipu:      'ZHIPU_API_KEY',
-  minimax:    'MINIMAX_API_KEY',
-  openrouter: 'OPENROUTER_API_KEY',
-};
-
-const PROVIDER_DEFAULTS: Record<ProviderId, { model: string; baseURL?: string }> = {
-  google:  { model: process.env.GOOGLE_MODEL  || 'gemini-2.5-flash' },
-  deepseek: { model: process.env.DEEPSEEK_MODEL || 'deepseek-v4-pro', baseURL: 'https://api.deepseek.com' },
-  zhipu:   { model: process.env.ZHIPU_MODEL   || 'glm-4.5',         baseURL: 'https://api.z.ai/api/coding/paas/v4' },
-  minimax: { model: process.env.MINIMAX_MODEL  || 'MiniMax-M3',      baseURL: 'https://api.minimax.io/anthropic/v1' },
-  openrouter: { model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash', baseURL: 'https://openrouter.ai/api/v1' },
-};
-
-function getModel(providerId: ProviderId, modelName?: string): LanguageModelV2 {
-  const cfg = PROVIDER_DEFAULTS[providerId];
-  const model = modelName || cfg.model;
-
-  if (providerId === 'google') {
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    if (!apiKey) throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not set');
-    return google(model);
-  }
-
-  // DeepSeek has its own dedicated AI SDK provider
-  if (providerId === 'deepseek') {
-    const apiKey = process.env.DEEPSEEK_API_KEY;
-    if (!apiKey) throw new Error('DEEPSEEK_API_KEY not set');
-    return deepseek(model);
-  }
-
-  // MiniMax uses Anthropic-compatible Messages API
-  if (providerId === 'minimax') {
-    const apiKey = process.env.MINIMAX_API_KEY;
-    if (!apiKey) throw new Error('MINIMAX_API_KEY not set');
-    const anthropic = createAnthropic({ baseURL: cfg.baseURL, apiKey });
-    return anthropic(model);
-  }
-
-  // Zhipu and OpenRouter use OpenAI-compatible Chat Completions
-  if (cfg.baseURL) {
-    const apiKey = process.env[KEY_ENV_MAP[providerId]];
-    if (!apiKey) throw new Error(`${KEY_ENV_MAP[providerId]} not set for provider "${providerId}"`);
-
-    const openai = createOpenAI({ baseURL: cfg.baseURL, apiKey });
-    // Use .chat() to hit /chat/completions instead of the default /responses endpoint
-    return openai.chat(model);
-  }
-
-  throw new Error(`Unknown provider: ${providerId}`);
-}
+// ── Provider configuration ─────────────────────────────────
+// All provider config (ProviderId, PROVIDER_DEFAULTS, KEY_ENV_MAP, getModel,
+// callProviderChain, mapLLMError) lives in ./providers.ts — see there for
+// the canonical 8-provider spec.
+const VALID_PROVIDERS: ProviderId[] = [
+  'openai', 'deepseek', 'openrouter', 'zai',
+  'minimax', 'gemini', 'claude', 'ollama',
+];
+const DEFAULT_PROVIDER: ProviderId = 'minimax';
 
 // ── Model List Cache ────────────────────────────────────────
 const modelCache = new Map<string, { models: string[]; expiry: number }>();
@@ -97,7 +52,7 @@ const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
 app.get('/api/models', async (req, res) => {
   const provider = req.query.provider as string;
-  if (!['google','deepseek','zhipu','minimax','openrouter'].includes(provider)) {
+  if (!VALID_PROVIDERS.includes(provider as ProviderId)) {
     res.status(400).json({ error: `Invalid provider: ${provider}` });
     return;
   }
@@ -112,11 +67,13 @@ app.get('/api/models', async (req, res) => {
 
   try {
     const apiKey = process.env[KEY_ENV_MAP[providerId]];
-    if (!apiKey) throw new Error(`${KEY_ENV_MAP[providerId]} not set`);
+    // ollama runs locally and typically needs no key
+    const keyRequired = providerId !== 'ollama';
+    if (keyRequired && !apiKey) throw new Error(`${KEY_ENV_MAP[providerId]} not set`);
 
     let models: string[] = [];
 
-    if (providerId === 'google') {
+    if (providerId === 'gemini') {
       // Google Generative Language API
       const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
       const resp = await fetch(url);
@@ -127,14 +84,25 @@ app.get('/api/models', async (req, res) => {
           .map((m) => m.name!.replace('models/', ''))
           .sort();
       }
-    } else if (providerId === 'minimax') {
-      // MiniMax Anthropic API doesn't expose a /models endpoint — use known models
-      models = ['MiniMax-M3', 'MiniMax-Text-01', 'abab6.5s-chat', 'abab5.5s-chat'];
-    } else {
-      // OpenAI-compatible providers
+    } else if (providerId === 'claude') {
+      // Anthropic Models API (needs x-api-key + anthropic-version headers)
       const cfg = PROVIDER_DEFAULTS[providerId];
       const resp = await fetch(`${cfg.baseURL}/models`, {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
+        headers: {
+          'x-api-key': apiKey!,
+          'anthropic-version': '2023-06-01',
+        },
+      });
+      const data = await resp.json() as { data?: { id: string }[] };
+      if (data.data && Array.isArray(data.data)) {
+        models = data.data.map((m) => m.id).sort();
+      }
+    } else {
+      // OpenAI-compatible providers (openai, deepseek, openrouter, zai,
+      // minimax, ollama) all expose GET /v1/models with Bearer auth.
+      const cfg = PROVIDER_DEFAULTS[providerId];
+      const resp = await fetch(`${cfg.baseURL}/models`, {
+        headers: { 'Authorization': `Bearer ${apiKey ?? ''}` },
       });
       const data = await resp.json() as { data?: { id: string }[] };
       if (data.data && Array.isArray(data.data)) {
@@ -167,7 +135,7 @@ import { createPalaceLinkHandler } from './palaceLinkHandler.js';
 
 app.post('/api/chat', async (req, res) => {
   const { messages, tier, provider, model: modelOverride, companionName, companionPrompt, eras, categories, subcategories, sessionId } = req.body;
-  const providerId: ProviderId = (['google','deepseek','zhipu','minimax','openrouter'].includes(provider) ? provider : 'zhipu') as ProviderId;
+  const providerId: ProviderId = (VALID_PROVIDERS.includes(provider) ? provider : DEFAULT_PROVIDER) as ProviderId;
 
   // Convert UIMessages from frontend to CoreMessages for streamText
   const coreMessages = await convertToModelMessages(messages ?? []);

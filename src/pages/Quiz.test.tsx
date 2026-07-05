@@ -153,7 +153,7 @@ describe('Quiz Page', () => {
     const [messageArg, optionsArg] = mockSendMessage.mock.calls[0];
     expect(messageArg.text).toBe('What was the price of milk in 1950?');
     expect(optionsArg.body).toHaveProperty('tier', 'tier1');
-    expect(optionsArg.body).toHaveProperty('provider', 'zhipu');
+    expect(optionsArg.body).toHaveProperty('provider', 'minimax');
     expect(optionsArg.body).toHaveProperty('eras');
     expect(optionsArg.body).toHaveProperty('categories');
   });
@@ -163,10 +163,13 @@ describe('Quiz Page', () => {
 
     // Provider buttons with emoji icons — verified via title attributes
     expect(screen.getByTitle(/Gemini/)).toBeInTheDocument();
+    expect(screen.getByTitle(/Claude/)).toBeInTheDocument();
     expect(screen.getByTitle(/DeepSeek/)).toBeInTheDocument();
-    expect(screen.getByTitle(/Zhipu/)).toBeInTheDocument();
+    expect(screen.getByTitle(/GLM/)).toBeInTheDocument();
     expect(screen.getByTitle(/MiniMax/)).toBeInTheDocument();
+    expect(screen.getByTitle(/OpenAI/)).toBeInTheDocument();
     expect(screen.getByTitle(/OpenRouter/)).toBeInTheDocument();
+    expect(screen.getByTitle(/Ollama/)).toBeInTheDocument();
   });
 
   it('calls sendMessage when Initialize AI Examiner button is clicked', () => {

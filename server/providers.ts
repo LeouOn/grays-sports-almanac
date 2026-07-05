@@ -1,63 +1,114 @@
-// Provider chain for runtime LLM calls. Used by palaceLinkHandler (and the
-// existing /api/companion/comment endpoint in index.ts). Extracted from the
-// inline chain in index.ts so the new endpoint can share the same fallback
-// order without modifying the existing route.
+// Provider chain for runtime LLM calls. Single source of truth for the
+// ProviderId union, default models/baseURLs, API-key env mapping, model
+// factory (getModel), and the cost-ordered fallback chain used by both
+// palaceLinkHandler and the /api/companion/comment route in index.ts.
 import { generateText, type LanguageModelV2 } from 'ai';
 import { google } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
-import { deepseek } from '@ai-sdk/deepseek';
 import { createAnthropic } from '@ai-sdk/anthropic';
 
-export type ProviderId = 'google' | 'deepseek' | 'zhipu' | 'minimax' | 'openrouter';
+export type ProviderId =
+  | 'openai'
+  | 'deepseek'
+  | 'openrouter'
+  | 'zai'
+  | 'minimax'
+  | 'gemini'
+  | 'claude'
+  | 'ollama';
 
-const KEY_ENV_MAP: Record<string, string> = {
-  google:     'GOOGLE_GENERATIVE_AI_API_KEY',
+export const KEY_ENV_MAP: Record<ProviderId, string> = {
+  openai:     'OPENAI_API_KEY',
   deepseek:   'DEEPSEEK_API_KEY',
-  zhipu:      'ZHIPU_API_KEY',
-  minimax:    'MINIMAX_API_KEY',
   openrouter: 'OPENROUTER_API_KEY',
+  zai:        'ZAI_API_KEY',
+  minimax:    'MINIMAX_API_KEY',
+  gemini:     'GOOGLE_GENERATIVE_AI_API_KEY',
+  claude:     'ANTHROPIC_API_KEY',
+  ollama:     'OLLAMA_API_KEY',
 };
 
-const PROVIDER_DEFAULTS: Record<ProviderId, { model: string; baseURL?: string }> = {
-  google:    { model: process.env.GOOGLE_MODEL    || 'gemini-2.5-flash' },
-  deepseek:  { model: process.env.DEEPSEEK_MODEL  || 'deepseek-v4-pro', baseURL: 'https://api.deepseek.com' },
-  zhipu:     { model: process.env.ZHIPU_MODEL     || 'glm-4.5',         baseURL: 'https://api.z.ai/api/coding/paas/v4' },
-  minimax:   { model: process.env.MINIMAX_MODEL   || 'MiniMax-M3',      baseURL: 'https://api.minimax.io/anthropic/v1' },
-  openrouter: { model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash', baseURL: 'https://openrouter.com/api/v1' },
+export const PROVIDER_DEFAULTS: Record<ProviderId, { model: string; baseURL?: string }> = {
+  openai:     { model: process.env.OPENAI_MODEL     || 'gpt-4o',                          baseURL: 'https://api.openai.com/v1' },
+  deepseek:   { model: process.env.DEEPSEEK_MODEL   || 'deepseek-v4-flash',               baseURL: 'https://api.deepseek.com' },
+  openrouter: { model: process.env.OPENROUTER_MODEL  || 'anthropic/claude-sonnet-latest', baseURL: 'https://openrouter.ai/api/v1' },
+  zai:        { model: process.env.ZAI_MODEL         || 'glm-5.1',                         baseURL: 'https://open.bigmodel.cn/api/paas/v4' },
+  minimax:    { model: process.env.MINIMAX_MODEL     || 'minimax-m3',                      baseURL: 'https://api.minimax.chat/v1' },
+  gemini:     { model: process.env.GEMINI_MODEL      || 'gemini-2.0-flash' },
+  claude:     { model: process.env.CLAUDE_MODEL      || 'claude-sonnet-4-20250514',        baseURL: 'https://api.anthropic.com/v1' },
+  ollama:     { model: process.env.OLLAMA_MODEL      || 'llama3.3',                        baseURL: process.env.OLLAMA_BASE_URL || 'http://localhost:11434/v1' },
 };
 
+// Providers whose API key is optional (e.g. local Ollama needs no auth).
+const OPTIONAL_KEY_PROVIDERS: ReadonlySet<ProviderId> = new Set<ProviderId>(['ollama']);
+
+/**
+ * Build a LanguageModelV2 for the given provider. Throws a clear error when a
+ * required API key is missing. The handler class is chosen per the
+ * LLM Provider Handlers spec:
+ *   - gemini   → @ai-sdk/google
+ *   - claude   → @ai-sdk/anthropic (with explicit baseURL)
+ *   - deepseek → @ai-sdk/deepseek (own SDK; baseURL handled internally)
+ *   - openai, openrouter, zai, minimax, ollama → OpenAI-compatible Chat
+ */
 export function getModel(providerId: ProviderId, modelName?: string): LanguageModelV2 {
   const cfg = PROVIDER_DEFAULTS[providerId];
+  if (!cfg) {
+    throw new Error(`Unknown provider: ${providerId}`);
+  }
   const model = modelName || cfg.model;
+  const keyEnv = KEY_ENV_MAP[providerId];
+  const apiKey = process.env[keyEnv];
+  const keyRequired = !OPTIONAL_KEY_PROVIDERS.has(providerId);
+  if (keyRequired && !apiKey) {
+    throw new Error(`${keyEnv} not set for provider "${providerId}"`);
+  }
 
-  if (providerId === 'google') {
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    if (!apiKey) throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not set');
+  // Gemini uses the dedicated Google SDK (no baseURL — Google's SDK handles it).
+  if (providerId === 'gemini') {
     return google(model);
   }
 
-  if (providerId === 'deepseek') {
-    const apiKey = process.env.DEEPSEEK_API_KEY;
-    if (!apiKey) throw new Error('DEEPSEEK_API_KEY not set');
-    return deepseek(model);
+  // Claude uses the dedicated Anthropic SDK with the spec's baseURL.
+  if (providerId === 'claude') {
+    return createAnthropic({ baseURL: cfg.baseURL, apiKey: apiKey! })(model);
   }
 
-  if (providerId === 'minimax') {
-    const apiKey = process.env.MINIMAX_API_KEY;
-    if (!apiKey) throw new Error('MINIMAX_API_KEY not set');
-    const anthropic = createAnthropic({ baseURL: cfg.baseURL, apiKey });
-    return anthropic(model);
-  }
-
+  // All remaining providers (openai, deepseek, openrouter, zai, minimax, ollama)
+  // speak the OpenAI-compatible Chat Completions API. ollama may send an empty key.
   if (cfg.baseURL) {
-    const apiKey = process.env[KEY_ENV_MAP[providerId]];
-    if (!apiKey) throw new Error(`${KEY_ENV_MAP[providerId]} not set for provider "${providerId}"`);
-
-    const openai = createOpenAI({ baseURL: cfg.baseURL, apiKey });
-    return openai.chat(model);
+    return createOpenAI({ baseURL: cfg.baseURL, apiKey: apiKey ?? '' }).chat(model);
   }
 
   throw new Error(`Unknown provider: ${providerId}`);
+}
+
+// ── Error normalization ─────────────────────────────────────
+//
+// Wrap provider errors in a consistent LLMError so routes can map them to
+// HTTP statuses without sniffing vendor-specific message text. Timeout,
+// auth, and rate-limit patterns are detected by regex; anything else is
+// surfaced as a generic "Provider error".
+export class LLMError extends Error {
+  constructor(message: string, public statusCode?: number) {
+    super(message);
+    this.name = 'LLMError';
+  }
+}
+
+export function mapLLMError(err: unknown): LLMError {
+  if (err instanceof LLMError) return err;
+  const msg = err instanceof Error ? err.message : String(err);
+  if (/timeout|timed\s*out|ETIMEDOUT|ECONNREFUSED/i.test(msg)) {
+    return new LLMError('Connection timed out. Please check your network.');
+  }
+  if (/401|403|unauthorized|forbidden/i.test(msg)) {
+    return new LLMError('Authentication failed. Please check your API key.');
+  }
+  if (/429|rate\s*limit/i.test(msg)) {
+    return new LLMError('Rate limit exceeded. Please try again later.');
+  }
+  return new LLMError(`Provider error: ${msg}`);
 }
 
 export interface CallProviderChainArgs {
@@ -74,8 +125,9 @@ export interface CallProviderChainResult {
 
 /**
  * Call the provider chain in cost order. The first provider whose key is
- * configured and whose call succeeds wins. Mirrors the inline chain in the
- * existing /api/companion/comment route.
+ * configured (when required) and whose call succeeds wins. Errors from
+ * generateText are normalized through `mapLLMError` so the surfaced "Last:"
+ * message is user-actionable rather than a vendor-specific blob.
  */
 export async function callProviderChain(
   args: CallProviderChainArgs
@@ -83,14 +135,16 @@ export async function callProviderChain(
   const { companionName, companionPrompt, contextItem, provider } = args;
 
   const fallbackOrder: ProviderId[] = provider
-    ? [provider, 'minimax', 'zhipu', 'deepseek', 'google']
-    : ['minimax', 'zhipu', 'deepseek', 'google'];
+    ? [provider, 'minimax', 'zai', 'deepseek', 'gemini', 'openai', 'claude', 'openrouter']
+    : ['minimax', 'zai', 'deepseek', 'gemini', 'openai', 'claude', 'openrouter'];
 
   let lastError = '';
 
   for (const pid of fallbackOrder) {
     const keyEnv = KEY_ENV_MAP[pid];
-    if (keyEnv && !process.env[keyEnv]) {
+    const hasKey = !!process.env[keyEnv];
+    const keyRequired = !OPTIONAL_KEY_PROVIDERS.has(pid);
+    if (keyRequired && !hasKey) {
       lastError = `${keyEnv} not set for ${pid}`;
       continue;
     }
@@ -110,8 +164,7 @@ Do not break character. Do not output anything other than your in-character dial
 
       return { comment: response.text.trim(), provider: pid };
     } catch (err: unknown) {
-      const errMessage = err instanceof Error ? err.message : String(err);
-      lastError = `${pid}: ${errMessage}`;
+      lastError = `${pid}: ${mapLLMError(err).message}`;
     }
   }
 

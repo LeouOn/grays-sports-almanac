@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // ── Module mocks ────────────────────────────────────────────────────────
 //
 // `providers.ts` builds a `LanguageModelV2` object by calling SDK factories
-// (google/deepseek/createAnthropic/createOpenAI) and then hands it to
+// (google/createAnthropic/createOpenAI) and then hands it to
 // `ai.generateText`. We don't want to hit any real network — so we stub
 // every SDK factory AND `generateText` here, and capture references for the
 // tests to drive directly.
@@ -22,9 +22,6 @@ vi.mock('ai', () => ({
 vi.mock('@ai-sdk/google', () => ({
   google: vi.fn((model: string) => ({ __sdk: 'google', model })),
 }));
-vi.mock('@ai-sdk/deepseek', () => ({
-  deepseek: vi.fn((model: string) => ({ __sdk: 'deepseek', model })),
-}));
 vi.mock('@ai-sdk/anthropic', () => ({
   createAnthropic: vi.fn(() => (model: string) => ({ __sdk: 'anthropic-compat', model })),
 }));
@@ -34,18 +31,20 @@ vi.mock('@ai-sdk/openai', () => ({
   })),
 }));
 
-import { getModel, callProviderChain, type ProviderId } from './providers.js';
+import { getModel, callProviderChain, mapLLMError, LLMError, type ProviderId } from './providers.js';
 import { google } from '@ai-sdk/google';
-import { deepseek } from '@ai-sdk/deepseek';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createOpenAI } from '@ai-sdk/openai';
 
 const ENV_KEYS = [
-  'GOOGLE_GENERATIVE_AI_API_KEY',
+  'OPENAI_API_KEY',
   'DEEPSEEK_API_KEY',
-  'ZHIPU_API_KEY',
-  'MINIMAX_API_KEY',
   'OPENROUTER_API_KEY',
+  'ZAI_API_KEY',
+  'MINIMAX_API_KEY',
+  'GOOGLE_GENERATIVE_AI_API_KEY',
+  'ANTHROPIC_API_KEY',
+  'OLLAMA_API_KEY',
 ];
 
 // Snapshot the original env so we can restore it between tests.
@@ -64,66 +63,146 @@ afterEach(() => {
   }
 });
 
-describe('getModel (provider configuration)', () => {
-  it('throws with a clear message when GOOGLE_GENERATIVE_AI_API_KEY is unset', () => {
-    expect(() => getModel('google')).toThrow(/GOOGLE_GENERATIVE_AI_API_KEY not set/);
+// ── getModel: missing API key ───────────────────────────────────────────
+
+describe('getModel (provider configuration) — missing API key', () => {
+  it('throws when OPENAI_API_KEY is unset', () => {
+    expect(() => getModel('openai')).toThrow(/OPENAI_API_KEY not set/);
   });
 
   it('throws when DEEPSEEK_API_KEY is unset', () => {
     expect(() => getModel('deepseek')).toThrow(/DEEPSEEK_API_KEY not set/);
   });
 
-  it('throws when MINIMAX_API_KEY is unset', () => {
-    expect(() => getModel('minimax')).toThrow(/MINIMAX_API_KEY not set/);
-  });
-
-  it('throws when ZHIPU_API_KEY is unset', () => {
-    expect(() => getModel('zhipu')).toThrow(/ZHIPU_API_KEY not set for provider "zhipu"/);
-  });
-
   it('throws when OPENROUTER_API_KEY is unset', () => {
     expect(() => getModel('openrouter')).toThrow(/OPENROUTER_API_KEY not set/);
   });
 
-  it('returns a Google model when the key is set, defaulting to gemini-2.5-flash', () => {
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-google-key';
-    const model = getModel('google') as { __sdk: string; model: string };
+  it('throws when ZAI_API_KEY is unset', () => {
+    expect(() => getModel('zai')).toThrow(/ZAI_API_KEY not set/);
+  });
+
+  it('throws when MINIMAX_API_KEY is unset', () => {
+    expect(() => getModel('minimax')).toThrow(/MINIMAX_API_KEY not set/);
+  });
+
+  it('throws when GOOGLE_GENERATIVE_AI_API_KEY is unset', () => {
+    expect(() => getModel('gemini')).toThrow(/GOOGLE_GENERATIVE_AI_API_KEY not set/);
+  });
+
+  it('throws when ANTHROPIC_API_KEY is unset', () => {
+    expect(() => getModel('claude')).toThrow(/ANTHROPIC_API_KEY not set/);
+  });
+});
+
+// ── getModel: happy path for all 8 providers ────────────────────────────
+
+describe('getModel (provider configuration) — model construction', () => {
+  it('returns a Gemini model via the Google SDK, defaulting to gemini-2.0-flash', () => {
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-gemini-key';
+    const model = getModel('gemini') as { __sdk: string; model: string };
     expect(model.__sdk).toBe('google');
-    expect(model.model).toBe('gemini-2.5-flash');
-    expect(google).toHaveBeenCalledWith('gemini-2.5-flash');
+    expect(model.model).toBe('gemini-2.0-flash');
+    expect(google).toHaveBeenCalledWith('gemini-2.0-flash');
   });
 
-  it('returns a DeepSeek model with its custom baseURL wired through', () => {
-    process.env.DEEPSEEK_API_KEY = 'test-deepseek-key';
-    getModel('deepseek');
-    expect(deepseek).toHaveBeenCalledWith('deepseek-v4-pro');
-  });
-
-  it('returns a Minimax model via the Anthropic-compat SDK', () => {
-    process.env.MINIMAX_API_KEY = 'test-minimax-key';
-    getModel('minimax');
+  it('returns a Claude model via the Anthropic SDK with the correct baseURL', () => {
+    process.env.ANTHROPIC_API_KEY = 'test-claude-key';
+    const model = getModel('claude') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('anthropic-compat');
+    expect(model.model).toBe('claude-sonnet-4-20250514');
     expect(createAnthropic).toHaveBeenCalledWith(
       expect.objectContaining({
-        baseURL: 'https://api.minimax.io/anthropic/v1',
-        apiKey: 'test-minimax-key',
+        baseURL: 'https://api.anthropic.com/v1',
+        apiKey: 'test-claude-key',
       }),
     );
   });
 
-  it('returns a Zhipu model via the OpenAI-compat SDK', () => {
-    process.env.ZHIPU_API_KEY = 'test-zhipu-key';
-    getModel('zhipu');
+  it('returns an OpenAI model via the OpenAI-compat SDK with the correct baseURL', () => {
+    process.env.OPENAI_API_KEY = 'test-openai-key';
+    const model = getModel('openai') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('gpt-4o');
     expect(createOpenAI).toHaveBeenCalledWith(
       expect.objectContaining({
-        baseURL: 'https://api.z.ai/api/coding/paas/v4',
-        apiKey: 'test-zhipu-key',
+        baseURL: 'https://api.openai.com/v1',
+        apiKey: 'test-openai-key',
+      }),
+    );
+  });
+
+  it('returns a DeepSeek model via the OpenAI-compat SDK with the deepseek baseURL', () => {
+    process.env.DEEPSEEK_API_KEY = 'test-deepseek-key';
+    const model = getModel('deepseek') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('deepseek-v4-flash');
+    expect(createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'https://api.deepseek.com',
+        apiKey: 'test-deepseek-key',
+      }),
+    );
+  });
+
+  it('returns an OpenRouter model via the OpenAI-compat SDK with the openrouter baseURL', () => {
+    process.env.OPENROUTER_API_KEY = 'test-openrouter-key';
+    const model = getModel('openrouter') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('anthropic/claude-sonnet-latest');
+    expect(createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: 'test-openrouter-key',
+      }),
+    );
+  });
+
+  it('returns a ZAI model via the OpenAI-compat SDK with the bigmodel.cn baseURL', () => {
+    process.env.ZAI_API_KEY = 'test-zai-key';
+    const model = getModel('zai') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('glm-5.1');
+    expect(createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'https://open.bigmodel.cn/api/paas/v4',
+        apiKey: 'test-zai-key',
+      }),
+    );
+  });
+
+  it('returns a Minimax model via the OpenAI-compat SDK (NOT Anthropic) with the minimax baseURL', () => {
+    process.env.MINIMAX_API_KEY = 'test-minimax-key';
+    const model = getModel('minimax') as { __sdk: string; model: string };
+    // CRITICAL: minimax must use the OpenAI-compatible handler, not Anthropic.
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('minimax-m3');
+    expect(createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'https://api.minimax.chat/v1',
+        apiKey: 'test-minimax-key',
+      }),
+    );
+    // And it must NOT have touched the Anthropic SDK.
+    expect(createAnthropic).not.toHaveBeenCalled();
+  });
+
+  it('returns an Ollama model via the OpenAI-compat SDK without requiring an API key (local)', () => {
+    // ollama runs locally — no API key needed. getModel should not throw
+    // and should wire the local base URL through createOpenAI.
+    const model = getModel('ollama') as { __sdk: string; model: string };
+    expect(model.__sdk).toBe('openai-compat');
+    expect(model.model).toBe('llama3.3');
+    expect(createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'http://localhost:11434/v1',
       }),
     );
   });
 
   it('honors an explicit modelName override', () => {
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-google-key';
-    getModel('google', 'gemini-2.5-pro');
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-gemini-key';
+    getModel('gemini', 'gemini-2.5-pro');
     expect(google).toHaveBeenCalledWith('gemini-2.5-pro');
   });
 
@@ -138,6 +217,77 @@ describe('getModel (provider configuration)', () => {
   });
 });
 
+// ── mapLLMError: error mapping ──────────────────────────────────────────
+
+describe('mapLLMError (error mapping)', () => {
+  it('maps timeout errors to a friendly "Connection timed out" message', () => {
+    const result = mapLLMError(new Error('Connection timed out'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Connection timed out. Please check your network.');
+  });
+
+  it('maps ETIMEDOUT-style errors to the timeout message', () => {
+    const result = mapLLMError(new Error('ETIMEDOUT'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Connection timed out. Please check your network.');
+  });
+
+  it('maps "timed out" (with space) to the timeout message', () => {
+    const result = mapLLMError(new Error('the request timed out after 30000ms'));
+    expect(result.message).toBe('Connection timed out. Please check your network.');
+  });
+
+  it('maps 401 Unauthorized errors to an authentication-failed message', () => {
+    const result = mapLLMError(new Error('401 Unauthorized'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Authentication failed. Please check your API key.');
+  });
+
+  it('maps 403 Forbidden errors to an authentication-failed message', () => {
+    const result = mapLLMError(new Error('403 Forbidden'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Authentication failed. Please check your API key.');
+  });
+
+  it('maps "unauthorized" keyword to the authentication-failed message', () => {
+    const result = mapLLMError(new Error('unauthorized access'));
+    expect(result.message).toBe('Authentication failed. Please check your API key.');
+  });
+
+  it('maps 429 rate-limit errors to a rate-limit message', () => {
+    const result = mapLLMError(new Error('429 Too Many Requests'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Rate limit exceeded. Please try again later.');
+  });
+
+  it('maps "rate limit" keyword to the rate-limit message', () => {
+    const result = mapLLMError(new Error('rate limit exceeded'));
+    expect(result.message).toBe('Rate limit exceeded. Please try again later.');
+  });
+
+  it('maps unknown errors to a generic "Provider error" message that includes the original text', () => {
+    const result = mapLLMError(new Error('something completely unexpected'));
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Provider error: something completely unexpected');
+  });
+
+  it('passes through an existing LLMError unchanged (same instance)', () => {
+    const original = new LLMError('already mapped', 500);
+    const result = mapLLMError(original);
+    expect(result).toBe(original);
+    expect(result.message).toBe('already mapped');
+    expect(result.statusCode).toBe(500);
+  });
+
+  it('handles non-Error throwables by stringifying them', () => {
+    const result = mapLLMError('a plain string error');
+    expect(result).toBeInstanceOf(LLMError);
+    expect(result.message).toBe('Provider error: a plain string error');
+  });
+});
+
+// ── callProviderChain: fallback order ───────────────────────────────────
+
 describe('callProviderChain (fallback order)', () => {
   it('throws "All companion providers failed" when no provider keys are configured', async () => {
     await expect(
@@ -150,47 +300,49 @@ describe('callProviderChain (fallback order)', () => {
   });
 
   it('returns the first successful provider result without falling through', async () => {
-    // Only set the DEEPSEEK key; the chain should skip minimax/zhipu
-    // (no key), succeed at deepseek, and return deepseek as the provider.
-    process.env.DEEPSEEK_API_KEY = 'k';
-    generateTextMock.mockResolvedValueOnce({ text: 'hello from deepseek' });
+    // minimax is first in the default chain. Set only its key, succeed
+    // immediately, and verify the chain stops there.
+    process.env.MINIMAX_API_KEY = 'k';
+    generateTextMock.mockResolvedValueOnce({ text: 'hello from minimax' });
 
     const result = await callProviderChain({
       companionName: 'Athena',
       companionPrompt: 'p',
       contextItem: 'c',
     });
-    expect(result.provider).toBe('deepseek');
-    expect(result.comment).toBe('hello from deepseek');
-    // generateText should have been called exactly once (for deepseek).
+    expect(result.provider).toBe('minimax');
+    expect(result.comment).toBe('hello from minimax');
     expect(generateTextMock).toHaveBeenCalledTimes(1);
   });
 
   it('puts the user-requested provider first when specified, then falls back to default order', async () => {
-    // Provider='google' should reorder the chain to [google, minimax, zhipu, deepseek].
-    // Only set GOOGLE key, so the chain stops at google.
+    // provider='gemini' should reorder the chain to put gemini first.
+    // Only set GOOGLE key, so the chain stops at gemini.
     process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'k';
-    generateTextMock.mockResolvedValueOnce({ text: 'google wins' });
+    generateTextMock.mockResolvedValueOnce({ text: 'gemini wins' });
 
     const result = await callProviderChain({
       companionName: 'Athena',
       companionPrompt: 'p',
       contextItem: 'c',
-      provider: 'google',
+      provider: 'gemini',
     });
-    expect(result.provider).toBe('google');
+    expect(result.provider).toBe('gemini');
     expect(generateTextMock).toHaveBeenCalledTimes(1);
   });
 
-  it('tries providers in default order (minimax → zhipu → deepseek → google) and surfaces the last error', async () => {
-    // Set ALL keys so every provider is reachable. Make generateText throw
-    // a distinguishable error every time. The "Last:" suffix on the final
-    // error should reference the LAST provider tried (google), proving the
-    // chain walked through the full default order without short-circuiting.
+  it('tries providers in default order and surfaces the last error (openrouter is last)', async () => {
+    // Set ALL keys so every provider in the default chain is reachable.
+    // Make generateText throw a distinguishable error every time. The
+    // "Last:" suffix on the final error should reference the LAST provider
+    // tried (openrouter), proving the chain walked the full default order.
     process.env.MINIMAX_API_KEY = 'k';
-    process.env.ZHIPU_API_KEY = 'k';
+    process.env.ZAI_API_KEY = 'k';
     process.env.DEEPSEEK_API_KEY = 'k';
     process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'k';
+    process.env.OPENAI_API_KEY = 'k';
+    process.env.ANTHROPIC_API_KEY = 'k';
+    process.env.OPENROUTER_API_KEY = 'k';
     generateTextMock.mockRejectedValue(new Error('boom-from-llm'));
 
     await expect(
@@ -199,17 +351,17 @@ describe('callProviderChain (fallback order)', () => {
         companionPrompt: 'p',
         contextItem: 'c',
       }),
-    ).rejects.toThrow(/All companion providers failed.*google: boom-from-llm/);
+    ).rejects.toThrow(/All companion providers failed.*openrouter.*boom-from-llm/);
 
-    // Each provider's key was set, so generateText should be called 4 times
-    // (once per provider in the default fallback chain).
-    expect(generateTextMock).toHaveBeenCalledTimes(4);
+    // 7 providers in the default chain (ollama excluded), all keys set:
+    // minimax → zai → deepseek → gemini → openai → claude → openrouter.
+    expect(generateTextMock).toHaveBeenCalledTimes(7);
   });
 
   it('skips providers whose env keys are unset (does not call generateText for them)', async () => {
-    // Only set DEEPSEEK and GOOGLE keys. The chain should attempt exactly
-    // those two — minimax and zhipu should be skipped at the env-var guard
-    // before any LLM call happens.
+    // Only set DEEPSEEK and GEMINI keys. The chain (minimax → zai → deepseek
+    // → gemini → openai → claude → openrouter) should skip minimax and zai
+    // (no key), succeed at deepseek, and never reach gemini.
     process.env.DEEPSEEK_API_KEY = 'k';
     process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'k';
     generateTextMock.mockResolvedValueOnce({ text: 'deepseek wins' });
@@ -220,8 +372,23 @@ describe('callProviderChain (fallback order)', () => {
       contextItem: 'c',
     });
     expect(result.provider).toBe('deepseek');
-    // Only 1 generateText call (the winning deepseek one). The chain
-    // stopped after the first success, so google was never reached.
+    expect(generateTextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses an explicitly-requested local ollama provider without requiring its key', async () => {
+    // ollama is local — no API key needed. When the user explicitly asks
+    // for ollama, the chain should attempt it first even though
+    // OLLAMA_API_KEY is unset.
+    generateTextMock.mockResolvedValueOnce({ text: 'hello from ollama' });
+
+    const result = await callProviderChain({
+      companionName: 'Athena',
+      companionPrompt: 'p',
+      contextItem: 'c',
+      provider: 'ollama',
+    });
+    expect(result.provider).toBe('ollama');
+    expect(result.comment).toBe('hello from ollama');
     expect(generateTextMock).toHaveBeenCalledTimes(1);
   });
 });
