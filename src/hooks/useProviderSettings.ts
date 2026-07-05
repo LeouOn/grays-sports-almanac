@@ -1,10 +1,13 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { secureStorage } from '@/lib/secure-storage';
 
 /**
  * Persisted configuration for a single LLM provider.
  *
  * Fields map 1:1 to the localStorage key-value pattern from the spec:
  *   `{providerName}_api_key`, `{providerName}_model`, `{providerName}_base_url`.
+ * On native (Capacitor), these are stored in the device keystore via
+ * `capacitor-secure-storage-plugin`. On web, they fall back to localStorage.
  */
 export interface ProviderConfig {
   readonly providerName: string;
@@ -23,8 +26,8 @@ const NAMES_KEY = 'provider_names';
 export const DEFAULT_PROVIDER_NAME = 'minimax';
 
 /** Read the configured provider names in insertion order. */
-function readNames(): readonly string[] {
-  const raw = localStorage.getItem(NAMES_KEY);
+async function readNames(): Promise<readonly string[]> {
+  const raw = await secureStorage.get(NAMES_KEY);
   if (!raw) return [];
   return raw
     .split(',')
@@ -33,77 +36,112 @@ function readNames(): readonly string[] {
 }
 
 /** Persist the name registry, clearing the key entirely when empty. */
-function writeNames(names: readonly string[]): void {
+async function writeNames(names: readonly string[]): Promise<void> {
   if (names.length === 0) {
-    localStorage.removeItem(NAMES_KEY);
+    await secureStorage.remove(NAMES_KEY);
     return;
   }
-  localStorage.setItem(NAMES_KEY, names.join(','));
+  await secureStorage.set(NAMES_KEY, names.join(','));
 }
 
-/** Assemble a ProviderConfig from the three localStorage slots for `name`. */
-function readProvider(name: string): ProviderConfig {
+/** Assemble a ProviderConfig from the three slots for `name`. */
+async function readProvider(name: string): Promise<ProviderConfig> {
+  const [apiKey, model, baseUrl] = await Promise.all([
+    secureStorage.get(`${name}_api_key`),
+    secureStorage.get(`${name}_model`),
+    secureStorage.get(`${name}_base_url`),
+  ]);
   return {
     providerName: name,
-    apiKey: localStorage.getItem(`${name}_api_key`) ?? '',
-    model: localStorage.getItem(`${name}_model`) ?? '',
-    baseUrl: localStorage.getItem(`${name}_base_url`) ?? '',
+    apiKey: apiKey ?? '',
+    model: model ?? '',
+    baseUrl: baseUrl ?? '',
   };
 }
 
 /** Rebuild the full ProviderConfig list from the registry. */
-function readAllProviders(): readonly ProviderConfig[] {
-  return readNames().map(readProvider);
+async function readAllProviders(): Promise<readonly ProviderConfig[]> {
+  const names = await readNames();
+  return Promise.all(names.map(readProvider));
 }
 
 export interface ProviderSettings {
   /** Every configured provider, in registry (insertion) order. */
   readonly providers: readonly ProviderConfig[];
   /** Persist `config` (3 keys) and register its name if new. */
-  readonly saveProvider: (config: ProviderConfig) => void;
+  readonly saveProvider: (config: ProviderConfig) => Promise<void>;
   /** Remove the 3 keys for `name` and unregister it. */
-  readonly deleteProvider: (name: string) => void;
+  readonly deleteProvider: (name: string) => Promise<void>;
   /** Look up a configured provider by name, or `undefined` if not registered. */
-  readonly getProvider: (name: string) => ProviderConfig | undefined;
+  readonly getProvider: (name: string) => Promise<ProviderConfig | undefined>;
   /** First configured provider name, falling back to {@link DEFAULT_PROVIDER_NAME}. */
   readonly activeProviderName: string;
+  /** True until the initial load from secureStorage completes. */
+  readonly loading: boolean;
 }
 
 /**
- * Client-side CRUD for LLM provider configs backed by localStorage.
+ * Client-side CRUD for LLM provider configs backed by secureStorage.
  *
  * The returned `providers` array is reactive: `saveProvider` / `deleteProvider`
- * mutate localStorage then refresh state so consumers re-render.
+ * persist to secureStorage then refresh state so consumers re-render.
  */
 export function useProviderSettings(): ProviderSettings {
-  const [providers, setProviders] = useState<readonly ProviderConfig[]>(readAllProviders);
+  const [providers, setProviders] = useState<readonly ProviderConfig[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const saveProvider = useCallback((config: ProviderConfig): void => {
+  // Initial load from secureStorage
+  useEffect(() => {
+    let cancelled = false;
+    readAllProviders()
+      .then((list) => {
+        if (!cancelled) {
+          setProviders(list);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const saveProvider = useCallback(async (config: ProviderConfig): Promise<void> => {
     const { providerName, apiKey, model, baseUrl } = config;
-    localStorage.setItem(`${providerName}_api_key`, apiKey);
-    localStorage.setItem(`${providerName}_model`, model);
-    localStorage.setItem(`${providerName}_base_url`, baseUrl);
-    const names = readNames();
+    await Promise.all([
+      secureStorage.set(`${providerName}_api_key`, apiKey),
+      secureStorage.set(`${providerName}_model`, model),
+      secureStorage.set(`${providerName}_base_url`, baseUrl),
+    ]);
+    const names = await readNames();
     if (!names.includes(providerName)) {
-      writeNames([...names, providerName]);
+      await writeNames([...names, providerName]);
     }
-    setProviders(readAllProviders());
+    const list = await readAllProviders();
+    setProviders(list);
   }, []);
 
-  const deleteProvider = useCallback((name: string): void => {
-    localStorage.removeItem(`${name}_api_key`);
-    localStorage.removeItem(`${name}_model`);
-    localStorage.removeItem(`${name}_base_url`);
-    writeNames(readNames().filter((n) => n !== name));
-    setProviders(readAllProviders());
+  const deleteProvider = useCallback(async (name: string): Promise<void> => {
+    await Promise.all([
+      secureStorage.remove(`${name}_api_key`),
+      secureStorage.remove(`${name}_model`),
+      secureStorage.remove(`${name}_base_url`),
+    ]);
+    const names = await readNames();
+    await writeNames(names.filter((n) => n !== name));
+    const list = await readAllProviders();
+    setProviders(list);
   }, []);
 
-  const getProvider = useCallback((name: string): ProviderConfig | undefined => {
-    if (!readNames().includes(name)) return undefined;
+  const getProvider = useCallback(async (name: string): Promise<ProviderConfig | undefined> => {
+    const names = await readNames();
+    if (!names.includes(name)) return undefined;
     return readProvider(name);
   }, []);
 
   const activeProviderName = providers[0]?.providerName ?? DEFAULT_PROVIDER_NAME;
 
-  return { providers, saveProvider, deleteProvider, getProvider, activeProviderName };
+  return { providers, saveProvider, deleteProvider, getProvider, activeProviderName, loading };
 }

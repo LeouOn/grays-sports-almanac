@@ -8,6 +8,7 @@ import { useCompanion } from '../context/CompanionContext';
 import { useCompetency } from '../hooks/useCompetency';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { showInfo } from '@/lib/toast';
+import { haptic } from '@/lib/haptics';
 import { defaultCompanions } from '../data/companions';
 import { AthenaQuizReaction } from '../components/AthenaQuizReaction';
 import { useSearchParams } from 'react-router';
@@ -117,6 +118,7 @@ export function Quiz() {
             if (args) {
               updateCompetency(args.topic, args.isCorrect, args.competenceDelta);
               processedToolCalls.current.add(tool.toolCallId);
+              void haptic(args.isCorrect ? 'success' : 'error');
             }
           }
         });
@@ -202,6 +204,7 @@ export function Quiz() {
       const [first, ...rest] = pendingQueue;
       setPendingQueue(rest);
       sendMessage({ text: first }, { body: getRequestBody() });
+      void haptic('light');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline, pendingQueue, isLoading]);
@@ -253,6 +256,7 @@ export function Quiz() {
         return;
       }
       sendMessage({ text: input }, { body: getRequestBody() });
+      void haptic('light');
       setInput('');
       // Reset textarea height after send
       const ta = document.querySelector<HTMLTextAreaElement>('[data-chat-input]');
