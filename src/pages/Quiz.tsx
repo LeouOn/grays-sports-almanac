@@ -3,7 +3,7 @@ import { useChat, type UIMessage } from '@ai-sdk/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRef, useEffect, useState } from 'react';
-import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw, Send } from 'lucide-react';
+import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw, Send, Trash2 } from 'lucide-react';
 import { useCompanion } from '../context/CompanionContext';
 import { useCompetency } from '../hooks/useCompetency';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -640,6 +640,23 @@ export function Quiz() {
               ref={scrollRef}
               className="flex-1 overflow-y-auto space-y-4 p-4 border border-neutral-800 rounded-md bg-neutral-950/50"
             >
+              {messages.length > 0 && (
+                <div className="flex justify-end mb-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setMessages([]);
+                      try { localStorage.removeItem(chatStorageKey); } catch { void 0; }
+                      showInfo('Chat history cleared.');
+                    }}
+                    className="h-8 px-2 text-xs text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800/50 cursor-pointer"
+                  >
+                    <Trash2 className="size-3 mr-1" />
+                    Clear history
+                  </Button>
+                </div>
+              )}
               {messages.length === 0 ? (
                 <div className="text-neutral-500 text-center py-20 flex flex-col items-center justify-center gap-4">
                   <div className="p-4 rounded-full bg-neutral-900 border border-neutral-800">
