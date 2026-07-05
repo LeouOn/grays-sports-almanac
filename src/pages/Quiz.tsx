@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useChat, type UIMessage } from '@ai-sdk/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRef, useEffect, useState } from 'react';
-import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw } from 'lucide-react';
+import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw, Send } from 'lucide-react';
 import { useCompanion } from '../context/CompanionContext';
 import { useCompetency } from '../hooks/useCompetency';
 import { defaultCompanions } from '../data/companions';
@@ -136,8 +135,20 @@ export function Quiz() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion, initialEntryId, messages.length, sendMessage]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
+    // Auto-resize: shrink to 1 row, then grow to fit content (max 5 rows)
+    const target = e.target;
+    target.style.height = 'auto';
+    target.style.height = `${Math.min(target.scrollHeight, 160)}px`;
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter sends, Shift+Enter inserts newline
+    if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -145,6 +156,9 @@ export function Quiz() {
     if (input.trim() && !isLoading) {
       sendMessage({ text: input }, { body: getRequestBody() });
       setInput('');
+      // Reset textarea height after send
+      const ta = document.querySelector<HTMLTextAreaElement>('[data-chat-input]');
+      if (ta) ta.style.height = 'auto';
     }
   };
 
@@ -648,17 +662,27 @@ export function Quiz() {
               )}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex gap-3">
-              <Input
+            <form onSubmit={handleSubmit} className="sticky bottom-0 bg-neutral-950/95 backdrop-blur-sm -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 border-t border-neutral-800 flex gap-2 items-end">
+              <textarea
+                data-chat-input
                 value={input}
                 onChange={handleInputChange}
-                placeholder={isLoading ? "AI is typing..." : "Type your message or choice (e.g. A, B)..."}
+                onKeyDown={handleKeyDown}
+                placeholder={isLoading ? "AI is typing..." : "Type your message... (Enter to send, Shift+Enter for newline)"}
                 aria-label="Quiz answer or message"
-                className="bg-neutral-900 border-neutral-800 text-white focus-visible:ring-indigo-500"
+                rows={1}
+                className="flex-1 min-h-11 max-h-40 px-3 py-2.5 rounded-md border border-neutral-800 bg-neutral-900 text-white text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none overflow-y-auto touch-manipulation"
                 disabled={isLoading}
+                style={{ height: '44px' }}
               />
-              <Button type="submit" variant="secondary" disabled={isLoading || !input.trim()}>
-                Send
+              <Button
+                type="submit"
+                variant="secondary"
+                disabled={isLoading || !input.trim()}
+                className="h-11 min-w-11 px-4 shrink-0 touch-manipulation"
+              >
+                <Send className="size-4 sm:hidden" />
+                <span className="hidden sm:inline">Send</span>
               </Button>
             </form>
           </div>
