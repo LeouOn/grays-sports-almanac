@@ -1,5 +1,26 @@
 apply plugin: 'com.android.application'
 
+/**
+ * Release signing configuration.
+ *
+ * To enable signed release builds, create `android/app/keystore.properties`
+ * with the following (this file MUST be gitignored):
+ *
+ *   storeFile=/absolute/path/to/keystore.jks
+ *   storePassword=...
+ *   keyAlias=...
+ *   keyPassword=...
+ *
+ * If `keystore.properties` is absent, release builds are unsigned (debug-signed
+ * with the default debug keystore) — fine for local testing, NOT acceptable for
+ * the Play Store. The Play Store requires a release-signed AAB.
+ */
+def keystorePropertiesFile = rootProject.file("app/keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.ttguide.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,10 +37,22 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Quiz — direct deep link to the AI examiner -->
+    <shortcut
+        android:shortcutId="quiz"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_quiz_short"
+        android:shortcutLongLabel="@string/shortcut_quiz_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ttguide.app"
+            android:targetClass="com.ttguide.app.MainActivity"
+            android:data="https://ttguide.app/quiz" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- Search — opens the search modal -->
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_search_short"
+        android:shortcutLongLabel="@string/shortcut_search_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ttguide.app"
+            android:targetClass="com.ttguide.app.MainActivity"
+            android:data="https://ttguide.app/?search=open" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- Settings — API key configuration -->
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_settings_short"
+        android:shortcutLongLabel="@string/shortcut_settings_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ttguide.app"
+            android:targetClass="com.ttguide.app.MainActivity"
+            android:data="https://ttguide.app/settings" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

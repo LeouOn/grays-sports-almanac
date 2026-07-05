@@ -29,6 +29,11 @@ bundle-report.html
 # Environment variables (API keys)
 .env
 
+# Android signing secrets (NEVER commit)
+keystore.properties
+*.jks
+*.keystore
+
 # SQLite database files
 *.db
 *.db-shm

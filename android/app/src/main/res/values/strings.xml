@@ -4,4 +4,10 @@
     <string name="title_activity_main">Time Traveler\'s Guide</string>
     <string name="package_name">com.ttguide.app</string>
     <string name="custom_url_scheme">com.ttguide.app</string>
+    <string name="shortcut_quiz_short">Quiz</string>
+    <string name="shortcut_quiz_long">Start AI quiz</string>
+    <string name="shortcut_search_short">Search</string>
+    <string name="shortcut_search_long">Search archive</string>
+    <string name="shortcut_settings_short">Settings</string>
+    <string name="shortcut_settings_long">LLM settings</string>
 </resources>
