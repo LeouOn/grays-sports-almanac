@@ -6,6 +6,8 @@ import { useRef, useEffect, useState } from 'react';
 import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw, Send } from 'lucide-react';
 import { useCompanion } from '../context/CompanionContext';
 import { useCompetency } from '../hooks/useCompetency';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import { showInfo } from '@/lib/toast';
 import { defaultCompanions } from '../data/companions';
 import { AthenaQuizReaction } from '../components/AthenaQuizReaction';
 import { useSearchParams } from 'react-router';
@@ -47,6 +49,9 @@ export function Quiz() {
   const [showProfile, setShowProfile] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
   const { profile, updateCompetency, resetCompetency } = useCompetency();
+  const isOnline = useOnlineStatus();
+  const [pendingQueue, setPendingQueue] = useState<string[]>([]);
+  const pendingQueueKey = 'tt-chat-pending';
   
   const processedToolCalls = useRef<Set<string>>(new Set());
   const [searchParams] = useSearchParams();
@@ -94,6 +99,7 @@ export function Quiz() {
       localStorage.setItem(chatStorageKey, JSON.stringify(messages));
     } catch {
       // Quota exceeded or private mode — silently fail
+      void 0;
     }
   }, [messages, chatStorageKey]);
 
@@ -116,6 +122,19 @@ export function Quiz() {
   }, [messages, updateCompetency]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Load pending messages from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(pendingQueueKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setPendingQueue(parsed.filter((x): x is string => typeof x === 'string'));
+      }
+    } catch {
+      localStorage.removeItem(pendingQueueKey);
+    }
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -165,14 +184,31 @@ export function Quiz() {
     sessionId,
   });
 
+  // Drain pending queue when back online
+  useEffect(() => {
+    if (isOnline && pendingQueue.length > 0 && !isLoading) {
+      const [first, ...rest] = pendingQueue;
+      setPendingQueue(rest);
+      sendMessage({ text: first }, { body: getRequestBody() });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOnline, pendingQueue, isLoading]);
+
   // Auto-send question from "Chat about this" navigation
   useEffect(() => {
     if (initialQuestion && initialEntryId && !hasSentInitial.current && messages.length === 0) {
       hasSentInitial.current = true;
+      if (!isOnline) {
+        const queued = [...pendingQueue, initialQuestion];
+        setPendingQueue(queued);
+        try { localStorage.setItem(pendingQueueKey, JSON.stringify(queued)); } catch { void 0; }
+        showInfo('Offline — initial question queued. Will send when online.');
+        return;
+      }
       sendMessage({ text: initialQuestion }, { body: getRequestBody() });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQuestion, initialEntryId, messages.length, sendMessage]);
+  }, [initialQuestion, initialEntryId, messages.length, sendMessage, isOnline]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -193,6 +229,17 @@ export function Quiz() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && !isLoading) {
+      if (!isOnline) {
+        // Queue message for when connectivity returns
+        const queued = [...pendingQueue, input.trim()];
+        setPendingQueue(queued);
+        try { localStorage.setItem(pendingQueueKey, JSON.stringify(queued)); } catch { void 0; }
+        showInfo(`Offline — message queued (${queued.length} pending). Will send when online.`);
+        setInput('');
+        const ta = document.querySelector<HTMLTextAreaElement>('[data-chat-input]');
+        if (ta) ta.style.height = 'auto';
+        return;
+      }
       sendMessage({ text: input }, { body: getRequestBody() });
       setInput('');
       // Reset textarea height after send
@@ -609,7 +656,13 @@ export function Quiz() {
                     </p>
                   </div>
                   <Button
-                    onClick={() => sendMessage({ text: 'start' }, { body: getRequestBody() })}
+                    onClick={() => {
+                      if (!isOnline) {
+                        showInfo('Cannot start — you are offline. Messages will queue and send when you reconnect.');
+                        return;
+                      }
+                      sendMessage({ text: 'start' }, { body: getRequestBody() });
+                    }}
                     variant="outline"
                     className="mt-2 text-xs border-neutral-800 hover:bg-neutral-800 hover:text-white cursor-pointer"
                   >
