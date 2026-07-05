@@ -16,7 +16,11 @@
     "preview": "vite preview",
     "analyze": "vite build --mode analyze",
     "check:bundle": "node scripts/check-bundle-size.mjs",
-    "build:check": "vite build && node scripts/check-bundle-size.mjs"
+    "build:check": "vite build && node scripts/check-bundle-size.mjs",
+    "build:web": "vite build",
+    "build:android": "vite build && cap sync android",
+    "android:open": "cap open android",
+    "android:sync": "cap sync android"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.81",
@@ -25,6 +29,9 @@
     "@ai-sdk/openai": "^3.0.67",
     "@ai-sdk/react": "^3.0.197",
     "@base-ui/react": "^1.5.0",
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
     "@fontsource-variable/geist": "^5.2.9",
     "@tailwindcss/vite": "^4.3.0",
     "ai": "^6.0.195",
