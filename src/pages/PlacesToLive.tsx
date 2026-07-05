@@ -217,7 +217,7 @@ export function PlacesToLive() {
           onClick={() => setActiveEntry(null)}
         >
           <div
-            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85dvh] overflow-y-auto p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <button

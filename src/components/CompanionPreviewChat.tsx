@@ -149,7 +149,7 @@ export function CompanionPreviewChat({
         role="dialog"
         aria-modal="true"
         aria-labelledby="preview-chat-title"
-        className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
+        className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden animate-in zoom-in-95 duration-200"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-neutral-800 shrink-0">
@@ -236,7 +236,7 @@ export function CompanionPreviewChat({
                   : 'Say something...'
               }
               disabled={limitReached || streaming}
-              className="flex-1 h-9 rounded-lg border border-neutral-800 bg-neutral-900 px-3 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500/50 transition-colors disabled:opacity-50"
+              className="flex-1 h-9 rounded-lg border border-neutral-800 bg-neutral-900 px-3 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-colors disabled:opacity-50"
               aria-label="Chat message input"
             />
             <Button

@@ -2,7 +2,7 @@
 import { useChat, type UIMessage } from '@ai-sdk/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { Cpu, AlertTriangle, Play, HelpCircle, UserCheck, ShieldAlert, ChevronDown, Search, RefreshCw, Send, Trash2 } from 'lucide-react';
 import { useCompanion } from '../context/CompanionContext';
 import { useCompetency } from '../hooks/useCompetency';
@@ -125,6 +125,15 @@ export function Quiz() {
   }, [messages, updateCompetency]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-resize the chat textarea on input changes (covers initial render
+  // and paste/programmatic updates the onChange handler doesn't catch).
+  useLayoutEffect(() => {
+    const ta = document.querySelector<HTMLTextAreaElement>('[data-chat-input]');
+    if (!ta) return;
+    ta.style.height = 'auto';
+    ta.style.height = `${Math.min(ta.scrollHeight, 160)}px`;
+  }, [input]);
 
   // Load pending messages from localStorage on mount
   useEffect(() => {
@@ -613,7 +622,7 @@ export function Quiz() {
           </div>
         </CardHeader>
         <CardContent className="pt-6">
-          <div className="space-y-4 max-h-[90vh] flex flex-col">
+          <div className="space-y-4 max-h-[100dvh] min-h-0 flex flex-col">
             {/* Suspicion Meter Indicator */}
             {suspicion !== null && (
               <div className="bg-neutral-950/80 p-3 rounded-lg border border-neutral-800/80 flex flex-col gap-2">
@@ -643,7 +652,7 @@ export function Quiz() {
 
             <div 
               ref={scrollRef}
-              className="flex-1 overflow-y-auto space-y-4 p-4 border border-neutral-800 rounded-md bg-neutral-950/50"
+              className="flex-1 min-h-0 overflow-y-auto space-y-4 p-4 border border-neutral-800 rounded-md bg-neutral-950/50"
             >
               {messages.length > 0 && (
                 <div className="flex justify-end mb-1">
@@ -787,7 +796,6 @@ export function Quiz() {
                 rows={1}
                 className="flex-1 min-h-11 max-h-40 px-3 py-2.5 rounded-md border border-neutral-800 bg-neutral-900 text-white text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none overflow-y-auto touch-manipulation"
                 disabled={isLoading}
-                style={{ height: '44px' }}
               />
               <Button
                 type="submit"

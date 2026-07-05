@@ -318,7 +318,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   }, {} as Record<string, SearchResult[]>);
 
   return (
-    <div className="min-h-screen bg-black text-neutral-50 flex flex-col font-sans">
+    <div className="min-h-[100dvh] bg-black text-neutral-50 flex flex-col font-sans">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -397,7 +397,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-modal-title"
-            className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
+            className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden animate-in zoom-in-95 duration-200"
           >
             <h2 id="search-modal-title" className="sr-only">Search the Archive</h2>
             <div className="flex items-center gap-3 p-4 border-b border-neutral-800">
@@ -490,7 +490,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="companion-modal-title"
-            className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
+            className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden animate-in zoom-in-95 duration-200"
           >
             <div className="flex justify-between items-center p-4 border-b border-neutral-800">
               <h2 id="companion-modal-title" className="text-base font-bold text-white flex items-center gap-2">
@@ -516,7 +516,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                   value={userName}
                   onChange={e => setUserName(e.target.value)}
                   placeholder="Yune"
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 <p className="text-[10px] text-neutral-500 mt-1">
                   Athena will address you by this name. Other companions ignore it.
@@ -562,7 +562,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                               value={customName}
                               onChange={e => setCustomName(e.target.value)}
                               placeholder="e.g. Sarcastic Time Cop"
-                              className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+                              className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             />
                           </div>
                           <div>
@@ -573,7 +573,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                               onChange={e => setCustomPrompt(e.target.value)}
                               placeholder="Describe your companion's voice, personality, knowledge, and catchphrases..."
                               rows={3}
-                              className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans leading-relaxed"
+                              className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-sans leading-relaxed"
                             />
                           </div>
                         </div>

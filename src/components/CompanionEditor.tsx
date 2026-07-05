@@ -108,7 +108,7 @@ const handleDeleteClick = () => {
   // Loading skeleton for edit mode
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center pt-20 px-4 animate-in fade-in duration-200">
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200">
         <div className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl animate-in zoom-in-95 duration-200 p-6">
           <div className="animate-pulse space-y-4">
             <div className="h-6 w-32 bg-neutral-800 rounded" />
@@ -132,12 +132,12 @@ const handleDeleteClick = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center pt-20 px-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="companion-editor-title"
-        className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200"
+        className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[80dvh] overflow-hidden animate-in zoom-in-95 duration-200"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-neutral-800 shrink-0">
@@ -287,7 +287,7 @@ const handleDeleteClick = () => {
       {/* Delete confirmation modal */}
       {confirmDelete && (
         <div
-          className="absolute inset-0 z-10 bg-black/80 backdrop-blur-md flex justify-center pt-32 px-4 animate-in fade-in duration-200"
+          className="absolute inset-0 z-10 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200"
           role="dialog"
           aria-modal="true"
           aria-labelledby="confirm-delete-title"

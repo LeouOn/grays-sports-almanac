@@ -180,7 +180,7 @@ export function BootstrapBlueprints() {
       {/* Blueprint Details Dialog Modal */}
       {activeBlueprint && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center items-center p-4 animate-in fade-in duration-200">
-          <div className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="flex justify-between items-start p-5 border-b border-neutral-800 bg-neutral-950/20">
               <div className="space-y-1 min-w-0">

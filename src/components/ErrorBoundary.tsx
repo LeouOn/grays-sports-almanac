@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-950 text-red-400">
+        <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-neutral-950 text-red-400">
           <h1 className="text-3xl font-bold mb-4">⚠️ Temporal Anomaly Detected</h1>
           <p className="mb-6">Something went wrong.</p>
           <Link

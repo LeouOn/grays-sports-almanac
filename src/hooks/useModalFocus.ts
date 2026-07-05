@@ -47,6 +47,11 @@ export function useModalFocus<T extends HTMLElement>(
 
     previousFocus.current = (document.activeElement as HTMLElement) ?? null;
 
+    // Lock body scroll while the modal is open so the background page can't
+    // scroll underneath on mobile (especially iOS Safari / Capacitor WebView).
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const node = ref.current;
     if (node) {
       const focusable = getFocusable(node);
@@ -88,6 +93,7 @@ export function useModalFocus<T extends HTMLElement>(
 
     return () => {
       document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = prevOverflow;
       const prev = previousFocus.current;
       if (prev && typeof prev.focus === 'function') {
         prev.focus();

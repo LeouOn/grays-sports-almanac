@@ -78,7 +78,7 @@ function SlangTranslator() {
             value={inputText}
             onChange={e => handleTranslate(e.target.value)}
             placeholder="Type your phrase (e.g., that guy is sus, I will google it on my cellphone no cap)"
-            className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-neutral-900 border border-neutral-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
 

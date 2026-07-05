@@ -133,7 +133,7 @@ export function PlacesToVisit() {
             id="category-filter"
             value={category}
             onChange={e => setCategory(e.target.value as Category | 'all')}
-            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white focus:outline-none focus:border-indigo-500"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option value="all">All</option>
             {CATEGORIES.map(c => (
@@ -227,7 +227,7 @@ export function PlacesToVisit() {
           onClick={() => setActiveEntry(null)}
         >
           <div
-            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85dvh] overflow-y-auto p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <button

@@ -203,7 +203,7 @@ export function CompanionGallery() {
           placeholder="Search companions..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-9 pl-9 pr-3 rounded-lg border border-neutral-800 bg-neutral-900 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500/50 transition-colors"
+          className="w-full h-9 pl-9 pr-3 rounded-lg border border-neutral-800 bg-neutral-900 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-colors"
           aria-label="Search companions"
         />
       </div>
@@ -331,7 +331,7 @@ export function CompanionGallery() {
       {/* Delete confirmation modal */}
       {confirmDelete && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center pt-40 px-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200"
           role="dialog"
           aria-modal="true"
           aria-labelledby="confirm-delete-title"
