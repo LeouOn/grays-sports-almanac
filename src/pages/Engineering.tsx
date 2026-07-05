@@ -147,7 +147,7 @@ export function Engineering() {
             id="subdomain-filter"
             value={subDomain}
             onChange={(e) => setSubDomain(e.target.value as SubDomain | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
             {SUB_DOMAINS.map((sd) => (
@@ -165,7 +165,7 @@ export function Engineering() {
             id="era-filter"
             value={era}
             onChange={(e) => setEra(e.target.value as Era | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
             {ERAS.map((er) => (

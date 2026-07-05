@@ -3,6 +3,7 @@ import { loadSports } from '@/data/loader';
 import type { SportsEvent } from '@/data/sports';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { exportToCSV } from '@/lib/export';
@@ -64,7 +65,7 @@ export function SportsAlmanac() {
               type="button"
               onClick={() => setRegionFilter(r)}
               aria-pressed={regionFilter === r}
-              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
+              className={`px-4 py-2 text-sm font-medium rounded-full border transition-colors cursor-pointer ${
                 regionFilter === r
                   ? 'bg-indigo-600 text-white border-indigo-500'
                   : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white hover:border-neutral-700'
@@ -99,7 +100,33 @@ export function SportsAlmanac() {
         </div>
       </div>
 
-      <div className="rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
+      {/* Mobile card view (hidden on md+) */}
+      <div className="space-y-3 md:hidden">
+        {filteredSports.map((event) => (
+          <Card
+            key={event.id}
+            className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700"
+            onClick={() => setSelectedEvent(event)}
+          >
+            <CardContent className="pt-5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-bold text-white">{event.year}</span>
+                <span className="px-2 py-1 rounded-full bg-neutral-800 text-xs text-neutral-400">{event.sport}</span>
+              </div>
+              <h3 className="font-semibold text-white">{event.event}</h3>
+              <div className="text-sm text-neutral-400">
+                <span className="text-green-400 font-semibold">{event.winner}</span>
+                {event.loser && <span> vs {event.loser}</span>}
+                {event.score && <span className="ml-2 text-neutral-500">{event.score}</span>}
+              </div>
+              {event.odds && <div className="text-xs text-amber-400/90">{event.odds}</div>}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop table view (hidden on mobile) */}
+      <div className="hidden md:block rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
         <Table>
           <TableHeader className="bg-neutral-900/50 hover:bg-neutral-900/50">
             <TableRow className="border-neutral-800 hover:bg-transparent">

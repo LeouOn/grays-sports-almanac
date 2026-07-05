@@ -228,7 +228,7 @@ export function Quiz() {
           onClick={() => handleTierChange('tier1')}
           role="radio"
           aria-checked={selectedTier === 'tier1'}
-          className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier1' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
+          className={`flex-1 py-3 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier1' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 1: Recall
         </button>
@@ -236,7 +236,7 @@ export function Quiz() {
           onClick={() => handleTierChange('tier2')}
           role="radio"
           aria-checked={selectedTier === 'tier2'}
-          className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier2' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
+          className={`flex-1 py-3 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier2' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 2: Judgment
         </button>
@@ -244,7 +244,7 @@ export function Quiz() {
           onClick={() => handleTierChange('tier3')}
           role="radio"
           aria-checked={selectedTier === 'tier3'}
-          className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier3' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
+          className={`flex-1 py-3 text-xs font-semibold rounded-md transition-all cursor-pointer ${selectedTier === 'tier3' ? 'bg-neutral-800 text-white shadow-sm' : 'text-neutral-400 hover:text-neutral-200'}`}
         >
           Tier 3: Roleplay
         </button>
@@ -260,7 +260,7 @@ export function Quiz() {
               onClick={() => setProviderId(p.id)}
               role="radio"
               aria-checked={providerId === p.id}
-              className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all cursor-pointer ${
+              className={`px-3 py-2 text-[11px] font-medium rounded transition-all cursor-pointer ${
                 providerId === p.id
                   ? 'bg-neutral-800 text-neutral-100 shadow-sm'
                   : 'text-neutral-500 hover:text-neutral-300'
@@ -280,7 +280,7 @@ export function Quiz() {
       <div className="relative max-w-xs mx-auto w-full">
         <button
           onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-          className="w-full flex items-center justify-between gap-2 px-3 py-1.5 text-xs bg-neutral-900 border border-neutral-800 rounded-md text-neutral-300 hover:border-neutral-700 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs bg-neutral-900 border border-neutral-800 rounded-md text-neutral-300 hover:border-neutral-700 transition-colors cursor-pointer"
         >
           <span className="flex items-center gap-2 min-w-0">
             {modelsLoading ? (
@@ -358,7 +358,7 @@ export function Quiz() {
                   key={era}
                   onClick={() => toggleSelection(setSelectedEras, era)}
                   aria-pressed={isSelected}
-                  className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer ${
+                  className={`px-3 py-2 text-[11px] rounded border transition-colors cursor-pointer ${
                     isSelected 
                       ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-300' 
                       : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:text-neutral-300'
@@ -382,7 +382,7 @@ export function Quiz() {
                       key={cat}
                       onClick={() => toggleSelection(setSelectedCategories, cat)}
                       aria-pressed={isSelected}
-                      className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
+                      className={`px-3 py-2 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
                         isSelected 
                           ? 'bg-amber-600/20 border-amber-500/50 text-amber-300' 
                           : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:text-neutral-300'
@@ -405,7 +405,7 @@ export function Quiz() {
                         key={sub}
                         onClick={() => toggleSelection(setSelectedSubcategories, sub)}
                         aria-pressed={isSelected}
-                        className={`px-2 py-0.5 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
+                        className={`px-3 py-2 text-[11px] rounded border transition-colors cursor-pointer capitalize ${
                           isSelected 
                             ? 'bg-teal-600/20 border-teal-500/50 text-teal-300' 
                             : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:text-neutral-300'
@@ -508,7 +508,7 @@ export function Quiz() {
           </div>
         </CardHeader>
         <CardContent className="pt-6">
-          <div className="space-y-4 h-[550px] flex flex-col">
+          <div className="space-y-4 max-h-[90vh] flex flex-col">
             {/* Suspicion Meter Indicator */}
             {suspicion !== null && (
               <div className="bg-neutral-950/80 p-3 rounded-lg border border-neutral-800/80 flex flex-col gap-2">

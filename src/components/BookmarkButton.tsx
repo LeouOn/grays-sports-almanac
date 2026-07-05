@@ -28,7 +28,7 @@ export function BookmarkButton({ module, entryId, title }: BookmarkButtonProps) 
   return (
     <button
       onClick={handleClick}
-      className="inline-flex items-center justify-center size-7 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none shrink-0"
+      className="inline-flex items-center justify-center size-9 min-h-11 min-w-11 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none shrink-0"
       title={bookmarked ? 'Remove bookmark' : 'Bookmark this entry'}
       aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this entry'}
       aria-pressed={bookmarked}

@@ -83,7 +83,7 @@ export function Bookmarks() {
             <div className="flex items-center gap-1.5 shrink-0">
               <Link
                 to={moduleRoutes[b.module] ?? '/'}
-                className="inline-flex items-center justify-center size-7 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none"
+                className="inline-flex items-center justify-center size-9 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none"
                 title="Go to module"
                 aria-label={`Open ${b.module} module`}
               >
@@ -91,7 +91,7 @@ export function Bookmarks() {
               </Link>
               <button
                 onClick={() => handleDelete(b.id)}
-                className="inline-flex items-center justify-center size-7 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-red-950/30 hover:border-red-800/50 text-neutral-400 hover:text-red-400 transition-all cursor-pointer select-none"
+                className="inline-flex items-center justify-center size-9 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-red-950/30 hover:border-red-800/50 text-neutral-400 hover:text-red-400 transition-all cursor-pointer select-none"
                 title="Remove bookmark"
                 aria-label={`Remove bookmark ${b.entry_id}`}
               >

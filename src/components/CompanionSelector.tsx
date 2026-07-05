@@ -63,7 +63,7 @@ export function CompanionSelector() {
       {/* Trigger button */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+        className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
         aria-label={`Active Companion: ${activeCompanion.name}. Click to change.`}
         aria-expanded={open}
         aria-haspopup="listbox"

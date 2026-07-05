@@ -78,7 +78,7 @@ export function PlacesToLive() {
           <span className="text-xs text-neutral-400">Decade:</span>
           <button
             onClick={() => setDecade('all')}
-            className={`px-3 py-1 text-xs rounded-full ${decade === 'all' ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
+            className={`px-4 py-2 text-sm rounded-full ${decade === 'all' ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
           >
             All
           </button>
@@ -86,7 +86,7 @@ export function PlacesToLive() {
             <button
               key={d}
               onClick={() => setDecade(d)}
-              className={`px-3 py-1 text-xs rounded-full ${decade === d ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
+              className={`px-4 py-2 text-sm rounded-full ${decade === d ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
             >
               {d}
             </button>
@@ -98,7 +98,7 @@ export function PlacesToLive() {
             id="stability-filter"
             value={stability}
             onChange={(e) => setStability(e.target.value as Stability | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
             {STABILITY_LEVELS.map(s => <option key={s} value={s}>{s}</option>)}

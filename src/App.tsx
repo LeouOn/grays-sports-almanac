@@ -363,7 +363,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <CompanionSelector />
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
               aria-label="Search the archive"
             >
               <Search className="size-3.5" />
@@ -375,7 +375,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <ThemeToggle />
             <button
               onClick={() => window.print()}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none print:hidden"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none print:hidden"
               title="Print Dossier on Acid-Free Paper"
               aria-label="Print guide"
             >
@@ -391,13 +391,13 @@ function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Global Search Overlay Modal */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center pt-20 px-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200">
           <div
             ref={searchModalRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-modal-title"
-            className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col h-[500px] overflow-hidden animate-in zoom-in-95 duration-200"
+            className="bg-neutral-900 border border-neutral-800 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
           >
             <h2 id="search-modal-title" className="sr-only">Search the Archive</h2>
             <div className="flex items-center gap-3 p-4 border-b border-neutral-800">
@@ -484,13 +484,13 @@ function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Companion Configuration Modal */}
       {isCompanionOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-center pt-20 px-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-4 animate-in fade-in duration-200">
           <div
             ref={companionModalRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="companion-modal-title"
-            className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col h-[550px] overflow-hidden animate-in zoom-in-95 duration-200"
+            className="bg-neutral-900 border border-neutral-800 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
           >
             <div className="flex justify-between items-center p-4 border-b border-neutral-800">
               <h2 id="companion-modal-title" className="text-base font-bold text-white flex items-center gap-2">

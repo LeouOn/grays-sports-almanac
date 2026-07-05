@@ -57,7 +57,7 @@ export function MobileNav({
     <Sheet open={open} onOpenChange={setOpen}>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center size-9 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none"
+        className="flex items-center justify-center size-11 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none"
         aria-label="Open navigation menu"
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -70,7 +70,7 @@ export function MobileNav({
             <SheetClose
               render={
                 <button
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
                 />
               }
               onClick={() => {
@@ -84,7 +84,7 @@ export function MobileNav({
             <SheetClose
               render={
                 <button
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
                 />
               }
               onClick={() => {

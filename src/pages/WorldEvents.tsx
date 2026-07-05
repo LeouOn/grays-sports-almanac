@@ -97,7 +97,7 @@ export function WorldEvents() {
             id="region-filter"
             value={region}
             onChange={(e) => setRegion(e.target.value as Region | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
             {REGIONS.map((r) => (
@@ -115,7 +115,7 @@ export function WorldEvents() {
             id="category-filter"
             value={category}
             onChange={(e) => setCategory(e.target.value as Category | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
             {CATEGORIES.map((c) => (

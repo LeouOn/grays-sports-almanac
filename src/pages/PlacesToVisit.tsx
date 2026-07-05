@@ -105,7 +105,7 @@ export function PlacesToVisit() {
             type="button"
             onClick={() => setDecade('all')}
             aria-pressed={decade === 'all'}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
+            className={`px-4 py-2 text-sm rounded-full transition-colors ${
               decade === 'all' ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white'
             }`}
           >
@@ -117,7 +117,7 @@ export function PlacesToVisit() {
               type="button"
               onClick={() => setDecade(d)}
               aria-pressed={decade === d}
-              className={`px-3 py-1 text-xs rounded-full transition-colors ${
+              className={`px-4 py-2 text-sm rounded-full transition-colors ${
                 decade === d ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white'
               }`}
             >
@@ -133,7 +133,7 @@ export function PlacesToVisit() {
             id="category-filter"
             value={category}
             onChange={e => setCategory(e.target.value as Category | 'all')}
-            className="h-8 px-2 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white focus:outline-none focus:border-indigo-500"
+            className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white focus:outline-none focus:border-indigo-500"
           >
             <option value="all">All</option>
             {CATEGORIES.map(c => (

@@ -411,7 +411,7 @@ export function TemporalMap() {
                       <button
                         key={risk}
                         onClick={() => handleToggleRisk(risk)}
-                        className={`py-1.5 px-2 rounded text-[11px] font-medium text-center border transition-all cursor-pointer ${
+                        className={`py-2 px-3 rounded text-[11px] font-medium text-center border transition-all cursor-pointer ${
                           isChecked 
                             ? 'bg-neutral-950 border-neutral-750 text-neutral-200 shadow-inner' 
                             : 'bg-neutral-950/10 border-transparent text-neutral-600 hover:text-neutral-500'
@@ -492,7 +492,7 @@ export function TemporalMap() {
                                 onClick={() => handleToggleEventInPlan(event.id)}
                                 aria-label={`Toggle ${event.title}`}
                                 data-testid={`checkbox-${event.id}`}
-                                className={`flex items-center justify-center size-5 rounded border transition-all cursor-pointer ${
+                                className={`flex items-center justify-center size-6 rounded border transition-all cursor-pointer ${
                                   isSelectedInPlan 
                                     ? 'bg-indigo-600 border-indigo-500 text-white' 
                                     : 'border-neutral-750 hover:border-neutral-500 bg-neutral-950'

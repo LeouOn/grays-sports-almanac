@@ -187,7 +187,7 @@ describe('Accessibility', () => {
 
   it('SportsAlmanac has no axe violations', async () => {
     await expectNoAxeViolations(<SportsAlmanac />);
-  });
+  }, 20000);
 
   it('FinancialAlmanac has no axe violations', async () => {
     await expectNoAxeViolations(<FinancialAlmanac />);

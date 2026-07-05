@@ -105,7 +105,7 @@ export function BootstrapBlueprints() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded text-sm font-semibold border transition-all cursor-pointer ${
                 selectedCategory === cat
                   ? 'bg-indigo-950 border-indigo-850 text-indigo-300 shadow-inner'
                   : 'bg-neutral-950/20 border-transparent text-neutral-500 hover:text-neutral-300'

@@ -3,6 +3,7 @@ import { loadFinance } from '@/data/loader';
 import type { FinancialEvent } from '@/data/finance';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { exportToCSV } from '@/lib/export';
@@ -264,7 +265,36 @@ export function FinancialAlmanac() {
         </Button>
       </div>
 
-      <div className="rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
+      {/* Mobile card view (hidden on md+) */}
+      <div className="space-y-3 md:hidden">
+        {filtered.map((event) => (
+          <Card
+            key={event.id}
+            className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700"
+            onClick={() => setSelectedEvent(event)}
+          >
+            <CardContent className="pt-5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold text-white">{event.date}</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-bold ${event.direction === 'up' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'}`}>
+                  {event.direction === 'up' ? '▲ LONG' : '▼ SHORT'}
+                </span>
+              </div>
+              <span className={`inline-block px-2 py-1 rounded-full bg-neutral-800 text-xs font-semibold ${categoryColors[event.category]}`}>
+                {event.category}
+              </span>
+              <h3 className="font-semibold text-white">{event.event}</h3>
+              <div className="text-xs text-neutral-500 space-y-0.5">
+                <div>Entry: {event.entrySignal}</div>
+                <div>Exit: {event.exitSignal}</div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop table view (hidden on mobile) */}
+      <div className="hidden md:block rounded-md border border-neutral-800 overflow-hidden bg-neutral-900/30">
         <Table>
           <TableHeader className="bg-neutral-900/50 hover:bg-neutral-900/50">
             <TableRow className="border-neutral-800 hover:bg-transparent">
