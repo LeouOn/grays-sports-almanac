@@ -58,6 +58,45 @@ export function Quiz() {
     id: `${selectedTier}-${providerId}-${selectedModel}`
   });
 
+  // Chat history persistence: restore from localStorage when session id
+  // (tier/provider/model) changes, and save after every message update.
+  const chatSessionId = `${selectedTier}-${providerId}-${selectedModel}`;
+  const chatStorageKey = `tt-chat-${chatSessionId}`;
+
+  // Restore messages when session id changes
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(chatStorageKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setMessages(parsed as UIMessage[]);
+      } else {
+        // New session — clear messages
+        setMessages([]);
+      }
+    } catch {
+      // Corrupted entry — clear it
+      localStorage.removeItem(chatStorageKey);
+      setMessages([]);
+    }
+    // processedToolCalls should reset per session to allow re-processing
+    processedToolCalls.current.clear();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatSessionId]);
+
+  // Save messages to localStorage on every change (debounced via the effect)
+  useEffect(() => {
+    if (messages.length === 0) {
+      localStorage.removeItem(chatStorageKey);
+      return;
+    }
+    try {
+      localStorage.setItem(chatStorageKey, JSON.stringify(messages));
+    } catch {
+      // Quota exceeded or private mode — silently fail
+    }
+  }, [messages, chatStorageKey]);
+
   useEffect(() => {
     messages.forEach(m => {
       const toolInvocations = (m as { toolInvocations?: { toolName: string; toolCallId: string; state: string; args: { topic: string; isCorrect: boolean; competenceDelta: number; feedback: string } }[] }).toolInvocations;
