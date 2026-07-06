@@ -18,6 +18,8 @@ const CATEGORIES = ['Geopolitical', 'Economic', 'Cultural', 'Scientific', 'Socia
 type Region = typeof REGIONS[number];
 type Category = typeof CATEGORIES[number];
 
+const PAGE_SIZE = 30;
+
 const REGION_COLORS: Record<Region, string> = {
   Americas: 'bg-blue-500/20 text-blue-300',
   Europe: 'bg-indigo-500/20 text-indigo-300',
@@ -40,6 +42,7 @@ export function WorldEvents() {
   const [region, setRegion] = useURLState('region', 'all');
   const [category, setCategory] = useURLState('category', 'all');
   const [activeEntry, setActiveEntry] = useState<WorldEvent | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
@@ -106,7 +109,10 @@ export function WorldEvents() {
           <select
             id="region-filter"
             value={region}
-            onChange={(e) => setRegion(e.target.value as Region | 'all')}
+            onChange={(e) => {
+              setRegion(e.target.value as Region | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
@@ -124,7 +130,10 @@ export function WorldEvents() {
           <select
             id="category-filter"
             value={category}
-            onChange={(e) => setCategory(e.target.value as Category | 'all')}
+            onChange={(e) => {
+              setCategory(e.target.value as Category | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
@@ -159,7 +168,7 @@ export function WorldEvents() {
 
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((e) => (
+        {filtered.slice(0, visibleCount).map((e) => (
           <Card
             key={e.id}
             className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
@@ -203,6 +212,18 @@ export function WorldEvents() {
           </Card>
         ))}
       </div>
+
+      {visibleCount < filtered.length && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="h-11 px-6"
+          >
+            Load more ({filtered.length - visibleCount} remaining)
+          </Button>
+        </div>
+      )}
 
       {activeEntry && (
         <div

@@ -12,6 +12,30 @@ import { Input } from '@/components/ui/input';
 import { CompanionPreviewChat } from '@/components/CompanionPreviewChat';
 import { showSuccess, showError } from '@/lib/toast';
 
+/** Quick-fill templates. `description` is shown as the button tooltip since
+ *  custom companions don't persist a separate description field — only name
+ *  and prompt are applied to the form. */
+const PRESETS = [
+  {
+    name: 'The Historian',
+    icon: '📚',
+    description: 'A serious, factual historian who cites sources and corrects anachronisms.',
+    prompt: 'You are Dr. Eleanor Vance, a professor of history specializing in 20th century America. You are serious, precise, and always cite your sources. You gently correct the user when they use anachronistic language or references. You speak in a measured, academic tone but remain accessible. You are fascinated by the butterfly effect of small changes.',
+  },
+  {
+    name: 'The Comedian',
+    icon: '🎭',
+    description: 'A witty companion who makes anachronistic jokes and keeps things light.',
+    prompt: 'You are Max "Timeline" Turner, a stand-up comedian from 2045 who got stuck in the past. You make witty observations about the absurdity of each decade. You love pointing out how ridiculous old technology and fashion were. You are funny but never mean. You occasionally break the fourth wall about being a time traveler.',
+  },
+  {
+    name: 'The Mentor',
+    icon: '🧙',
+    description: 'A patient, wise mentor who asks Socratic questions and guides gently.',
+    prompt: 'You are Sage, a wise and patient mentor who has guided many time travelers. You ask Socratic questions to help the user think through consequences. You never give direct advice — instead, you guide them to discover the right answer themselves. You are warm, encouraging, and deeply knowledgeable about history.',
+  },
+];
+
 interface CompanionEditorProps {
   companionId?: string;
   onSave: () => void;
@@ -155,6 +179,25 @@ const handleDeleteClick = () => {
 
         {/* Form */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Quick-fill presets */}
+          <div className="flex flex-wrap gap-2">
+            <span className="text-[10px] text-neutral-500 uppercase tracking-wider w-full mb-1">Quick Templates</span>
+            {PRESETS.map((preset) => (
+              <button
+                key={preset.name}
+                type="button"
+                title={preset.description}
+                onClick={() => {
+                  setName(preset.name);
+                  setPrompt(preset.prompt);
+                }}
+                className="px-3 py-1.5 rounded-md border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-xs text-neutral-300 hover:text-white transition-colors cursor-pointer"
+              >
+                {preset.icon} {preset.name}
+              </button>
+            ))}
+          </div>
+
           {/* Name */}
           <div>
             <label
@@ -175,8 +218,10 @@ const handleDeleteClick = () => {
                   : 'bg-neutral-900 text-white border-neutral-800'
               }
             />
-            {errors.name && (
+            {errors.name ? (
               <p className="text-[10px] text-red-400 mt-1">{errors.name}</p>
+            ) : (
+              <p className="text-[10px] text-neutral-600 mt-0.5">How the companion introduces themselves</p>
             )}
           </div>
 
@@ -203,9 +248,12 @@ const handleDeleteClick = () => {
             {errors.prompt ? (
               <p className="text-[10px] text-red-400 mt-1">{errors.prompt}</p>
             ) : (
-              <p className="text-[10px] text-neutral-500 mt-1">
-                Min 10 characters. Used as the system prompt for the chat model.
-              </p>
+              <div className="flex justify-between items-center mt-1">
+                <p className="text-[10px] text-neutral-600">Defines personality, tone, and behavior. Be specific.</p>
+                <span className={`text-[10px] font-mono ${prompt.length < 50 ? 'text-amber-400' : 'text-neutral-600'}`}>
+                  {prompt.length} / 2000
+                </span>
+              </div>
             )}
           </div>
 

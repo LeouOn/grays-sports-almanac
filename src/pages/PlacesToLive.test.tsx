@@ -14,6 +14,14 @@ const renderPage = (entries: string[] = ['/']) =>
     </MemoryRouter>
   );
 
+// The page now paginates (PAGE_SIZE = 24). Tests that assert on specific cities
+// deep in the dataset (e.g. Tehran) click "Load more" until all are visible.
+const loadAll = () => {
+  while (screen.queryByRole('button', { name: /^load more/i })) {
+    fireEvent.click(screen.getByRole('button', { name: /^load more/i }));
+  }
+};
+
 describe('PlacesToLive page', () => {
   beforeEach(() => {
     window.history.replaceState(null, '', '/');
@@ -38,6 +46,7 @@ describe('PlacesToLive page', () => {
 
   it('filters by decade via chip buttons', () => {
     renderPage();
+    loadAll();
     // Tehran is 1970s in the real dataset.
     expect(screen.getAllByText('Tehran').length).toBeGreaterThan(0);
 
@@ -58,6 +67,7 @@ describe('PlacesToLive page', () => {
     fireEvent.change(screen.getByLabelText(/stability/i), {
       target: { value: 'Turbulent' },
     });
+    loadAll();
 
     // Tehran is Turbulent, so it remains.
     expect(screen.getAllByText('Tehran').length).toBeGreaterThan(0);

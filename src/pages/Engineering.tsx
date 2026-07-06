@@ -15,6 +15,7 @@ import { ShareButton } from '@/components/ShareButton';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 
 const SUB_DOMAINS = ['cnc_machining', 'semiconductors', 'metallurgy', 'aerospace', 'telecommunications'] as const;
+const PAGE_SIZE = 12;
 const ERAS = ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s'] as const;
 type SubDomain = typeof SUB_DOMAINS[number];
 type Era = typeof ERAS[number];
@@ -68,6 +69,7 @@ export function Engineering() {
   const [era, setEra] = useState<Era | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeEntry, setActiveEntry] = useState<EngineeringSpec | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
@@ -150,7 +152,10 @@ export function Engineering() {
           <select
             id="subdomain-filter"
             value={subDomain}
-            onChange={(e) => setSubDomain(e.target.value as SubDomain | 'all')}
+            onChange={(e) => {
+              setSubDomain(e.target.value as SubDomain | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
@@ -168,7 +173,10 @@ export function Engineering() {
           <select
             id="era-filter"
             value={era}
-            onChange={(e) => setEra(e.target.value as Era | 'all')}
+            onChange={(e) => {
+              setEra(e.target.value as Era | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
@@ -185,7 +193,10 @@ export function Engineering() {
             type="text"
             placeholder="Search name, specs, tags..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setVisibleCount(PAGE_SIZE);
+            }}
             aria-label="Search engineering specs"
             className="pl-8 bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-500"
           />
@@ -214,7 +225,7 @@ export function Engineering() {
 
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((s) => (
+        {filtered.slice(0, visibleCount).map((s) => (
           <Card
             key={s.id}
             className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
@@ -266,6 +277,18 @@ export function Engineering() {
           </Card>
         ))}
       </div>
+
+      {visibleCount < filtered.length && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="h-11 px-6"
+          >
+            Load more ({filtered.length - visibleCount} remaining)
+          </Button>
+        </div>
+      )}
 
       {activeEntry && (
         <div

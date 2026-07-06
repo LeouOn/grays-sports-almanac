@@ -14,6 +14,15 @@ const renderPage = (entries: string[] = ['/']) =>
     </MemoryRouter>
   );
 
+// The page now paginates (PAGE_SIZE = 30). Several tests assert on specific
+// events (e.g. "Berlin Wall falls" at 1989) that fall beyond the first page.
+// This helper clicks "Load more" until every entry is visible.
+const loadAll = () => {
+  while (screen.queryByRole('button', { name: /^load more/i })) {
+    fireEvent.click(screen.getByRole('button', { name: /^load more/i }));
+  }
+};
+
 describe('WorldEvents page', () => {
   beforeEach(() => {
     // Reset URL state between tests.
@@ -31,6 +40,7 @@ describe('WorldEvents page', () => {
 
   it('renders known events from the real dataset', () => {
     renderPage();
+    loadAll();
     // These entries all exist in src/data/world-events.ts
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
     expect(screen.getByText('Japanese asset bubble peak')).toBeTruthy();
@@ -45,10 +55,12 @@ describe('WorldEvents page', () => {
 
   it('filters by region when select changes', () => {
     renderPage();
+    loadAll();
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
 
     const regionSelect = screen.getByLabelText(/region/i);
     fireEvent.change(regionSelect, { target: { value: 'Europe' } });
+    loadAll();
 
     // After Europe filter, Berlin Wall (Europe) should still be visible
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
@@ -58,10 +70,12 @@ describe('WorldEvents page', () => {
 
   it('filters by category when select changes', () => {
     renderPage();
+    loadAll();
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
 
     const catSelect = screen.getByLabelText(/category/i);
     fireEvent.change(catSelect, { target: { value: 'Economic' } });
+    loadAll();
 
     // Economic events should remain
     expect(screen.getByText('Japanese asset bubble peak')).toBeTruthy();
@@ -72,6 +86,7 @@ describe('WorldEvents page', () => {
 
   it('shows empty state when no matches', () => {
     renderPage();
+    loadAll();
     expect(screen.getByText('Berlin Wall falls')).toBeTruthy();
 
     // "Scientific" has very few entries in the real dataset, so combining

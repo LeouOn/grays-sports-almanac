@@ -15,6 +15,14 @@ const renderPage = () =>
     </MemoryRouter>
   );
 
+// The page now paginates (PAGE_SIZE = 24). Tests that assert on specific
+// destinations deep in the dataset click "Load more" until all are visible.
+const loadAll = () => {
+  while (screen.queryByRole('button', { name: /^load more/i })) {
+    fireEvent.click(screen.getByRole('button', { name: /^load more/i }));
+  }
+};
+
 describe('PlacesToVisit page', () => {
   it('renders the page heading and description', () => {
     renderPage();
@@ -24,6 +32,7 @@ describe('PlacesToVisit page', () => {
 
   it('renders all 60 destinations on load', () => {
     renderPage();
+    loadAll();
     // Anchors from each of the four decades.
     expect(screen.getByText('Apollo Lunar Landing Sites')).toBeTruthy(); // 1970s
     expect(screen.getByText('The Berlin Wall & Checkpoint Charlie')).toBeTruthy(); // 1980s

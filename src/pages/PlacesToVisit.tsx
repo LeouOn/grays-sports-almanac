@@ -14,6 +14,7 @@ import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 
 const DECADES = ['1970s', '1980s', '1990s', '2000s'] as const;
+const PAGE_SIZE = 24;
 const CATEGORIES = [
   'Natural Wonder',
   'Historical Site',
@@ -47,6 +48,7 @@ export function PlacesToVisit() {
   const [decade, setDecade] = useURLState('decade', 'all');
   const [category, setCategory] = useURLState('category', 'all');
   const [activeEntry, setActiveEntry] = useState<TouristDestination | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
@@ -113,7 +115,10 @@ export function PlacesToVisit() {
           <span className="text-xs text-neutral-400">Decade:</span>
           <button
             type="button"
-            onClick={() => setDecade('all')}
+            onClick={() => {
+              setDecade('all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             aria-pressed={decade === 'all'}
             className={`px-4 py-2 text-sm rounded-full transition-colors ${
               decade === 'all' ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white'
@@ -125,7 +130,10 @@ export function PlacesToVisit() {
             <button
               key={d}
               type="button"
-              onClick={() => setDecade(d)}
+              onClick={() => {
+                setDecade(d);
+                setVisibleCount(PAGE_SIZE);
+              }}
               aria-pressed={decade === d}
               className={`px-4 py-2 text-sm rounded-full transition-colors ${
                 decade === d ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white'
@@ -142,7 +150,10 @@ export function PlacesToVisit() {
           <select
             id="category-filter"
             value={category}
-            onChange={e => setCategory(e.target.value as Category | 'all')}
+            onChange={e => {
+              setCategory(e.target.value as Category | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option value="all">All</option>
@@ -177,7 +188,7 @@ export function PlacesToVisit() {
 
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map(p => (
+        {filtered.slice(0, visibleCount).map(p => (
           <Card
             key={p.id}
             className="bg-neutral-900/50 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
@@ -230,6 +241,18 @@ export function PlacesToVisit() {
           </Card>
         ))}
       </div>
+
+      {visibleCount < filtered.length && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="h-11 px-6"
+          >
+            Load more ({filtered.length - visibleCount} remaining)
+          </Button>
+        </div>
+      )}
 
       {activeEntry && (
         <div

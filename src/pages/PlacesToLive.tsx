@@ -17,6 +17,8 @@ const DECADES = ['1970s', '1980s', '1990s', '2000s'] as const;
 const STABILITY_LEVELS = ['Stable', 'Turbulent', 'Authoritarian', 'Transitional'] as const;
 type Stability = typeof STABILITY_LEVELS[number];
 
+const PAGE_SIZE = 24;
+
 const STABILITY_COLORS: Record<Stability, string> = {
   Stable: 'bg-emerald-500/20 text-emerald-300',
   Turbulent: 'bg-amber-500/20 text-amber-300',
@@ -30,6 +32,7 @@ export function PlacesToLive() {
   const [decade, setDecade] = useURLState('decade', 'all');
   const [stability, setStability] = useURLState('stability', 'all');
   const [activeEntry, setActiveEntry] = useState<RelocationDestination | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
@@ -87,7 +90,10 @@ export function PlacesToLive() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-neutral-400">Decade:</span>
           <button
-            onClick={() => setDecade('all')}
+            onClick={() => {
+              setDecade('all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className={`px-4 py-2 text-sm rounded-full ${decade === 'all' ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
           >
             All
@@ -95,7 +101,10 @@ export function PlacesToLive() {
           {DECADES.map(d => (
             <button
               key={d}
-              onClick={() => setDecade(d)}
+              onClick={() => {
+                setDecade(d);
+                setVisibleCount(PAGE_SIZE);
+              }}
               className={`px-4 py-2 text-sm rounded-full ${decade === d ? 'bg-indigo-600 text-white' : 'bg-neutral-800 text-neutral-400'}`}
             >
               {d}
@@ -107,7 +116,10 @@ export function PlacesToLive() {
           <select
             id="stability-filter"
             value={stability}
-            onChange={(e) => setStability(e.target.value as Stability | 'all')}
+            onChange={(e) => {
+              setStability(e.target.value as Stability | 'all');
+              setVisibleCount(PAGE_SIZE);
+            }}
             className="h-10 px-3 rounded-md border border-neutral-800 bg-neutral-900 text-sm text-white"
           >
             <option value="all">All</option>
@@ -138,7 +150,7 @@ export function PlacesToLive() {
 
       {/* Card grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map(p => (
+        {filtered.slice(0, visibleCount).map(p => (
           <Card
             key={p.id}
             className="bg-neutral-900 border-neutral-800 cursor-pointer hover:border-neutral-700 transition-colors"
@@ -220,6 +232,18 @@ export function PlacesToLive() {
           </Card>
         ))}
       </div>
+
+      {visibleCount < filtered.length && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="h-11 px-6"
+          >
+            Load more ({filtered.length - visibleCount} remaining)
+          </Button>
+        </div>
+      )}
 
       {activeEntry && (
         <div

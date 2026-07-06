@@ -13,12 +13,15 @@ import { defaultCompanions } from './data/companions';
 import { CompanionSelector } from './components/CompanionSelector';
 import { Toaster } from 'sonner';
 import { OfflineBanner } from './components/OfflineBanner';
+import { InstallPrompt } from './components/InstallPrompt';
 import { BookmarkButton } from '@/components/BookmarkButton';
 import { showSuccess } from './lib/toast';
 import { PageSkeleton } from './components/PageSkeleton';
 import { useSpacedRepetition } from './hooks/useSpacedRepetition';
 import { useProviderSettings } from './hooks/useProviderSettings';
 import { useRecentlyViewed } from './hooks/useRecentlyViewed';
+import { useCompetency } from './hooks/useCompetency';
+import { useBookmarks } from './hooks/useBookmarks';
 
 const SportsAlmanac = lazy(() => import('./pages/SportsAlmanac').then(m => ({ default: m.SportsAlmanac })));
 const EraGuide = lazy(() => import('./pages/EraGuide').then(m => ({ default: m.EraGuide })));
@@ -54,6 +57,23 @@ export function Dashboard() {
   const { dueCount, loading } = useSpacedRepetition();
   const { providers, loading: providersLoading } = useProviderSettings();
   const { recent } = useRecentlyViewed();
+  const { profile } = useCompetency();
+  const { bookmarks } = useBookmarks();
+
+  // Quick-stats for the "Your Progress" widget. profile is keyed by topic and
+  // each value is { score, questionsAnswered, correctAnswers } — a topic counts
+  // as "viewed" once it has any answered question, and avg competency is the
+  // mean of per-topic scores (0–100).
+  const modulesViewed = Object.keys(profile).filter(
+    (k) => profile[k].questionsAnswered > 0,
+  ).length;
+  const competencyKeys = Object.keys(profile);
+  const avgCompetency = competencyKeys.length > 0
+    ? Math.round(competencyKeys.reduce((sum, k) => sum + profile[k].score, 0) / competencyKeys.length)
+    : 0;
+  const bookmarkCount = bookmarks.length;
+  const reviewsDue = dueCount;
+  const hasActivity = modulesViewed > 0 || bookmarkCount > 0 || reviewsDue > 0;
   const [onboardDismissed, setOnboardDismissed] = useState(() => {
     try {
       return localStorage.getItem('tt-onboard-dismissed') === '1';
@@ -104,6 +124,28 @@ export function Dashboard() {
           >
             <X className="size-4" />
           </button>
+        </div>
+      )}
+
+      {/* Quick Stats — only show once the user has any activity */}
+      {hasActivity && (
+        <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg">
+            <div className="text-2xl font-bold text-white">{modulesViewed}<span className="text-sm text-neutral-500">/12</span></div>
+            <div className="text-[10px] uppercase tracking-wider text-neutral-500">Modules</div>
+          </div>
+          <div className="p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg">
+            <div className="text-2xl font-bold text-white">{avgCompetency}<span className="text-sm text-neutral-500">%</span></div>
+            <div className="text-[10px] uppercase tracking-wider text-neutral-500">Quiz Score</div>
+          </div>
+          <div className="p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg">
+            <div className="text-2xl font-bold text-white">{bookmarkCount}</div>
+            <div className="text-[10px] uppercase tracking-wider text-neutral-500">Bookmarks</div>
+          </div>
+          <div className="p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg">
+            <div className="text-2xl font-bold text-white">{reviewsDue}</div>
+            <div className="text-[10px] uppercase tracking-wider text-neutral-500">Reviews Due</div>
+          </div>
         </div>
       )}
 
@@ -477,6 +519,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
+      <InstallPrompt />
       <main id="main-content" tabIndex={-1} className="flex-1 container mx-auto px-4 py-12 pb-20 focus:outline-none safe-area-bottom">
         {children}
       </main>
