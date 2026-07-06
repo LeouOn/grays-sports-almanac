@@ -3,14 +3,19 @@ import { blueprintsData } from '../data/blueprints';
 import { searchAll } from './search';
 
 describe('Bootstrap Blueprints Data & Search', () => {
-  it('contains all 4 expected engineering blueprints', () => {
-    expect(blueprintsData.length).toBe(4);
+  it('contains all 8 expected engineering blueprints', () => {
+    expect(blueprintsData.length).toBe(8);
 
     const ids = blueprintsData.map(b => b.id);
     expect(ids).toContain('czochralski-silicon');
     expect(ids).toContain('optical-photolithography');
     expect(ids).toContain('precision-ball-screw');
     expect(ids).toContain('silicon-planar-process');
+    // Wave 3 expansion: pre-1900 bootstrap tech for the 1970-2001 traveler.
+    expect(ids).toContain('electromagnetic-telegraph');
+    expect(ids).toContain('daguerreotype-process');
+    expect(ids).toContain('monier-reinforced-concrete');
+    expect(ids).toContain('benz-internal-combustion-engine');
   });
 
   it('verifies semiconductor blueprint details are correct', () => {

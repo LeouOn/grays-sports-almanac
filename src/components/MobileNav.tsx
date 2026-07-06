@@ -10,6 +10,7 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 import { useState } from 'react';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 
 interface NavLink {
   to: string;
@@ -76,6 +77,9 @@ export function MobileNav({
   onSearchClick,
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  // Amber dot next to Quiz — the only AI-Tools nav entry that hits a live
+  // LLM endpoint and breaks the moment connectivity drops.
+  const isOnline = useOnlineStatus();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -146,6 +150,9 @@ export function MobileNav({
                     >
                       {Icon && <Icon className="size-4 shrink-0" />}
                       {link.label}
+                      {link.to === '/quiz' && !isOnline && (
+                        <span className="ml-1 text-[9px] text-amber-400" aria-label="Offline">●</span>
+                      )}
                     </SheetClose>
                   );
                 })}

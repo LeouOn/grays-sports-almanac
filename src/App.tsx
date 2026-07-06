@@ -22,6 +22,7 @@ import { useProviderSettings } from './hooks/useProviderSettings';
 import { useRecentlyViewed } from './hooks/useRecentlyViewed';
 import { useCompetency } from './hooks/useCompetency';
 import { useBookmarks } from './hooks/useBookmarks';
+import { useOnlineStatus } from './hooks/useOnlineStatus';
 
 const SportsAlmanac = lazy(() => import('./pages/SportsAlmanac').then(m => ({ default: m.SportsAlmanac })));
 const EraGuide = lazy(() => import('./pages/EraGuide').then(m => ({ default: m.EraGuide })));
@@ -340,6 +341,9 @@ function Layout({ children }: { children: React.ReactNode }) {
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
   const [isShortcutHintOpen, setIsShortcutHintOpen] = useState(false);
   const { activeCompanion, selectCompanion, customName, setCustomName, customPrompt, setCustomPrompt, companionProvider, setCompanionProvider, userName, setUserName } = useCompanion();
+  // Surfaced as an amber dot next to the Quiz link — the only module that
+  // depends on a live LLM call, so going offline actually breaks it.
+  const isOnline = useOnlineStatus();
 
   // Focus traps for the two modal dialogs. Each ref attaches to the dialog
   // container; the hook handles trapping Tab/Shift+Tab, focusing the first
@@ -476,7 +480,10 @@ function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/medical" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Medical</Link>
               <Link to="/butterfly" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Risk</Link>
               <Link to="/safety" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Safety</Link>
-              <Link to="/quiz" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Quiz</Link>
+              <Link to="/quiz" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                Quiz
+                {!isOnline && <span className="ml-1 text-[9px] text-amber-400" aria-label="Offline">●</span>}
+              </Link>
               <Link to="/bookmarks" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Bookmarks</Link>
               <Link to="/progress" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Progress</Link>
               <Link to="/companions" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Companions</Link>
