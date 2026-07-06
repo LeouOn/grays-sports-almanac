@@ -2,14 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, Cpu, Cog, Wrench, Radio, FlaskConical, Plane, Search, Tag, CheckCircle2, Download } from 'lucide-react';
 import { loadEngineering } from '@/data/loader';
-import type { EngineeringSpec, ConfidenceLevel } from '@/data/engineering';
+import type { EngineeringSpec } from '@/data/engineering';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
+import { riskBadgeForConfidence } from '@/lib/risk-colors';
 import { exportToCSV } from '@/lib/export';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 
 const SUB_DOMAINS = ['cnc_machining', 'semiconductors', 'metallurgy', 'aerospace', 'telecommunications'] as const;
 const ERAS = ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s'] as const;
@@ -49,13 +52,6 @@ const ERA_COLORS: Record<Era, string> = {
   '2000s': 'bg-pink-500/20 text-pink-300',
 };
 
-const CONFIDENCE_COLORS: Record<ConfidenceLevel, string> = {
-  high: 'bg-green-500/20 text-green-300',
-  medium: 'bg-yellow-500/20 text-yellow-300',
-  low: 'bg-orange-500/20 text-orange-300',
-  estimated: 'bg-neutral-500/20 text-neutral-300',
-};
-
 const ERA_ORDER: Record<Era, number> = {
   '1950s': 1,
   '1960s': 2,
@@ -72,6 +68,7 @@ export function Engineering() {
   const [era, setEra] = useState<Era | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeEntry, setActiveEntry] = useState<EngineeringSpec | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     loadEngineering()
@@ -93,6 +90,13 @@ export function Engineering() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [activeEntry]);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (activeEntry) {
+      addRecent({ id: activeEntry.id, module: 'Engineering', title: activeEntry.conceptName, path: '/engineering' });
+    }
+  }, [activeEntry, addRecent]);
 
   const filtered = useMemo(() => {
     const q = searchTerm.toLowerCase().trim();
@@ -229,7 +233,7 @@ export function Engineering() {
                   {SUB_DOMAIN_ICONS[s.subDomain]} {SUB_DOMAIN_LABELS[s.subDomain]}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${CONFIDENCE_COLORS[s.provenance.confidence]}`}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${riskBadgeForConfidence(s.provenance.confidence)}`}
                   title={`Provenance confidence: ${s.provenance.confidence} (source: ${s.provenance.sourceSite})`}
                 >
                   <CheckCircle2 className="size-2.5" /> {s.provenance.confidence}
@@ -272,13 +276,16 @@ export function Engineering() {
             className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85dvh] overflow-y-auto p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setActiveEntry(null)}
-              className="float-right text-neutral-400 hover:text-white"
-              aria-label="Close detail"
-            >
-              ✕
-            </button>
+            <div className="float-right flex items-center gap-3">
+              <ShareButton title={activeEntry.conceptName} text={activeEntry.description} />
+              <button
+                onClick={() => setActiveEntry(null)}
+                className="text-neutral-400 hover:text-white cursor-pointer"
+                aria-label="Close detail"
+              >
+                ✕
+              </button>
+            </div>
 
             <h2 className="text-xl font-bold text-white leading-snug">{activeEntry.conceptName}</h2>
 
@@ -320,7 +327,7 @@ export function Engineering() {
                 </a>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${CONFIDENCE_COLORS[activeEntry.provenance.confidence]}`}>
+                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${riskBadgeForConfidence(activeEntry.provenance.confidence)}`}>
                   <CheckCircle2 className="size-2.5" /> {activeEntry.provenance.confidence}
                 </span>
                 <span className="text-neutral-500">Extracted: {activeEntry.provenance.extractedAt}</span>

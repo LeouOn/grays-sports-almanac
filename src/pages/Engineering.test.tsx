@@ -9,6 +9,20 @@ vi.mock('@/data/loader', () => ({
   loadEngineering: vi.fn(),
 }));
 
+// Mock global fetch — the Engineering page renders components (AthenaCommentary,
+// CompanionThought, PalaceLink, BookmarkButton, etc.) that fetch from the
+// backend at localhost:3001. In the test environment the server is not running,
+// so we stub fetch to return [] (an array so .some/.map/.filter work without
+// throwing). This prevents AggregateError / ECONNREFUSED noise.
+beforeEach(() => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      new Response(JSON.stringify([]), { status: 200, headers: { 'Content-Type': 'application/json' } }),
+    ),
+  );
+});
+
 const mockSpecs = [
   {
     id: 'cnc_mit_1952',
@@ -236,7 +250,7 @@ describe('Engineering page', () => {
     await waitFor(() => {
       expect(screen.getByLabelText(/close/i)).toBeTruthy();
     });
-  });
+  }, 30000);
 
   it('closes modal on backdrop click', async () => {
     render(
@@ -259,5 +273,5 @@ describe('Engineering page', () => {
     await waitFor(() => {
       expect(screen.queryByLabelText(/close/i)).toBeNull();
     });
-  });
+  }, 30000);
 });

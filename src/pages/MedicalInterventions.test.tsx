@@ -33,14 +33,15 @@ describe('MedicalInterventions', () => {
     expect(screen.getByPlaceholderText('Search by condition, target, or details...')).toBeTruthy();
   });
 
-  it('renders medical entries with butterfly risk badges', () => {
+  it('renders medical entries with risk badges', () => {
     renderPage();
     // Should have accordion triggers for medical entries
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
-    // Should show butterfly risk labels
-    const riskBadges = screen.getAllByText(/🦋/);
-    expect(riskBadges.length).toBeGreaterThan(0);
+    // Should show color-coded risk badges (emoji + level concatenated via nested span)
+    const isRiskBadge = (_: string, el: Element | null) =>
+      /^(🟢|🟡|🟠|🔴)(Low|Medium|High|Extreme)$/.test(el?.textContent ?? '');
+    expect(screen.getAllByText(isRiskBadge).length).toBeGreaterThan(0);
   });
 
   it('filters entries when typing non-matching search', () => {
@@ -79,12 +80,14 @@ describe('MedicalInterventions', () => {
     expect(screen.getAllByText(/500-1,000\+ children/).length).toBeGreaterThan(0);
   });
 
-  it('renders butterfly risk badges including the Extreme rating', () => {
+  it('renders risk badges including the Extreme rating', () => {
     renderPage();
-    // Most entries render `{e.butterflyRisk} 🦋`. HIV/AIDS Early Warning is
+    // Most entries render `<RiskBadge>`. HIV/AIDS Early Warning is
     // the one Extreme entry.
-    expect(screen.getAllByText(/🦋/).length).toBeGreaterThan(10);
-    expect(screen.getByText('Extreme 🦋')).toBeTruthy();
+    const isRiskBadge = (_: string, el: Element | null) =>
+      /^(🟢|🟡|🟠|🔴)(Low|Medium|High|Extreme)$/.test(el?.textContent ?? '');
+    expect(screen.getAllByText(isRiskBadge).length).toBeGreaterThan(10);
+    expect(screen.getByText('Extreme')).toBeTruthy();
   });
 
   it('filters to a specific condition when searching by its name', () => {

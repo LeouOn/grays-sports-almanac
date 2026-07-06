@@ -9,6 +9,8 @@ import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
 import { exportToCSV } from '@/lib/export';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 
 const DECADES = ['1970s', '1980s', '1990s', '2000s'] as const;
@@ -28,6 +30,7 @@ export function PlacesToLive() {
   const [decade, setDecade] = useURLState('decade', 'all');
   const [stability, setStability] = useURLState('stability', 'all');
   const [activeEntry, setActiveEntry] = useState<RelocationDestination | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     loadPlacesToLive()
@@ -49,6 +52,13 @@ export function PlacesToLive() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [activeEntry]);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (activeEntry) {
+      addRecent({ id: activeEntry.id, module: 'Places to Live', title: `${activeEntry.city}, ${activeEntry.country}`, path: '/places-to-live' });
+    }
+  }, [activeEntry, addRecent]);
 
   const filtered = useMemo(() => {
     return places.filter(p => {
@@ -220,13 +230,16 @@ export function PlacesToLive() {
             className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85dvh] overflow-y-auto p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setActiveEntry(null)}
-              className="float-right text-neutral-400 hover:text-white"
-              aria-label="Close detail"
-            >
-              ✕
-            </button>
+            <div className="float-right flex items-center gap-3">
+              <ShareButton title={`${activeEntry.city}, ${activeEntry.country}`} text={`${activeEntry.city}, ${activeEntry.country} — ${activeEntry.decade}`} />
+              <button
+                onClick={() => setActiveEntry(null)}
+                className="text-neutral-400 hover:text-white cursor-pointer"
+                aria-label="Close detail"
+              >
+                ✕
+              </button>
+            </div>
 
             <h2 className="text-xl font-bold text-white leading-snug">
               {activeEntry.city}, {activeEntry.country}

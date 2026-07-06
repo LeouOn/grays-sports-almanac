@@ -66,15 +66,17 @@ describe('DisasterPrevention', () => {
     expect(screen.getByText(/Bhopal, Madhya Pradesh, India/)).toBeTruthy();
   });
 
-  it('renders butterfly risk badges with the 🦋 suffix', () => {
+  it('renders butterfly risk badges with color-coded emoji prefix', () => {
     renderPage();
-    // The page renders `{e.butterflyRisk} 🦋 Risk` for every entry.
-    // The Chernobyl entry has High risk; HIV/AIDS Early Warning and
-    // September 11 Attacks both have Extreme.
-    expect(screen.getAllByText(/🦋 Risk/).length).toBeGreaterThan(10);
-    expect(screen.getAllByText('Extreme 🦋 Risk').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('High 🦋 Risk').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Low 🦋 Risk').length).toBeGreaterThan(0);
+    // The page renders `<RiskBadge>` per entry. The emoji is in a nested
+    // <span aria-hidden="true">, so textContent is emoji+level concatenated
+    // (e.g. "🔴Extreme"). Use a function matcher to handle the split structure.
+    const isRiskBadge = (_: string, el: Element | null) =>
+      /^(🟢|🟡|🟠|🔴)(Low|Medium|High|Extreme)$/.test(el?.textContent ?? '');
+    expect(screen.getAllByText(isRiskBadge).length).toBeGreaterThan(10);
+    expect(screen.getAllByText('Extreme').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('High').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Low').length).toBeGreaterThan(0);
   });
 
   it('renders category icon glyphs from each category', () => {

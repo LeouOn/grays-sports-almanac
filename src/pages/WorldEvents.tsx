@@ -9,6 +9,8 @@ import { PageSkeleton } from '@/components/PageSkeleton';
 import { showError } from '@/lib/toast';
 import { exportToCSV } from '@/lib/export';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 
 const REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Middle East'] as const;
@@ -38,6 +40,7 @@ export function WorldEvents() {
   const [region, setRegion] = useURLState('region', 'all');
   const [category, setCategory] = useURLState('category', 'all');
   const [activeEntry, setActiveEntry] = useState<WorldEvent | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     loadWorldEvents()
@@ -59,6 +62,13 @@ export function WorldEvents() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [activeEntry]);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (activeEntry) {
+      addRecent({ id: activeEntry.id, module: 'World Events', title: activeEntry.event, path: '/world-events' });
+    }
+  }, [activeEntry, addRecent]);
 
   const filtered = useMemo(() => {
     return events
@@ -203,13 +213,16 @@ export function WorldEvents() {
             className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full max-h-[85dvh] overflow-y-auto p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setActiveEntry(null)}
-              className="float-right text-neutral-400 hover:text-white"
-              aria-label="Close detail"
-            >
-              ✕
-            </button>
+            <div className="float-right flex items-center gap-3">
+              <ShareButton title={activeEntry.event} text={activeEntry.significance} />
+              <button
+                onClick={() => setActiveEntry(null)}
+                className="text-neutral-400 hover:text-white cursor-pointer"
+                aria-label="Close detail"
+              >
+                ✕
+              </button>
+            </div>
 
             <h2 className="text-xl font-bold text-white leading-snug">{activeEntry.event}</h2>
 

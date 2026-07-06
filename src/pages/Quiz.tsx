@@ -11,7 +11,7 @@ import { showInfo } from '@/lib/toast';
 import { haptic } from '@/lib/haptics';
 import { defaultCompanions } from '../data/companions';
 import { AthenaQuizReaction } from '../components/AthenaQuizReaction';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, Link } from 'react-router';
 
 type Tier = 'tier1' | 'tier2' | 'tier3';
 type ProviderId = 'openai' | 'deepseek' | 'openrouter' | 'zai' | 'minimax' | 'gemini' | 'claude' | 'ollama';
@@ -62,6 +62,30 @@ export function Quiz() {
   const initialEntryId = searchParams.get('entryId');
   const initialQuestion = searchParams.get('q');
   const hasSentInitial = useRef(false);
+
+  // Server availability: the Quiz chat posts to /api/chat which requires the
+  // backend (server/providers.ts) to be running with LLM credentials. Probe
+  // /api/health on mount so we can show a clear empty state instead of a
+  // silently failing chat. A rejected fetch (server unreachable) marks the
+  // server 'down'; any response — even a non-200 — means the server is
+  // reachable so the chat can surface its own errors. States: 'checking' |
+  // 'up' | 'down'.
+  const [serverStatus, setServerStatus] = useState<'checking' | 'up' | 'down'>('checking');
+  useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+    fetch('/api/health', { signal: controller.signal })
+      .then(() => {
+        if (!cancelled) setServerStatus('up');
+      })
+      .catch(() => {
+        if (!cancelled) setServerStatus('down');
+      });
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, []);
 
   const { messages, sendMessage, status, setMessages } = useChat({
     id: `${selectedTier}-${providerId}-${selectedModel}`
@@ -332,6 +356,34 @@ export function Quiz() {
       return [...prev, item];
     });
   };
+
+  if (serverStatus === 'down') {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">LLM Testing Module</h1>
+          <p className="text-neutral-400 mt-2">Prove your factual recall, judgment, and roleplay skills across the modern era.</p>
+        </div>
+        <div className="text-center py-12 px-4">
+          <div className="inline-flex p-4 rounded-full bg-neutral-900 border border-neutral-800 mb-4">
+            <AlertTriangle className="size-8 text-amber-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-200">Server AI is not running</h3>
+          <p className="text-sm text-neutral-400 mt-2 max-w-md mx-auto">
+            The Quiz feature requires the backend server. Start it with{' '}
+            <code className="px-1.5 py-0.5 rounded bg-neutral-900 text-indigo-300 text-xs">npm run dev:backend</code>
+            {' '}or configure an LLM provider directly on a native build via Settings.
+          </p>
+          <Link
+            to="/settings"
+            className="inline-block mt-4 px-4 py-2.5 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+          >
+            Go to Settings
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">

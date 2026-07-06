@@ -74,14 +74,24 @@ describe('TechTransfer', () => {
     expect(screen.getByText('Send in 1990')).toBeTruthy();
   });
 
-  it('renders butterfly risk badges across the spectrum', () => {
+  it('renders risk badges across the spectrum', () => {
     renderPage();
+    // Use function matchers because the badge text spans nested <span>
+    // elements (emoji in aria-hidden child, level text adjacent). The text
+    // isRiskBadge function receives `(text, element)` and tests element.textContent
+    // (the joined text from all child text nodes).
+    const isRiskBadge = (_: string, el: Element | null) =>
+      /^(🟢|🟡|🟠|🔴)(Low|Medium|High|Extreme)$/.test(el?.textContent ?? '');
+    const badges = screen.getAllByText(isRiskBadge);
+    const highCount = badges.filter((b) => b.textContent?.startsWith('🟠High')).length;
+    const mediumCount = badges.filter((b) => b.textContent?.startsWith('🟡Medium')).length;
+    const lowCount = badges.filter((b) => b.textContent?.startsWith('🟢Low')).length;
     // TCP/IP and PageRank are the two High-risk entries.
-    expect(screen.getAllByText('High 🦋 Risk').length).toBe(2);
+    expect(highCount).toBe(2);
     // Multiple entries are Medium (Li-ion, Recombinant DNA, etc.).
-    expect(screen.getAllByText('Medium 🦋 Risk').length).toBeGreaterThan(0);
+    expect(mediumCount).toBeGreaterThan(0);
     // Many entries are Low risk.
-    expect(screen.getAllByText('Low 🦋 Risk').length).toBeGreaterThan(5);
+    expect(lowCount).toBeGreaterThan(5);
   });
 
   it('filters to a specific concept when searching by its name', () => {

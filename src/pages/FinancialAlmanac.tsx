@@ -12,6 +12,8 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { FinancialChart } from '@/components/FinancialChart';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 
 const categoryColors: Record<FinancialEvent['category'], string> = {
@@ -26,10 +28,18 @@ export function FinancialAlmanac() {
   const [selectedEvent, setSelectedEvent] = useState<FinancialEvent | null>(null);
   const [searchTerm, setSearchTerm] = useURLState('search', '');
   const [events, setEvents] = useState<FinancialEvent[] | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     void loadFinance().then(setEvents);
   }, []);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (selectedEvent) {
+      addRecent({ id: selectedEvent.id, module: 'Finance', title: selectedEvent.event, path: '/finance' });
+    }
+  }, [selectedEvent, addRecent]);
 
   if (!events) {
     return (
@@ -348,13 +358,16 @@ export function FinancialAlmanac() {
               <h2 className="text-base font-bold text-white flex items-center gap-2">
                 <span>📈</span> {selectedEvent.date}: {selectedEvent.event}
               </h2>
-              <button
-                onClick={() => setSelectedEvent(null)}
-                className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
-                aria-label="Close event details"
-              >
-                <X className="size-5" />
-              </button>
+              <div className="flex items-center gap-3">
+                <ShareButton title={selectedEvent.event} text={`${selectedEvent.date}: ${selectedEvent.event}`} />
+                <button
+                  onClick={() => setSelectedEvent(null)}
+                  className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close event details"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
             </div>
             
             <div className="p-6 space-y-4">

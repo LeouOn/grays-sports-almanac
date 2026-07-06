@@ -9,6 +9,8 @@ import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 import { Search, Filter, Cpu, Wrench, Layers, Lightbulb, Clock, Info, ShieldAlert } from 'lucide-react';
 
@@ -31,10 +33,18 @@ export function BootstrapBlueprints() {
   const [activeBlueprint, setActiveBlueprint] = useState<BootstrapBlueprint | null>(null);
   const [modalTab, setModalTab] = useState<'specs' | 'guide' | 'impact'>('specs');
   const [blueprints, setBlueprints] = useState<BootstrapBlueprint[] | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     void loadBlueprints().then(setBlueprints);
   }, []);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (activeBlueprint) {
+      addRecent({ id: activeBlueprint.id, module: 'Blueprints', title: activeBlueprint.title, path: '/blueprints' });
+    }
+  }, [activeBlueprint, addRecent]);
 
   const categories = ['All', 'Semiconductors', 'Machine Tooling', 'Electronics', 'Materials & Chemistry'];
 
@@ -196,12 +206,15 @@ export function BootstrapBlueprints() {
                   {activeBlueprint.title}
                 </h2>
               </div>
-              <button
-                onClick={() => setActiveBlueprint(null)}
-                className="text-neutral-500 hover:text-white transition-colors cursor-pointer text-xl font-bold"
-              >
-                &times;
-              </button>
+              <div className="flex items-center gap-3 shrink-0">
+                <ShareButton title={activeBlueprint.title} text={`${activeBlueprint.category} blueprint: ${activeBlueprint.title}`} />
+                <button
+                  onClick={() => setActiveBlueprint(null)}
+                  className="text-neutral-500 hover:text-white transition-colors cursor-pointer text-xl font-bold"
+                >
+                  &times;
+                </button>
+              </div>
             </div>
 
             {/* Modal Navigation Tabs */}

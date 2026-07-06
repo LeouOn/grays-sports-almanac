@@ -9,14 +9,8 @@ import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
 import { RelatedEntries } from '@/components/RelatedEntries';
 import { ButterflyImpact } from '@/components/ButterflyImpact';
+import { RiskBadge } from '@/components/RiskBadge';
 import { useURLState } from '../hooks/useURLState';
-
-const riskColors: Record<DisasterEvent['butterflyRisk'], string> = {
-  'Low': 'bg-green-950/60 text-green-400 border-green-800',
-  'Medium': 'bg-amber-950/60 text-amber-400 border-amber-800',
-  'High': 'bg-orange-950/60 text-orange-400 border-orange-800',
-  'Extreme': 'bg-red-950/60 text-red-400 border-red-800',
-};
 
 const categoryIcons: Record<DisasterEvent['category'], string> = {
   'Aviation': '✈️',
@@ -93,9 +87,7 @@ export function DisasterPrevention() {
                       <span className="text-xs text-red-400/80">{e.casualties}</span>
                     </div>
                   </div>
-                  <span className={`px-2 py-0.5 rounded text-xs font-semibold border ${riskColors[e.butterflyRisk]}`}>
-                    {e.butterflyRisk} 🦋 Risk
-                  </span>
+                  <RiskBadge level={e.butterflyRisk} className="border" />
                 </div>
               </AccordionTrigger>
               <AccordionContent className="text-neutral-400 pb-4 space-y-4">

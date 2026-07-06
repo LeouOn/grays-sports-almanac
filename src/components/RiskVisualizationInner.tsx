@@ -30,14 +30,14 @@ interface FactorDatum {
 /** Color for individual factor bars: green (1-2), amber (3), red (4-5). */
 const getFactorColor = (score: number): string => {
   if (score === 0) return 'var(--muted-foreground)';
-  if (score <= 2) return '#22c55e';
+  if (score <= 2) return '#10b981';
   if (score === 3) return '#eab308';
   return '#ef4444';
 };
 
 /** Color for composite / radar based on raw product score. */
 const getCompositeColor = (raw: number): string => {
-  if (raw <= 9) return '#22c55e';
+  if (raw <= 9) return '#10b981';
   if (raw <= 45) return '#eab308';
   if (raw <= 150) return '#f97316';
   return '#ef4444';

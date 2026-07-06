@@ -11,6 +11,8 @@ import { AthenaCommentary } from '@/components/AthenaCommentary';
 import { ChatAboutThis } from '@/components/ChatAboutThis';
 import { PalaceHook } from '@/components/PalaceHook';
 import { PalaceLink } from '@/components/PalaceLink';
+import { ShareButton } from '@/components/ShareButton';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useURLState } from '../hooks/useURLState';
 
 export function SportsAlmanac() {
@@ -18,10 +20,18 @@ export function SportsAlmanac() {
   const [regionFilter, setRegionFilter] = useURLState('region', 'all');
   const [selectedEvent, setSelectedEvent] = useState<SportsEvent | null>(null);
   const [events, setEvents] = useState<SportsEvent[] | null>(null);
+  const { addRecent } = useRecentlyViewed();
 
   useEffect(() => {
     void loadSports().then(setEvents);
   }, []);
+
+  // Track opened entries for the Dashboard 'Recently Viewed' shortcut.
+  useEffect(() => {
+    if (selectedEvent) {
+      addRecent({ id: selectedEvent.id, module: 'Sports', title: `${selectedEvent.year} ${selectedEvent.event}`, path: '/sports' });
+    }
+  }, [selectedEvent, addRecent]);
 
   if (!events) {
     return (
@@ -181,13 +191,16 @@ export function SportsAlmanac() {
               <h2 className="text-base font-bold text-white flex items-center gap-2">
                 <span>🏆</span> {selectedEvent.year} {selectedEvent.event}
               </h2>
-              <button
-                onClick={() => setSelectedEvent(null)}
-                className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
-                aria-label="Close event details"
-              >
-                <X className="size-5" />
-              </button>
+              <div className="flex items-center gap-3">
+                <ShareButton title={`${selectedEvent.year} ${selectedEvent.event}`} text={`${selectedEvent.sport} — ${selectedEvent.event} (${selectedEvent.year})`} />
+                <button
+                  onClick={() => setSelectedEvent(null)}
+                  className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close event details"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
             </div>
             
             <div className="p-6 space-y-4">

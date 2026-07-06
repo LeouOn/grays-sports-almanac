@@ -3,7 +3,7 @@ import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useModalFocus } from './hooks/useModalFocus';
 import { searchAll, preloadSearchData, type SearchResult } from './lib/search';
-import { Search, X, Printer, Settings as SettingsIcon } from 'lucide-react';
+import { Search, X, Printer, Settings as SettingsIcon, Cpu } from 'lucide-react';
 import { ThemeToggle } from './components/ThemeToggle';
 import { MobileNav } from './components/MobileNav';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,6 +17,8 @@ import { BookmarkButton } from '@/components/BookmarkButton';
 import { showSuccess } from './lib/toast';
 import { PageSkeleton } from './components/PageSkeleton';
 import { useSpacedRepetition } from './hooks/useSpacedRepetition';
+import { useProviderSettings } from './hooks/useProviderSettings';
+import { useRecentlyViewed } from './hooks/useRecentlyViewed';
 
 const SportsAlmanac = lazy(() => import('./pages/SportsAlmanac').then(m => ({ default: m.SportsAlmanac })));
 const EraGuide = lazy(() => import('./pages/EraGuide').then(m => ({ default: m.EraGuide })));
@@ -50,6 +52,24 @@ function Lazy({ children }: { children: React.ReactNode }) {
 
 export function Dashboard() {
   const { dueCount, loading } = useSpacedRepetition();
+  const { providers, loading: providersLoading } = useProviderSettings();
+  const { recent } = useRecentlyViewed();
+  const [onboardDismissed, setOnboardDismissed] = useState(() => {
+    try {
+      return localStorage.getItem('tt-onboard-dismissed') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const dismissOnboard = () => {
+    setOnboardDismissed(true);
+    try {
+      localStorage.setItem('tt-onboard-dismissed', '1');
+    } catch {
+      // private mode / quota — ignore
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -57,6 +77,36 @@ export function Dashboard() {
         <h1 className="text-3xl font-bold tracking-tight mb-1">Welcome, Traveler.</h1>
         <p className="text-neutral-400">You are about to depart for the modern era (1970s–2001). Select a module to prepare.</p>
       </div>
+
+      {/* Onboarding banner — shown only when no LLM provider is configured
+          and the user hasn't dismissed it. Waits for providersLoading so we
+          don't flash the banner for users who DO have a provider saved. */}
+      {!providersLoading && providers.length === 0 && !onboardDismissed && (
+        <div className="p-4 bg-indigo-950/30 border border-indigo-900/50 rounded-lg flex items-start gap-3">
+          <Cpu className="size-5 text-indigo-400 shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-neutral-100">Unlock the AI Quiz</h3>
+            <p className="text-sm text-neutral-400 mt-1">
+              Configure an LLM provider (OpenAI, Claude, Gemini, etc.) to chat with an AI examiner about prices, sports, slang, and more.
+            </p>
+            <Link
+              to="/settings"
+              className="inline-block mt-3 px-3 py-2 rounded bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Configure LLM
+            </Link>
+          </div>
+          <button
+            type="button"
+            onClick={dismissOnboard}
+            aria-label="Dismiss onboarding banner"
+            className="text-neutral-500 hover:text-neutral-300 p-1 shrink-0 cursor-pointer"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      )}
+
       {/* Live region is always in the DOM so screen readers announce the
           badge when its content appears or the dueCount changes. aria-busy
           signals to assistive tech that the review queue is still loading. */}
@@ -76,6 +126,28 @@ export function Dashboard() {
           </Link>
         )}
       </div>
+
+      {/* Recently Viewed — surfaces the last few entries the user opened,
+          persisted across sessions via localStorage. Hidden until there's
+          at least one entry. */}
+      {recent.length > 0 && (
+        <section aria-labelledby="recently-viewed-heading">
+          <h2 id="recently-viewed-heading" className="text-sm font-semibold text-neutral-300 mb-3">Recently Viewed</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {recent.map((entry) => (
+              <Link
+                key={entry.id}
+                to={entry.path}
+                className="block p-3 rounded-lg border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 hover:border-neutral-700 transition-colors"
+              >
+                <div className="text-[10px] text-neutral-500 uppercase tracking-wider">{entry.module}</div>
+                <div className="text-sm font-medium text-neutral-200 mt-0.5 truncate">{entry.title}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="bg-neutral-900 border-neutral-800 hover:border-indigo-800/50 transition-colors">
           <CardHeader>
@@ -341,6 +413,16 @@ function Layout({ children }: { children: React.ReactNode }) {
                 onSearchClick={() => setIsSearchOpen(true)}
               />
             </div>
+            {/* Mobile-only search button — visible below the lg breakpoint
+                where the desktop search pill is hidden. size-11 = 44px touch
+                target per WCAG 2.5.5. */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="lg:hidden flex items-center justify-center size-11 rounded-md border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer select-none"
+              aria-label="Search the archive"
+            >
+              <Search className="size-4" />
+            </button>
             <nav className="hidden lg:flex gap-4 flex-wrap">
               <Link to="/sports" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Sports</Link>
               <Link to="/finance" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Finance</Link>
@@ -364,7 +446,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <CompanionSelector />
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
+              className="hidden lg:flex items-center gap-2 px-3 py-2.5 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900 text-neutral-400 hover:text-white text-xs transition-all cursor-pointer select-none"
               aria-label="Search the archive"
             >
               <Search className="size-3.5" />
