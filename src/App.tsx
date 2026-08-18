@@ -27,6 +27,7 @@ import { useOnlineStatus } from './hooks/useOnlineStatus';
 const SportsAlmanac = lazy(() => import('./pages/SportsAlmanac').then(m => ({ default: m.SportsAlmanac })));
 const EraGuide = lazy(() => import('./pages/EraGuide').then(m => ({ default: m.EraGuide })));
 const Quiz = lazy(() => import('./pages/Quiz').then(m => ({ default: m.Quiz })));
+const Run = lazy(() => import('./pages/Run').then(m => ({ default: m.Run })));
 const FinancialAlmanac = lazy(() => import('./pages/FinancialAlmanac').then(m => ({ default: m.FinancialAlmanac })));
 const DisasterPrevention = lazy(() => import('./pages/DisasterPrevention').then(m => ({ default: m.DisasterPrevention })));
 const TechTransfer = lazy(() => import('./pages/TechTransfer').then(m => ({ default: m.TechTransfer })));
@@ -248,6 +249,18 @@ export function Dashboard() {
           <CardContent>
             <Link to="/quiz" className={buttonVariants({ variant: "secondary", className: "w-full text-center" })}>
               Take the Quiz
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-neutral-900 border-neutral-800 hover:border-amber-500/50 transition-colors">
+          <CardHeader>
+            <CardTitle className="text-white">⚡ The Run</CardTitle>
+            <CardDescription className="text-neutral-400">Jump to an era with your almanac. Grow capital, keep your cover, retire rich.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link to="/run" className={buttonVariants({ variant: "secondary", className: "w-full text-center" })}>
+              Start a Run
             </Link>
           </CardContent>
         </Card>
@@ -482,6 +495,10 @@ function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/safety" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Safety</Link>
               <Link to="/quiz" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
                 Quiz
+                {!isOnline && <span className="ml-1 text-[9px] text-amber-400" aria-label="Offline">●</span>}
+              </Link>
+              <Link to="/run" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                Run
                 {!isOnline && <span className="ml-1 text-[9px] text-amber-400" aria-label="Offline">●</span>}
               </Link>
               <Link to="/bookmarks" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Bookmarks</Link>
@@ -822,6 +839,7 @@ function App() {
             <Route path="/butterfly" element={<Lazy><ButterflyCalculator /></Lazy>} />
             <Route path="/safety" element={<Lazy><SafetyProtocols /></Lazy>} />
             <Route path="/quiz" element={<Lazy><Quiz /></Lazy>} />
+            <Route path="/run" element={<Lazy><Run /></Lazy>} />
             <Route path="/timeline" element={<Lazy><TemporalMap /></Lazy>} />
             <Route path="/blueprints" element={<Lazy><BootstrapBlueprints /></Lazy>} />
             <Route path="/bookmarks" element={<Lazy><Bookmarks /></Lazy>} />
