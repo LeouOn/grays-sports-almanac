@@ -3,7 +3,7 @@ import cors from 'cors';
 import { streamText, tool, convertToModelMessages } from 'ai';
 import { z } from 'zod';
 import dotenv from 'dotenv';
-import { initAthenaDb, runFeatureMigrations, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
+import { initAthenaDb, runFeatureMigrations, runRunMigrations, seedStaticContent, getSessionNotes, insertSessionNote } from './db.js';
 import { registerEntries } from './entry-registry.js';
 import { requestLogger } from './middleware.js';
 import { createAthenaRoutes } from './athena-routes.js';
@@ -23,6 +23,7 @@ const athenaDb = initAthenaDb('data/athena.db');
 registerEntries(athenaDb);
 seedStaticContent(athenaDb, athenaStatic as { mnemonics: Record<string, string>; quizReactions: Record<string, string> });
 runFeatureMigrations(athenaDb._db);
+runRunMigrations(athenaDb._db);
 console.log('[athena] SQLite cache initialized');
 
 const app = express();
@@ -132,6 +133,7 @@ app.get('/api/models', async (req, res) => {
 import { KNOWLEDGE_MODULES } from './knowledge/index.js';
 import { createApiV1Router } from './api-v1.js';
 import { createPalaceLinkHandler } from './palaceLinkHandler.js';
+import { createRunRoutes } from './run-routes.js';
 
 app.post('/api/chat', async (req, res) => {
   const { messages, tier, provider, model: modelOverride, companionName, companionPrompt, eras, categories, subcategories, sessionId } = req.body;
@@ -416,6 +418,7 @@ app.post('/api/companion/palace-link', createPalaceLinkHandler());
 app.use('/api/v1', createApiV1Router());
 app.use('/api/athena', createAthenaRoutes(athenaDb));
 app.use('/api/features', createFeatureRoutes(athenaDb));
+app.use('/api/run', createRunRoutes(athenaDb));
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
