@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import type { Beat } from '@/hooks/useRun';
 
-export function BeatView({ beat, correct, onChoose, onAnswer, busy }: {
+export function BeatView({ beat, correct, onChoose, onAnswer, onAdvance, busy }: {
   beat: Beat;
   correct: boolean | null;
   onChoose: (choiceId: string) => void;
   onAnswer: (idx: number) => void;
+  onAdvance: () => void;
   busy: boolean;
 }) {
   const [picked, setPicked] = useState<number | null>(null);
@@ -46,6 +47,15 @@ export function BeatView({ beat, correct, onChoose, onAnswer, busy }: {
             <p className={`text-sm ${correct ? 'text-emerald-400' : 'text-red-400'}`}>
               {correct ? 'Correct — the locals buy your cover.' : 'Wrong — a few eyebrows rise.'} (Source: {kc.sourceArticle})
             </p>
+          )}
+          {correct !== null && (
+            <button
+              onClick={onAdvance}
+              disabled={busy}
+              className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-colors cursor-pointer disabled:opacity-50"
+            >
+              Continue →
+            </button>
           )}
         </div>
       ) : (

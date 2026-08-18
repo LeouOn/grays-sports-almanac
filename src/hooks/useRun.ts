@@ -34,28 +34,35 @@ export function useRun(companionId: string) {
   const [phase, setPhase] = useState<Phase>('setup');
   const [run, setRun] = useState<RunState | null>(null);
   const [beat, setBeat] = useState<Beat | null>(null);
+  const [pendingNext, setPendingNext] = useState<Beat | null>(null);
   const [correct, setCorrect] = useState<boolean | null>(null);
   const [score, setScore] = useState<number | null>(null);
 
   const start = useCallback(async (era: string) => {
     const data = await post<{ run: RunState; beat: Beat }>('/api/run/start', { era, companionId });
-    setRun(data.run); setBeat(data.beat); setCorrect(null); setScore(null);
+    setRun(data.run); setBeat(data.beat); setPendingNext(null); setCorrect(null); setScore(null);
     setPhase('playing');
   }, [companionId]);
 
   const choose = useCallback(async (choiceId: string) => {
     if (!run) return;
     const data = await post<{ run: RunState; beat: Beat | null }>(`/api/run/${run.runId}/choice`, { choiceId });
-    setRun(data.run); setBeat(data.beat); setCorrect(null);
+    setRun(data.run); setBeat(data.beat); setPendingNext(null); setCorrect(null);
     if (data.run.outcome !== 'active') setPhase('summary');
   }, [run]);
 
   const answer = useCallback(async (answerIndex: number) => {
     if (!run) return;
     const data = await post<{ correct: boolean; run: RunState; beat: Beat | null }>(`/api/run/${run.runId}/knowledge-check`, { answerIndex });
-    setRun(data.run); setBeat(data.beat); setCorrect(data.correct);
-    if (data.run.outcome !== 'active') setPhase('summary');
+    setRun(data.run); setPendingNext(data.beat); setCorrect(data.correct);
   }, [run]);
+
+  const advance = useCallback(() => {
+    setBeat(pendingNext);
+    setPendingNext(null);
+    setCorrect(null);
+    if (run && run.outcome !== 'active') setPhase('summary');
+  }, [pendingNext, run]);
 
   const retire = useCallback(async () => {
     if (!run) return;
@@ -64,8 +71,8 @@ export function useRun(companionId: string) {
   }, [run]);
 
   const reset = useCallback(() => {
-    setPhase('setup'); setRun(null); setBeat(null); setCorrect(null); setScore(null);
+    setPhase('setup'); setRun(null); setBeat(null); setPendingNext(null); setCorrect(null); setScore(null);
   }, []);
 
-  return { phase, run, beat, correct, score, start, choose, answer, retire, reset };
+  return { phase, run, beat, pendingNext, correct, score, start, choose, answer, advance, retire, reset };
 }

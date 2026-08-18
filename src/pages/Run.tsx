@@ -8,7 +8,7 @@ import { RunSummary } from '@/components/run/RunSummary';
 
 export function Run() {
   const { activeCompanion } = useCompanion();
-  const { phase, run, beat, correct, score, start, choose, answer, retire, reset } = useRun(activeCompanion.id);
+  const { phase, run, beat, correct, score, start, choose, answer, advance, retire, reset } = useRun(activeCompanion.id);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,9 +36,10 @@ export function Run() {
   return (
     <div className="space-y-6 max-w-2xl">
       <RunHUD meters={run.meters} />
-      <BeatView beat={beat} correct={correct} busy={busy}
+      <BeatView key={beat.index} beat={beat} correct={correct} busy={busy}
         onChoose={(id) => void wrap(() => choose(id))()}
-        onAnswer={(i) => void wrap(() => answer(i))()} />
+        onAnswer={(i) => void wrap(() => answer(i))()}
+        onAdvance={() => void wrap(advance)()} />
       {run.beatIndex >= 6 && (
         <button
           onClick={() => void wrap(retire)()}
