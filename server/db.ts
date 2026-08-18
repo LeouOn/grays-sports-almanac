@@ -1,4 +1,5 @@
 import Database from 'better-sqlite3';
+import type { RunState, Beat } from './run-engine.js';
 
 export interface AthenaDb {
   _db: Database.Database;
@@ -272,4 +273,110 @@ SELECT * FROM session_notes WHERE session_id = ? ORDER BY created_at ASC
 
 export function getSessionNotes(db: AthenaDb, sessionId: string): SessionNoteRow[] {
   return db._db.prepare(GET_SESSION_NOTES).all(sessionId) as SessionNoteRow[];
+}
+
+// --- The Run (game) persistence ---
+
+const RUN_MIGRATIONS = `
+CREATE TABLE IF NOT EXISTS runs (
+  run_id        TEXT PRIMARY KEY,
+  era           TEXT NOT NULL,
+  companion_id  TEXT NOT NULL,
+  beat_index    INTEGER NOT NULL DEFAULT 0,
+  total_beats   INTEGER NOT NULL DEFAULT 10,
+  capital       INTEGER NOT NULL,
+  reputation    INTEGER NOT NULL,
+  temporal_risk INTEGER NOT NULL,
+  outcome       TEXT NOT NULL DEFAULT 'active',
+  checks_asked  INTEGER NOT NULL DEFAULT 0,
+  checks_correct INTEGER NOT NULL DEFAULT 0,
+  created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS run_beats (
+  run_id     TEXT NOT NULL,
+  beat_index INTEGER NOT NULL,
+  type       TEXT NOT NULL,
+  title      TEXT NOT NULL,
+  narrative  TEXT NOT NULL,
+  payload    TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (run_id, beat_index)
+);
+`;
+
+export function runRunMigrations(db: Database.Database): void {
+  db.exec(RUN_MIGRATIONS);
+}
+
+interface RunRow {
+  run_id: string; era: string; companion_id: string;
+  beat_index: number; total_beats: number;
+  capital: number; reputation: number; temporal_risk: number;
+  outcome: string; checks_asked: number; checks_correct: number;
+}
+
+function rowToState(r: RunRow): RunState {
+  return {
+    runId: r.run_id, era: r.era as RunState['era'], companionId: r.companion_id,
+    beatIndex: r.beat_index, totalBeats: r.total_beats,
+    meters: { capital: r.capital, reputation: r.reputation, temporalRisk: r.temporal_risk },
+    outcome: r.outcome as RunState['outcome'],
+    checksAsked: r.checks_asked, checksCorrect: r.checks_correct,
+  };
+}
+
+export function insertRun(db: AthenaDb, state: RunState): void {
+  db._db.prepare(`
+    INSERT INTO runs (run_id, era, companion_id, beat_index, total_beats, capital, reputation, temporal_risk, outcome, checks_asked, checks_correct)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    state.runId, state.era, state.companionId, state.beatIndex, state.totalBeats,
+    state.meters.capital, state.meters.reputation, state.meters.temporalRisk,
+    state.outcome, state.checksAsked, state.checksCorrect,
+  );
+}
+
+export function getRun(db: AthenaDb, runId: string): RunState | null {
+  const row = db._db.prepare('SELECT * FROM runs WHERE run_id = ?').get(runId) as RunRow | undefined;
+  return row ? rowToState(row) : null;
+}
+
+export function updateRun(db: AthenaDb, state: RunState): void {
+  db._db.prepare(`
+    UPDATE runs SET beat_index=?, capital=?, reputation=?, temporal_risk=?, outcome=?, checks_asked=?, checks_correct=?, updated_at=datetime('now')
+    WHERE run_id=?
+  `).run(
+    state.beatIndex, state.meters.capital, state.meters.reputation, state.meters.temporalRisk,
+    state.outcome, state.checksAsked, state.checksCorrect, state.runId,
+  );
+}
+
+export function insertBeat(db: AthenaDb, runId: string, beat: Beat): void {
+  db._db.prepare(`
+    INSERT OR REPLACE INTO run_beats (run_id, beat_index, type, title, narrative, payload)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(
+    runId, beat.index, beat.type, beat.title, beat.narrative,
+    JSON.stringify({ choices: beat.choices, knowledgeCheck: beat.knowledgeCheck, companionQuip: beat.companionQuip }),
+  );
+}
+
+export function getBeats(db: AthenaDb, runId: string): Beat[] {
+  const rows = db._db.prepare('SELECT * FROM run_beats WHERE run_id = ? ORDER BY beat_index ASC').all(runId) as {
+    beat_index: number; type: string; title: string; narrative: string; payload: string;
+  }[];
+  return rows.map(r => {
+    const payload = JSON.parse(r.payload) as { choices?: Beat['choices']; knowledgeCheck?: Beat['knowledgeCheck']; companionQuip?: string };
+    return {
+      index: r.beat_index,
+      type: r.type as Beat['type'],
+      title: r.title,
+      narrative: r.narrative,
+      choices: payload.choices ?? [],
+      knowledgeCheck: payload.knowledgeCheck,
+      companionQuip: payload.companionQuip,
+    };
+  });
 }
