@@ -52,7 +52,7 @@ New frontend (following existing `src/pages/*` patterns):
 
 Persistence (better-sqlite3, existing `server/db.ts`):
 
-- `runs` — id, user session, era, companion id, started/ended timestamps, outcome (`active|retired|exiled`), final score.
+- `runs` — id, local session id (same anonymous-session pattern used by quiz/progress), era, companion id, started/ended timestamps, outcome (`active|retired|exiled`), final score.
 - `run_beats` — run id, beat index, beat type, narrative, choices JSON, chosen index, meter snapshot, knowledge-check Q/A.
 
 ### Engine/LLM split (deliberate)
