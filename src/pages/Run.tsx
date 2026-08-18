@@ -12,7 +12,7 @@ export function Run() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const wrap = (fn: () => Promise<void>) => async () => {
+  const wrap = (fn: () => void | Promise<void>) => async () => {
     setBusy(true); setError(null);
     try { await fn(); } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
     finally { setBusy(false); }
