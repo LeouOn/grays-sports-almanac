@@ -64,11 +64,9 @@ export function createRunRoutes(db: AthenaDb, deps: RunRouteDeps = {}): Router {
     const model = resolveModel();
     let beat: Beat;
     if (type === 'knowledge_check') {
-      // genCheck accepts the null model — Task 5's implementation returns its
-      // template check on that path without touching the model param.
       beat = await genCheck({
         state,
-        model: model as unknown as LanguageModelV2,
+        model,
         kiwix: model ? kiwix : null,
         curatedExcerpt: excerpt,
       });
@@ -131,7 +129,7 @@ export function createRunRoutes(db: AthenaDb, deps: RunRouteDeps = {}): Router {
       const next = applyChoice(state, current, req.body?.choiceId);
       updateRun(db, next);
       const beat = next.outcome === 'active' ? await buildBeat(next) : null;
-      res.json({ run: next, beat });
+      res.json({ run: next, beat, ...(next.outcome !== 'active' ? { score: computeScore(next) } : {}) });
     } catch (err) {
       handleRouteError(err, res);
     }
@@ -155,7 +153,7 @@ export function createRunRoutes(db: AthenaDb, deps: RunRouteDeps = {}): Router {
       const next = applyKnowledgeCheck(state, correct);
       updateRun(db, next);
       const beat = next.outcome === 'active' ? await buildBeat(next) : null;
-      res.json({ correct, run: next, beat });
+      res.json({ correct, run: next, beat, ...(next.outcome !== 'active' ? { score: computeScore(next) } : {}) });
     } catch (err) {
       handleRouteError(err, res);
     }
@@ -179,7 +177,7 @@ export function createRunRoutes(db: AthenaDb, deps: RunRouteDeps = {}): Router {
   router.get('/:id', (req, res) => {
     try {
       const state = loadActiveRun(req.params.id);
-      res.json({ run: state, beats: getBeats(db, state.runId) });
+      res.json({ run: state, beats: getBeats(db, state.runId), score: computeScore(state) });
     } catch (err) {
       handleRouteError(err, res);
     }

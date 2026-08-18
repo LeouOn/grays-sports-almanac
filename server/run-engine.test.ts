@@ -71,6 +71,15 @@ describe('knowledge checks, retire, score', () => {
     expect(s.checksCorrect).toBe(1);
   });
 
+  it('exiles via a wrong knowledge check at high temporal risk', () => {
+    const s = applyKnowledgeCheck(
+      { ...createRun('2000s', 'doc', 'run-risk'), meters: { capital: 100, reputation: 50, temporalRisk: 97 } },
+      false,
+    );
+    expect(s.outcome).toBe('exiled');
+    expect(s.checksAsked).toBe(1);
+  });
+
   it('canRetire only from beat 6', () => {
     expect(canRetire({ ...base(), beatIndex: 5 })).toBe(false);
     expect(canRetire({ ...base(), beatIndex: 6 })).toBe(true);

@@ -103,7 +103,7 @@ export async function generateBeat(args: {
 
 export async function generateKnowledgeCheckBeat(args: {
   state: RunState;
-  model: LanguageModelV2;
+  model: LanguageModelV2 | null;
   kiwix: KiwixClient | null;
   curatedExcerpt: string;
 }): Promise<Beat> {
@@ -116,7 +116,7 @@ export async function generateKnowledgeCheckBeat(args: {
     choices: [],
   };
 
-  if (process.env.RUN_LLM_STUB === '1' || !kiwix) {
+  if (process.env.RUN_LLM_STUB === '1' || !kiwix || !model) {
     return { ...base, knowledgeCheck: TEMPLATE_CHECK };
   }
 

@@ -46,15 +46,16 @@ export function useRun(companionId: string) {
 
   const choose = useCallback(async (choiceId: string) => {
     if (!run) return;
-    const data = await post<{ run: RunState; beat: Beat | null }>(`/api/run/${run.runId}/choice`, { choiceId });
+    const data = await post<{ run: RunState; beat: Beat | null; score?: number }>(`/api/run/${run.runId}/choice`, { choiceId });
     setRun(data.run); setBeat(data.beat); setPendingNext(null); setCorrect(null);
-    if (data.run.outcome !== 'active') setPhase('summary');
+    if (data.run.outcome !== 'active') { setScore(data.score ?? null); setPhase('summary'); }
   }, [run]);
 
   const answer = useCallback(async (answerIndex: number) => {
     if (!run) return;
-    const data = await post<{ correct: boolean; run: RunState; beat: Beat | null }>(`/api/run/${run.runId}/knowledge-check`, { answerIndex });
+    const data = await post<{ correct: boolean; run: RunState; beat: Beat | null; score?: number }>(`/api/run/${run.runId}/knowledge-check`, { answerIndex });
     setRun(data.run); setPendingNext(data.beat); setCorrect(data.correct);
+    if (data.run.outcome !== 'active') setScore(data.score ?? null);
   }, [run]);
 
   const advance = useCallback(() => {

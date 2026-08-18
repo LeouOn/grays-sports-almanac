@@ -88,6 +88,7 @@ describe('Run Routes', () => {
 
     const get = await request(app).get(`/api/run/${runId}`);
     expect(get.body.beats.length).toBeGreaterThanOrEqual(6);
+    expect(typeof get.body.score).toBe('number');
   });
 
   // Amendment: keyless operation — resolveModelFn throws, router must still
