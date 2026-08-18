@@ -8,20 +8,28 @@
  * Use for sensitive values like LLM API keys.
  */
 import { isNative } from './platform';
-// @ts-expect-error - capacitor-secure-storage-plugin has no bundled types
-import { SecureStorage } from 'capacitor-secure-storage-plugin';
 
-const secure = SecureStorage as {
+interface SecureStoragePlugin {
   getItem(opts: { key: string }): Promise<{ value: string | null }>;
   setItem(opts: { key: string; value: string }): Promise<void>;
   removeItem(opts: { key: string }): Promise<void>;
   clear(): Promise<void>;
   keys(): Promise<{ keys: string[] }>;
-};
+}
+
+// The plugin is loaded lazily: its package has no web-compatible ESM export,
+// so a static top-level import crashes the browser bundle at startup. On web
+// this is never called — every method gates on isNative() first.
+async function getSecure(): Promise<SecureStoragePlugin> {
+  // @ts-expect-error - capacitor-secure-storage-plugin has no bundled types
+  const mod = await import('capacitor-secure-storage-plugin');
+  return mod.SecureStorage as SecureStoragePlugin;
+}
 
 export const secureStorage = {
   async get(key: string): Promise<string | null> {
     if (isNative()) {
+      const secure = await getSecure();
       const { value } = await secure.getItem({ key });
       return value;
     }
@@ -30,6 +38,7 @@ export const secureStorage = {
 
   async set(key: string, value: string): Promise<void> {
     if (isNative()) {
+      const secure = await getSecure();
       await secure.setItem({ key, value });
       return;
     }
@@ -38,6 +47,7 @@ export const secureStorage = {
 
   async remove(key: string): Promise<void> {
     if (isNative()) {
+      const secure = await getSecure();
       await secure.removeItem({ key });
       return;
     }
@@ -46,6 +56,7 @@ export const secureStorage = {
 
   async keys(): Promise<string[]> {
     if (isNative()) {
+      const secure = await getSecure();
       const { keys } = await secure.keys();
       return keys;
     }
@@ -59,6 +70,7 @@ export const secureStorage = {
 
   async clear(): Promise<void> {
     if (isNative()) {
+      const secure = await getSecure();
       await secure.clear();
       return;
     }
