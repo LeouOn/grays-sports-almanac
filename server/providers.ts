@@ -21,7 +21,7 @@ export const KEY_ENV_MAP: Record<ProviderId, string> = {
   openai:     'OPENAI_API_KEY',
   deepseek:   'DEEPSEEK_API_KEY',
   openrouter: 'OPENROUTER_API_KEY',
-  zai:        'ZAI_API_KEY',
+  zai:        'ZAI_API_KEY',      // ZHIPU_API_KEY is also accepted as a fallback (see getModel).
   minimax:    'MINIMAX_API_KEY',
   gemini:     'GOOGLE_GENERATIVE_AI_API_KEY',
   claude:     'ANTHROPIC_API_KEY',
@@ -31,9 +31,9 @@ export const KEY_ENV_MAP: Record<ProviderId, string> = {
 export const PROVIDER_DEFAULTS: Record<ProviderId, { model: string; baseURL?: string }> = {
   openai:     { model: process.env.OPENAI_MODEL     || 'gpt-4o',                          baseURL: 'https://api.openai.com/v1' },
   deepseek:   { model: process.env.DEEPSEEK_MODEL   || 'deepseek-v4-flash',               baseURL: 'https://api.deepseek.com' },
-  openrouter: { model: process.env.OPENROUTER_MODEL  || 'anthropic/claude-sonnet-latest', baseURL: 'https://openrouter.ai/api/v1' },
+  openrouter: { model: process.env.OPENROUTER_MODEL  || 'google/gemini-2.5-flash', baseURL: 'https://openrouter.ai/api/v1' },
   zai:        { model: process.env.ZAI_MODEL         || 'glm-5.1',                         baseURL: 'https://open.bigmodel.cn/api/paas/v4' },
-  minimax:    { model: process.env.MINIMAX_MODEL     || 'minimax-m3',                      baseURL: 'https://api.minimax.chat/v1' },
+  minimax:    { model: process.env.MINIMAX_MODEL     || 'MiniMax-M2',              baseURL: 'https://api.minimax.io/v1' },
   gemini:     { model: process.env.GEMINI_MODEL      || 'gemini-2.0-flash' },
   claude:     { model: process.env.CLAUDE_MODEL      || 'claude-sonnet-4-20250514',        baseURL: 'https://api.anthropic.com/v1' },
   ollama:     { model: process.env.OLLAMA_MODEL      || 'llama3.3',                        baseURL: process.env.OLLAMA_BASE_URL || 'http://localhost:11434/v1' },
@@ -58,7 +58,7 @@ export function getModel(providerId: ProviderId, modelName?: string): LanguageMo
   }
   const model = modelName || cfg.model;
   const keyEnv = KEY_ENV_MAP[providerId];
-  const apiKey = process.env[keyEnv];
+  const apiKey = process.env[keyEnv] ?? (providerId === 'zai' ? process.env.ZHIPU_API_KEY : undefined);
   const keyRequired = !OPTIONAL_KEY_PROVIDERS.has(providerId);
   if (keyRequired && !apiKey) {
     throw new Error(`${keyEnv} not set for provider "${providerId}"`);

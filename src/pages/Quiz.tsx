@@ -21,9 +21,9 @@ const PROVIDERS: { id: ProviderId; label: string; icon: string; defaultModel: st
   { id: 'claude',     label: 'Claude',     icon: '🟠', defaultModel: 'claude-sonnet-4-20250514' },
   { id: 'deepseek',   label: 'DeepSeek',   icon: '🐋', defaultModel: 'deepseek-v4-flash' },
   { id: 'zai',        label: 'GLM',        icon: '🧠', defaultModel: 'glm-5.1' },
-  { id: 'minimax',    label: 'MiniMax',    icon: '⚡', defaultModel: 'minimax-m3' },
+  { id: 'minimax',    label: 'MiniMax',    icon: '⚡', defaultModel: 'MiniMax-M2' },
   { id: 'openai',     label: 'OpenAI',     icon: '🟢', defaultModel: 'gpt-4o' },
-  { id: 'openrouter', label: 'OpenRouter', icon: '🔀', defaultModel: 'anthropic/claude-sonnet-latest' },
+  { id: 'openrouter', label: 'OpenRouter', icon: '🔀', defaultModel: 'google/gemini-2.5-flash' },
   { id: 'ollama',     label: 'Ollama',     icon: '🦙', defaultModel: 'llama3.3' },
 ];
 

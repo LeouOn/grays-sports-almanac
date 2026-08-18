@@ -31,7 +31,7 @@ vi.mock('@ai-sdk/openai', () => ({
   })),
 }));
 
-import { getModel, callProviderChain, mapLLMError, LLMError, type ProviderId } from './providers.js';
+import { getModel, callProviderChain, mapLLMError, LLMError, PROVIDER_DEFAULTS, type ProviderId } from './providers.js';
 import { google } from '@ai-sdk/google';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createOpenAI } from '@ai-sdk/openai';
@@ -45,6 +45,7 @@ const ENV_KEYS = [
   'GOOGLE_GENERATIVE_AI_API_KEY',
   'ANTHROPIC_API_KEY',
   'OLLAMA_API_KEY',
+  'ZHIPU_API_KEY',
 ];
 
 // Snapshot the original env so we can restore it between tests.
@@ -78,7 +79,7 @@ describe('getModel (provider configuration) — missing API key', () => {
     expect(() => getModel('openrouter')).toThrow(/OPENROUTER_API_KEY not set/);
   });
 
-  it('throws when ZAI_API_KEY is unset', () => {
+  it('throws when ZAI_API_KEY (and ZHIPU_API_KEY) is unset', () => {
     expect(() => getModel('zai')).toThrow(/ZAI_API_KEY not set/);
   });
 
@@ -149,7 +150,7 @@ describe('getModel (provider configuration) — model construction', () => {
     process.env.OPENROUTER_API_KEY = 'test-openrouter-key';
     const model = getModel('openrouter') as { __sdk: string; model: string };
     expect(model.__sdk).toBe('openai-compat');
-    expect(model.model).toBe('anthropic/claude-sonnet-latest');
+    expect(model.model).toBe('google/gemini-2.5-flash');
     expect(createOpenAI).toHaveBeenCalledWith(
       expect.objectContaining({
         baseURL: 'https://openrouter.ai/api/v1',
@@ -176,10 +177,10 @@ describe('getModel (provider configuration) — model construction', () => {
     const model = getModel('minimax') as { __sdk: string; model: string };
     // CRITICAL: minimax must use the OpenAI-compatible handler, not Anthropic.
     expect(model.__sdk).toBe('openai-compat');
-    expect(model.model).toBe('minimax-m3');
+    expect(model.model).toBe('MiniMax-M2');
     expect(createOpenAI).toHaveBeenCalledWith(
       expect.objectContaining({
-        baseURL: 'https://api.minimax.chat/v1',
+        baseURL: 'https://api.minimax.io/v1',
         apiKey: 'test-minimax-key',
       }),
     );
@@ -214,6 +215,29 @@ describe('getModel (provider configuration) — model construction', () => {
     // provider" branch — pin that behavior so future refactors don't
     // silently swallow it.
     expect(() => getModel('made-up-provider' as unknown as ProviderId)).toThrow();
+  });
+
+  it('minimax targets the international endpoint with MiniMax-M2', () => {
+    expect(PROVIDER_DEFAULTS.minimax.baseURL).toBe('https://api.minimax.io/v1');
+    expect(PROVIDER_DEFAULTS.minimax.model).toBe('MiniMax-M2');
+  });
+
+  it('openrouter defaults to a live model id', () => {
+    expect(PROVIDER_DEFAULTS.openrouter.model).toBe('google/gemini-2.5-flash');
+  });
+
+  it('zai falls back to ZHIPU_API_KEY when ZAI_API_KEY is unset', () => {
+    const savedZai = process.env.ZAI_API_KEY;
+    const savedZhipu = process.env.ZHIPU_API_KEY;
+    delete process.env.ZAI_API_KEY;
+    process.env.ZHIPU_API_KEY = 'zhipu-test-key';
+    try {
+      expect(() => getModel('zai')).not.toThrow();
+    } finally {
+      if (savedZai !== undefined) process.env.ZAI_API_KEY = savedZai;
+      if (savedZhipu !== undefined) process.env.ZHIPU_API_KEY = savedZhipu;
+      else delete process.env.ZHIPU_API_KEY;
+    }
   });
 });
 
