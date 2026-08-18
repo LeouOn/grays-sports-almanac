@@ -16,6 +16,7 @@
     "preview": "vite preview",
     "analyze": "vite build --mode analyze",
     "check:bundle": "node scripts/check-bundle-size.mjs",
+    "kiwix:setup": "node scripts/kiwix-setup.mjs",
     "build:check": "vite build && node scripts/check-bundle-size.mjs",
     "build:web": "vite build",
     "build:android": "vite build && cap sync android",
