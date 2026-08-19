@@ -47,3 +47,9 @@ keystore.properties
 .omo/run-continuation/
 .omo/notepads/
 .omo/boulder.json
+
+# Subagent-driven-development scratch (task briefs, reports, progress ledger)
+.superpowers/
+
+# Playwright output
+test-results/
