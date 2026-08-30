@@ -28,24 +28,29 @@ export function htmlToText(html: string, maxChars = 4000): string {
   return cut.slice(0, cut.lastIndexOf(' ')) + '…';
 }
 
-// kiwix-serve /search?format=xml returns an Atom-ish feed whose entries link
-// to /raw/{zim}/content/A/{path}. Regex-based parsing is deliberate: the feed
-// is simple and adding an XML dependency for it is not justified.
 export function parseSearchXml(xml: string): WikiSearchResult[] {
   const results: WikiSearchResult[] = [];
-  const entryRe = /<entry>([\s\S]*?)<\/entry>/g;
+
+  // Real kiwix-serve /search?format=xml emits RSS (<rss><channel><item>...)
+  // with links shaped /content/<bookName>/<Article_Path>. Older builds
+  // may emit Atom (<feed><entry>...) with /raw/<book>/content/A/<...> links;
+  // we keep Atom handling for compatibility but the live server is RSS.
+  const itemRe = /<item>([\s\S]*?)<\/item>/g;
   let m: RegExpExecArray | null;
-  while ((m = entryRe.exec(xml)) !== null) {
+  while ((m = itemRe.exec(xml)) !== null) {
     const block = m[1];
     const title = /<title>([\s\S]*?)<\/title>/.exec(block)?.[1];
-    const href = /<link[^>]*href="([^"]*)"/.exec(block)?.[1];
-    const snippet = /<summary>([\s\S]*?)<\/summary>/.exec(block)?.[1] ?? '';
-    if (!title || !href) continue;
-    const pathMatch = /\/content\/A\/([^"?#]+)/.exec(href);
-    if (!pathMatch) continue;
+    const link = /<link>([\s\S]*?)<\/link>/.exec(block)?.[1];
+    const snippet = /<description>([\s\S]*?)<\/description>/.exec(block)?.[1] ?? '';
+    if (!title || !link) continue;
+    const decoded = decodeEntities(link.trim());
+    // /content/<book>/<path...> - drop leading empty, 'content', and book.
+    const segments = decoded.replace(/^\//, '').split('/').map(seg => decodeURIComponent(seg));
+    if (segments.length < 3) continue;
+    const articlePath = segments.slice(2).join('/');
     results.push({
       title: decodeEntities(title).trim(),
-      path: decodeURIComponent(pathMatch[1]),
+      path: articlePath,
       snippet: htmlToText(snippet, 300),
     });
   }

@@ -2,32 +2,48 @@ import { describe, it, expect } from 'vitest';
 import { parseSearchXml, htmlToText, KiwixClient, createWikiTools } from './wiki-tools.js';
 
 const SEARCH_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <entry>
-    <title>Babe Ruth</title>
-    <link href="/raw/wikipedia_en_top_nopic/content/A/Babe_Ruth"/>
-    <summary>American baseball player (1895–1948) …</summary>
-  </entry>
-  <entry>
-    <title>1978 World Series</title>
-    <link href="/raw/wikipedia_en_top_nopic/content/A/1978_World_Series"/>
-    <summary>The 1978 World Series was the championship series …</summary>
-  </entry>
-</feed>`;
+<rss version="2.0"
+     xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Search: Miracle on Ice</title>
+    <link>/search?pattern=Miracle%20on%20Ice&amp;format=xml</link>
+    <description>Search result for Miracle on Ice</description>
+    <item>
+      <title>Miracle on Ice</title>
+      <link>/content/wikipedia_en_top_mini_2026-06/Miracle_on_Ice</link>
+      <description><b>on</b> <b>Ice</b> 1980 Winter Olympics in Lake Placid...</description>
+      <book><title>Best of Wikipedia</title></book>
+      <wordCount>499</wordCount>
+    </item>
+    <item>
+      <title>1980 Winter Olympics</title>
+      <link>/content/wikipedia_en_top_mini_2026-06/1980_Winter_Olympics</link>
+      <description>International multi-sport event held in the United States.</description>
+      <book><title>Best of Wikipedia</title></book>
+      <wordCount>1100</wordCount>
+    </item>
+  </channel>
+</rss>`;
 
-describe('parseSearchXml', () => {
-  it('extracts title, path (without A/ prefix), and snippet', () => {
+describe('parseSearchXml (live RSS shape)', () => {
+  it('extracts title, path (without book prefix), and snippet from <item> blocks', () => {
     const results = parseSearchXml(SEARCH_XML);
     expect(results).toHaveLength(2);
     expect(results[0]).toEqual({
-      title: 'Babe Ruth',
-      path: 'Babe_Ruth',
-      snippet: 'American baseball player (1895–1948) …',
+      title: 'Miracle on Ice',
+      path: 'Miracle_on_Ice',
+      snippet: 'on Ice 1980 Winter Olympics in Lake Placid...',
     });
   });
 
   it('returns [] on malformed xml', () => {
     expect(parseSearchXml('not xml at all')).toEqual([]);
+  });
+
+  it('decodes percent-encoding in the article path', () => {
+    const xml = `<rss><channel><item><title>X</title><link>/content/foo/Babe%20Ruth</link><description></description></item></channel></rss>`;
+    expect(parseSearchXml(xml)).toEqual([{ title: 'X', path: 'Babe Ruth', snippet: '' }]);
   });
 });
 
@@ -65,7 +81,7 @@ describe('KiwixClient', () => {
     expect(calls[0]).toContain('books.name=my_zim');
     expect(calls[0]).toContain('format=xml');
     expect(calls[0]).toContain('pageLength=3');
-    expect(results[0].path).toBe('Babe_Ruth');
+    expect(results[0].path).toBe('Miracle_on_Ice');
   });
 
   it('readArticle fetches /raw/{zim}/content/A/{path} and returns text', async () => {
