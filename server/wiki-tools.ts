@@ -32,9 +32,8 @@ export function parseSearchXml(xml: string): WikiSearchResult[] {
   const results: WikiSearchResult[] = [];
 
   // Real kiwix-serve /search?format=xml emits RSS (<rss><channel><item>...)
-  // with links shaped /content/<bookName>/<Article_Path>. Older builds
-  // may emit Atom (<feed><entry>...) with /raw/<book>/content/A/<...> links;
-  // we keep Atom handling for compatibility but the live server is RSS.
+  // with links shaped /content/<bookName>/<Article_Path>. The article path
+  // we feed to wikiRead strips the /content/<bookName>/ prefix.
   const itemRe = /<item>([\s\S]*?)<\/item>/g;
   let m: RegExpExecArray | null;
   while ((m = itemRe.exec(xml)) !== null) {
