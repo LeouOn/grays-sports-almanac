@@ -3,6 +3,7 @@
 import { era_1950__culture__sports } from './1950s_culture_sports.js';
 import { era_1950__science__tech } from './1950s_science_tech.js';
 import { era_1950__science__medical } from './1950s_science_medical.js';
+import { era_1950__economics__finance } from './1950s_economics_finance.js';
 import { era_1950__events__disasters } from './1950s_events_disasters.js';
 import { era_1950__engineering__cnc_machining } from './1950s_engineering_cnc_machining.js';
 import { era_1950__engineering__semiconductors } from './1950s_engineering_semiconductors.js';
@@ -12,6 +13,7 @@ import { era_1950__engineering__telecommunications } from './1950s_engineering_t
 import { era_1960__culture__sports } from './1960s_culture_sports.js';
 import { era_1960__science__tech } from './1960s_science_tech.js';
 import { era_1960__science__medical } from './1960s_science_medical.js';
+import { era_1960__economics__finance } from './1960s_economics_finance.js';
 import { era_1960__events__disasters } from './1960s_events_disasters.js';
 import { era_1960__engineering__cnc_machining } from './1960s_engineering_cnc_machining.js';
 import { era_1960__engineering__semiconductors } from './1960s_engineering_semiconductors.js';
@@ -29,6 +31,7 @@ import { era_1970__engineering__telecommunications } from './1970s_engineering_t
 import { era_1980__culture__sports } from './1980s_culture_sports.js';
 import { era_1980__culture__slang } from './1980s_culture_slang.js';
 import { era_1980__science__tech } from './1980s_science_tech.js';
+import { era_1980__science__medical } from './1980s_science_medical.js';
 import { era_1980__economics__prices } from './1980s_economics_prices.js';
 import { era_1980__economics__finance } from './1980s_economics_finance.js';
 import { era_1980__events__disasters } from './1980s_events_disasters.js';
@@ -60,6 +63,7 @@ export const KNOWLEDGE_MODULES: Record<string, Record<string, Record<string, str
       'medical': era_1950__science__medical,
     },
     'economics': {
+      'finance': era_1950__economics__finance,
     },
     'events': {
       'disasters': era_1950__events__disasters,
@@ -81,6 +85,7 @@ export const KNOWLEDGE_MODULES: Record<string, Record<string, Record<string, str
       'medical': era_1960__science__medical,
     },
     'economics': {
+      'finance': era_1960__economics__finance,
     },
     'events': {
       'disasters': era_1960__events__disasters,
@@ -120,6 +125,7 @@ export const KNOWLEDGE_MODULES: Record<string, Record<string, Record<string, str
     },
     'science': {
       'tech': era_1980__science__tech,
+      'medical': era_1980__science__medical,
     },
     'economics': {
       'prices': era_1980__economics__prices,
