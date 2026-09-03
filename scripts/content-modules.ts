@@ -118,6 +118,18 @@ const blueprintsSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+const confidenceSchema = z.preprocess(
+  (v) => {
+    if (typeof v !== 'string') return v;
+    const s = v.trim().toLowerCase();
+    // Models invent synonyms ("accurate", "verified"). Rather than guessing
+    // intent, an unrecognized value degrades to "estimated" - the enum's
+    // semantic meaning for unquantified trustworthiness.
+    return (['high', 'medium', 'low', 'estimated'] as const).includes(s as 'high') ? s : 'estimated';
+  },
+  z.enum(['high', 'medium', 'low', 'estimated']),
+);
+
 const engineeringSchema = z.object({
   id: z.string(),
   era: z.enum(['1950s','1960s','1970s','1980s','1990s','2000s']),
@@ -128,7 +140,7 @@ const engineeringSchema = z.object({
   provenance: z.object({
     sourceUrl: z.string(),
     sourceSite: z.string(),
-    confidence: z.enum(['high','medium','low','estimated']),
+    confidence: confidenceSchema,
     extractedAt: z.string(),
   }),
   tags: z.array(z.string()).optional(),

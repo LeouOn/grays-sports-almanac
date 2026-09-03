@@ -152,15 +152,15 @@ if (!Array.isArray(parsedRaw)) {
 const validated: unknown[] = [];
 let rejected = 0;
 let rejectSample = '';
+const rejectedSamples: { entry: unknown; issues: string[] }[] = [];
 for (const item of parsedRaw) {
   const r = (mod.schema as ZodTypeAny).safeParse(item);
   if (r.success) validated.push(r.data);
   else {
     rejected += 1;
-    if (!rejectSample) {
-      const first = r.error.issues[0];
-      rejectSample = `${first?.path.join('.') || '(root)'}: ${first?.message}`;
-    }
+    const issues = r.error.issues.slice(0, 3).map(i => `${i.path.join('.') || '(root)'}: ${i.message}`);
+    if (!rejectSample) rejectSample = issues[0] ?? '';
+    if (rejectedSamples.length < 5) rejectedSamples.push({ entry: item, issues });
   }
 }
 if (rejected > 0) console.error(`rejected ${rejected}/${parsedRaw.length} entries; first issue - ${rejectSample}`);
@@ -186,6 +186,7 @@ writeFileSync(OUT, JSON.stringify({
   schemaVersion: 1,
   counts: { generated: parsedRaw.length, validated: validated.length, rejected, deduped },
   entries,
+  rejectedSamples,
   sources,
 }, null, 2));
 
