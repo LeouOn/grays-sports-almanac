@@ -4,11 +4,9 @@ import {
   type Beat, type RunState,
 } from './run-engine.js';
 import { KiwixClient, createWikiTools } from './wiki-tools.js';
-import { callProviderChain, getModel, type ProviderId } from './providers.js';
+import { callProviderChain, getModel, stripThinkTags, type ProviderId } from './providers.js';
 
-export function stripThinkTags(text: string): string {
-  return text.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim();
-}
+export { stripThinkTags };
 
 export function extractJson(text: string): unknown {
   const clean = stripThinkTags(text);

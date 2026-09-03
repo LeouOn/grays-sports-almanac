@@ -339,6 +339,34 @@ describe('callProviderChain (fallback order)', () => {
     expect(generateTextMock).toHaveBeenCalledTimes(1);
   });
 
+  it('strips <think> reasoning blocks from the returned comment', async () => {
+    process.env.MINIMAX_API_KEY = 'k';
+    generateTextMock.mockResolvedValueOnce({
+      text: '<think>\ninner monologue about the era\n</think>\nGreat Scott!',
+    });
+
+    const result = await callProviderChain({
+      companionName: 'Doc',
+      companionPrompt: 'p',
+      contextItem: 'c',
+    });
+    expect(result.comment).toBe('Great Scott!');
+  });
+
+  it('strips an unterminated <think> block (model hit the token cap mid-reasoning)', async () => {
+    process.env.MINIMAX_API_KEY = 'k';
+    generateTextMock.mockResolvedValueOnce({
+      text: '<think>\ntruncated reasoning with no closing tag',
+    });
+
+    const result = await callProviderChain({
+      companionName: 'Doc',
+      companionPrompt: 'p',
+      contextItem: 'c',
+    });
+    expect(result.comment).toBe('');
+  });
+
   it('puts the user-requested provider first when specified, then falls back to default order', async () => {
     // provider='gemini' should reorder the chain to put gemini first.
     // Only set GOOGLE key, so the chain stops at gemini.

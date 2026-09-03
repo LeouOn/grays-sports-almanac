@@ -96,6 +96,13 @@ export class LLMError extends Error {
   }
 }
 
+// Reasoning models (MiniMax-M2, GLM) emit <think>...</think> blocks in their
+// completion text. Callers never want the model's inner monologue, so the
+// chain strips it before returning a comment.
+export function stripThinkTags(text: string): string {
+  return text.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim();
+}
+
 export function mapLLMError(err: unknown): LLMError {
   if (err instanceof LLMError) return err;
   const msg = err instanceof Error ? err.message : String(err);
@@ -162,7 +169,7 @@ Do not break character. Do not output anything other than your in-character dial
         prompt: `The user is currently reading this historical guide entry: "${contextItem}". What is your reaction?`,
       });
 
-      return { comment: response.text.trim(), provider: pid };
+      return { comment: stripThinkTags(response.text.trim()), provider: pid };
     } catch (err: unknown) {
       lastError = `${pid}: ${mapLLMError(err).message}`;
     }

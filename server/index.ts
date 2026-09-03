@@ -12,6 +12,7 @@ import {
   getModel,
   PROVIDER_DEFAULTS,
   KEY_ENV_MAP,
+  callProviderChain,
   type ProviderId,
 } from './providers.js';
 import athenaStatic from '../src/data/athena-static.json' with { type: 'json' };
@@ -367,48 +368,28 @@ Make sure they stay in character and react to what just happened. If the travele
 app.post('/api/companion/comment', async (req, res) => {
   const { companionName, companionPrompt, contextItem, provider } = req.body;
 
-  // Cost-ordered fallback: specified provider → MiniMax → Zhipu → DeepSeek → Google
-  const fallbackOrder: ProviderId[] = provider
-    ? [provider, 'minimax', 'zhipu', 'deepseek', 'google']
-    : ['minimax', 'zhipu', 'deepseek', 'google'];
+  // The frontend (CompanionContext) still persists legacy provider names;
+  // map them onto the canonical ProviderId values before delegating.
+  const LEGACY_PROVIDER_MAP: Partial<Record<string, ProviderId>> = {
+    google: 'gemini',
+    zhipu: 'zai',
+  };
+  const providerId = provider ? LEGACY_PROVIDER_MAP[provider] ?? provider : undefined;
 
-  let lastError = '';
-
-  for (const pid of fallbackOrder) {
-    // Skip if API key not set
-    const keyEnv = KEY_ENV_MAP[pid];
-    if (keyEnv && !process.env[keyEnv]) {
-      lastError = `${keyEnv} not set for ${pid}`;
-      continue;
-    }
-
-    try {
-      const model = getModel(pid);
-      const response = await generateText({
-        model,
-        system: `You are ${companionName}, a time travel companion.
-Here is your persona:
-"${companionPrompt}"
-
-Your job is to provide a single, short, witty, in-character comment (max 2 sentences) about the historical item or facts the user is currently looking at.
-Do not break character. Do not output anything other than your in-character dialogue. Do not wrap it in quotes.`,
-        prompt: `The user is currently reading this historical guide entry: "${contextItem}". What is your reaction?`
-      });
-
-      console.log(`[companion] used provider=${pid}`);
-      res.json({ comment: response.text.trim(), provider: pid });
-      return;
-    } catch (err: unknown) {
-      const errMessage = err instanceof Error ? err.message : String(err);
-      lastError = `${pid}: ${errMessage}`;
-      console.warn(`[companion] fallback from ${pid}: ${lastError}`);
-      // Continue to next provider
-    }
+  try {
+    const result = await callProviderChain({
+      companionName,
+      companionPrompt,
+      contextItem,
+      provider: providerId,
+    });
+    console.log(`[companion] used provider=${result.provider}`);
+    res.json(result);
+  } catch (err: unknown) {
+    const errMessage = err instanceof Error ? err.message : String(err);
+    console.error(`[companion] all providers failed. Last error: ${errMessage}`);
+    res.status(502).json({ error: errMessage });
   }
-
-  // All providers failed
-  console.error(`[companion] all providers failed. Last error: ${lastError}`);
-  res.status(502).json({ error: `All companion providers failed. Last: ${lastError}` });
 });
 
 // ── Runtime palace-link (cross-topic synthesis) ──────────────
