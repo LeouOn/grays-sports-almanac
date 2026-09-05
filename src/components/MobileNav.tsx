@@ -58,6 +58,7 @@ const navGroups: NavGroup[] = [
     icon: Bookmark,
     links: [
       { to: '/bookmarks', label: 'Bookmarks' },
+      { to: '/podcasts', label: 'Podcasts' },
       { to: '/progress', label: 'Progress' },
     ],
   },

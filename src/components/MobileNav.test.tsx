@@ -78,15 +78,15 @@ describe('MobileNav grouped drawer', () => {
     expect(screen.getByText('Progress')).toBeTruthy();
   });
 
-  it('total count: 18 nav links across 3 groups', async () => {
+  it('total count: 19 nav links across 3 groups', async () => {
     renderNav();
     fireEvent.click(screen.getByRole('button', { name: /open navigation menu/i }));
     await screen.findByText('Knowledge');
-    // 13 Knowledge + 3 AI Tools + 2 Personal = 18 nav links total.
+    // 13 Knowledge + 3 AI Tools + 3 Personal = 19 nav links total.
     // The 2 header buttons (companion, search) are <button> elements, not
-    // <a> tags, so getAllByRole('link') only counts the 18 nav links.
+    // <a> tags, so getAllByRole('link') only counts the 19 nav links.
     const links = screen.getAllByRole('link');
-    expect(links.length).toBe(18);
+    expect(links.length).toBe(19);
   });
 
   it('clicking a nav link closes the drawer and navigates', async () => {

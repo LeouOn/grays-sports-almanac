@@ -3,6 +3,7 @@ import { useProgress, type ProgressEntry } from '@/hooks/useProgress';
 import { Link } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartSkeleton } from '@/components/ChartSkeleton';
+import { formatActivity } from '@/lib/formatActivity';
 
 // Lazy-load the recharts-backed donut so the recharts vendor chunk is only
 // fetched when the Progress page renders. While it loads, an
@@ -25,15 +26,6 @@ const modules = [
 function modulePercentage(entry: ProgressEntry | undefined): number {
   if (!entry || entry.total_entries === 0) return 0;
   return Math.round((entry.entries_viewed / entry.total_entries) * 100);
-}
-
-function formatActivity(date: string | null): string {
-  if (!date) return '—';
-  try {
-    return new Date(date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch {
-    return date;
-  }
 }
 
 export function Progress() {

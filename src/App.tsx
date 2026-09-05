@@ -38,6 +38,7 @@ const TemporalMap = lazy(() => import('./pages/TemporalMap').then(m => ({ defaul
 const BootstrapBlueprints = lazy(() => import('./pages/BootstrapBlueprints').then(m => ({ default: m.BootstrapBlueprints })));
 const Bookmarks = lazy(() => import('./pages/Bookmarks').then(m => ({ default: m.Bookmarks })));
 const Progress = lazy(() => import('./pages/Progress').then(m => ({ default: m.Progress })));
+const Podcasts = lazy(() => import('./pages/Podcasts').then(m => ({ default: m.Podcasts })));
 const ReviewSession = lazy(() => import('./components/ReviewSession').then(m => ({ default: m.ReviewSession })));
 const CompanionGallery = lazy(() => import('./pages/CompanionGallery').then(m => ({ default: m.CompanionGallery })));
 const WorldEvents = lazy(() => import('./pages/WorldEvents').then(m => ({ default: m.WorldEvents })));
@@ -502,6 +503,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                 {!isOnline && <span className="ml-1 text-[9px] text-amber-400" aria-label="Offline">●</span>}
               </Link>
               <Link to="/bookmarks" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Bookmarks</Link>
+              <Link to="/podcasts" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Podcasts</Link>
               <Link to="/progress" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Progress</Link>
               <Link to="/companions" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Companions</Link>
               <Link to="/world-events" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">World Events</Link>
@@ -843,6 +845,7 @@ function App() {
             <Route path="/timeline" element={<Lazy><TemporalMap /></Lazy>} />
             <Route path="/blueprints" element={<Lazy><BootstrapBlueprints /></Lazy>} />
             <Route path="/bookmarks" element={<Lazy><Bookmarks /></Lazy>} />
+            <Route path="/podcasts" element={<Lazy><Podcasts /></Lazy>} />
             <Route path="/progress" element={<Lazy><Progress /></Lazy>} />
             <Route path="/review" element={<Lazy><ReviewSession /></Lazy>} />
             <Route path="/companions" element={<Lazy><CompanionGallery /></Lazy>} />
