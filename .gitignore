@@ -60,3 +60,6 @@ data/generated/
 
 # Playwright output
 test-results/
+
+# NotebookLM briefing books (generated per-era via `pnpm briefing`)
+data/briefings/

@@ -6,6 +6,7 @@
   "scripts": {
     "generate:knowledge": "tsx scripts/generate-knowledge.ts",
     "precompute:athena": "tsx scripts/precompute-athena.ts",
+    "briefing": "tsx scripts/generate-briefing.ts",
     "dev:frontend": "vite",
     "dev:backend": "npm run generate:knowledge && npm run precompute:athena && tsx server/index.ts",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
